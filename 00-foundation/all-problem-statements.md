@@ -17,46 +17,39 @@ Every problem statement must trace back to direct personal observation or lived 
 
 > **WHO** has trouble with **WHAT**, **WHEN or WHERE**, and it matters because **WHY**.
 
----
+Besik Meskhia
+H1 — Hairband (your own daily life)
 
-## Besik Meskhia
+Problem:
+A third-year Computer Science student at KIU who lives in Kutaisi and relies specifically on bus number 3 for morning commutes to 09:00–10:00 lectures does not have access to reliable real-time arrival information, leading them to wait at the stop without knowing whether the bus is delayed or skipped, particularly on weekdays before classes.
 
-### H1 -- Hairband (a problem in your own daily life)
+Where this observation comes from:
+This occurs in my own daily commute. A recent instance was waiting at the stop after checking the board showing a 10-minute arrival, which later updated to a 45-minute delay, forcing a last-minute decision.
 
-**Problem:**  
-A KIU 3rd-year computer science student from Kutaisi has trouble relying on bus number 3 when commuting to university due to inconsistent scheduling and lack of real-time tracking, especially in the mornings, and it matters because it can lead to being late for lectures or exams.
+Rough severity estimate: Medium–High
+This results in either arriving late to lectures or paying for taxis unexpectedly (financial cost), and creates repeated uncertainty and stress in time-sensitive situations where attendance matters.
 
-**Where this observation comes from:**  
-This issue occurs regularly in my daily routine. A recent example was when the bus was expected in 10 minutes, but the board showed a 45-minute delay, which has happened multiple times and forced me to take taxis.
+H2 — Headache (someone else)
 
-**Rough severity estimate:** Medium  
-The problem causes inconvenience and extra cost or time, but there are workarounds such as leaving earlier or using taxis.
+Problem:
+KIU students living in shared dormitories who use the communal laundry room in the evenings (typically between 18:00–23:00) forget to return on time to collect their clothes after a washing cycle finishes, resulting in other students removing their laundry to free up machines during peak usage hours.
 
----
+Where this observation comes from:
+Observed multiple times while spending evenings in the dorms with friends, where finished laundry remained in machines for extended periods and other students intervened.
 
-### H2 -- Headache (a problem you observed in someone else)
+Rough severity estimate: Medium
+This leads to social friction (others touching personal belongings), mild conflict between students, and inefficient use of limited machines during high-demand periods, sometimes forcing others to wait 20–40 minutes unnecessarily.
 
-**Problem:**  
-KIU students living in dormitories have trouble remembering to remove their laundry from shared washing machines in the laundry room, and it matters because their clothes may be removed by others and machines stay occupied unnecessarily.
+H3 — Heartburn (community-level recurring problem)
 
-**Where this observation comes from:**  
-I observed this while spending time in the dormitories with friends, where this situation happened multiple times and appeared to be a regular occurrence.
+Problem:
+KIU students living on limited monthly budgets (typically under 400–600 GEL) and attending full-day schedules (multiple classes between 10:00–18:00) do not have consistent access to nearby affordable, filling, and good-quality meals within walking distance of the university, forcing them to either skip meals, rely on low-quality fast food, or spend additional time and money traveling elsewhere.
 
-**Rough severity estimate:** Low  
-The issue is inconvenient but does not cause serious long-term problems and is easy to recover from.
+Where this observation comes from:
+Observed consistently over three years among KIU students, including conversations with peers who regularly discuss food limitations and budgeting constraints.
 
----
-
-### H3 -- Heartburn (a recurring problem in a community or context you know)
-
-**Problem:**  
-KIU students have trouble accessing affordable and good-quality food near the university, and it matters because they must travel far or rely on limited and often unsatisfactory options.
-
-**Where this observation comes from:**  
-This has been observed over the past three years among KIU students, affecting many people who cannot afford to frequently order food and have limited nearby options.
-
-**Rough severity estimate:** High  
-The problem affects daily life and well-being for many students and is a consistent issue without an easy workaround.
+Rough severity estimate: High
+This leads to repeated financial strain (overspending on delivery or transport), lost time between classes (traveling for food), and negative effects on energy, focus, and overall well-being during academic hours.
 
 ---
 
