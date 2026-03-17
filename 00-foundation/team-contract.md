@@ -9,12 +9,12 @@
 
 ## Team Members and Roles
 
-| Name          | Role           | Primary Accountability                         |
-| ------------- | -------------- | ---------------------------------------------- |
-| Beso          | Program Lead   | Deadlines, submissions, conflict resolution    |
-| Modebadze     | Discovery Lead | Interview quality, synthesis, customer insight |
-| Gio           | Tech Lead      | Repository, code quality, architecture         |
-| Kvirikashvili | Tech Lead      | Repository, code quality, architecture         |
+| Name                  | Role           | Primary Accountability                         |
+| --------------------- | -------------- | ---------------------------------------------- |
+| Besik Meskhia         | Program Lead   | Deadlines, submissions, conflict resolution    |
+| Nikoloz Modebadze     | Discovery Lead | Interview quality, synthesis, customer insight |
+| Giorgi Mikaberidze    | Tech Lead      | Repository, code quality, architecture         |
+| Nikoloz Kvirikashvili | Tech Lead      | Repository, code quality, architecture         |
 
 ---
 
