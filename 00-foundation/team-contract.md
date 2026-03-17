@@ -2,35 +2,33 @@
 
 **Team Name:** [Your team name]  
 **Course:** CS-PD-2026 Product Development for Software Engineers  
-**Date Created:** [Date]  
-**Last Updated:** [Date]
+**Date Created:** 3/17/2026
+**Last Updated:** 3/17/2026
 
 ---
 
 ## Team Members and Roles
 
-| Name                | Role           | Primary Accountability                         |
-| ------------------- | -------------- | ---------------------------------------------- |
-| [Name]              | Program Lead   | Deadlines, submissions, conflict resolution    |
-| [Name]              | Discovery Lead | Interview quality, synthesis, customer insight |
-| [Name]              | Tech Lead      | Repository, code quality, architecture         |
-| [Name if 4 members] | [Role doubled] | [Specify which role and what specifically]     |
+| Name          | Role           | Primary Accountability                         |
+| ------------- | -------------- | ---------------------------------------------- |
+| Beso          | Program Lead   | Deadlines, submissions, conflict resolution    |
+| Modebadze     | Discovery Lead | Interview quality, synthesis, customer insight |
+| Gio           | Tech Lead      | Repository, code quality, architecture         |
+| Kvirikashvili | Tech Lead      | Repository, code quality, architecture         |
 
 ---
 
 ## Communication
 
-**Primary channel:** [e.g., WhatsApp group, Telegram, Discord -- name the specific group]
+**Primary channel:** Discord
 
-**Standup cadence:** [e.g., "Twice weekly: Tuesday and Thursday at 20:00, voice call, 15 minutes max"]
+**Standup cadence:** Monday Thursday 10pm, 20 minutes max
 
-**Response time expectation:** [e.g., "All messages acknowledged within 4 hours during 09:00-22:00. Messages after 22:00 are acknowledged by 10:00 the following morning."]
+**Response time expectation:** All messages acknowledged within 4 hours during 011:00-22:00. Messages after 22:00 are acknowledged by 12:00 the following morning.
 
-**Meeting location:** [e.g., "Online via Google Meet. Physical if both parties are on campus."]
+**Meeting location:** Online via Discord. Physical if both parties are on campus.
 
-**If someone goes silent for more than 24 hours with a deadline approaching:** [Describe what happens -- who follows up, what the escalation looks like]
-
----
+## **If someone goes silent for more than 24 hours with a deadline approaching:** First, attempt to contact the individual through social media. If there is no response and the individual resides in the dormitories, reach out to another team member who lives there to check on them. Otherwise, proceed to contact the individual via their mobile phone.
 
 ## Decision-Making
 
@@ -88,12 +86,12 @@ The team agrees to follow the KIU 4-Step Conflict Protocol:
 
 By committing this document, all team members confirm they have read, understood, and agreed to this contract.
 
-| Name        | GitHub Username | Date   |
-| ----------- | --------------- | ------ |
-| [Name]      | @[username]     | [Date] |
-| [Name]      | @[username]     | [Date] |
-| [Name]      | @[username]     | [Date] |
-| [Name if 4] | @[username]     | [Date] |
+| Name          | GitHub Username | Date      |
+| ------------- | --------------- | --------- |
+| Besik Meshkia | @Besika40k      | 3/17/2026 |
+| [Name]        | @[username]     | [Date]    |
+| [Name]        | @[username]     | [Date]    |
+| [Name if 4]   | @[username]     | [Date]    |
 
 ---
 
