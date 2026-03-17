@@ -93,7 +93,7 @@ By committing this document, all team members confirm they have read, understood
 | Name          | GitHub Username | Date      |
 | ------------- | --------------- | --------- |
 | Besik Meshkia | @Besika40k      | 3/17/2026 |
-| [Name]        | @[username]     | [Date]    |
+| [Nikoloz Modebadze]        | @[NW0RK]     | [3/17/2026]    |
 | [Name]        | @[username]     | [Date]    |
 | [Name if 4]   | @[username]     | [Date]    |
 
