@@ -57,42 +57,42 @@ This leads to repeated financial strain (overspending on delivery or transport),
 
 ## Nikoloz Modebadze
 
-### H1 -- Hairband
+### H1 — Hairband (Personal Problem)
 
-**Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+**Problem:**
+A university student experiences constant two-factor authentication (2FA) and password reverification every time they attempt to log into the LMS study system. This creates repetitive friction and unnecessarily delays access to daily study materials. 
 
-**Where this observation comes from:**  
-[Your own experience -- be specific]
+**Where this observation comes from:**
+This is a personal, daily experience. The issue occurs consistently whenever the student tries to access the LMS, turning a simple login process into a tedious and repetitive chore.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
-
----
-
-### H2 -- Headache
-
-**Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
-
-**Where this observation comes from:**  
-[Describe what you witnessed and in what context]
-
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Severity:**
+Low to Medium — While it doesn't completely prevent access to the study materials, the constant friction is highly annoying and wastes valuable time on a daily basis.
 
 ---
 
-### H3 -- Heartburn
+### H2 — Headache (Observed Problem)
 
-**Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+**Problem:**
+A university professor experiences issues with files and submissions failing to display correctly when uploading materials to the deeply-layered LMS. This creates significant uncertainty for the professor regarding whether critical coursework was actually received and published successfully.
 
-**Where this observation comes from:**  
-[Describe the community and your knowledge of it]
+**Where this observation comes from:**
+This comes from direct observation of a specific professor struggling with the LMS interface while attempting to upload and manage course materials for their class.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Severity:**
+Medium — It causes confusion and anxiety for the teaching staff and likely requires them to take extra, time-consuming steps to verify that their uploads went through, which could also lead to students missing assignments if the upload actually failed.
+
+---
+
+### H3 — Heartburn (Systemic Problem)
+
+**Problem:**
+University students encounter a buggy, mandatory fullscreen notification popup during the high-stakes exam phase. The button to dismiss this popup frequently fails to register, which completely blocks students from bypassing the screen and accessing their critical exam materials.
+
+**Where this observation comes from:**
+This is a widespread issue affecting the broader student body at the university specifically during critical, time-sensitive examination periods.
+
+**Severity:**
+High — The problem completely blocks access to high-stakes exams. This not only causes severe stress and panic but directly jeopardizes the students' academic performance due to a system error entirely out of their control.
 
 ---
 
