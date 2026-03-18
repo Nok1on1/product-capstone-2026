@@ -1,17 +1,17 @@
-# [Your Team Name] -- Product Capstone 2026
+# Bandersnatch -- Product Capstone 2026
 
 **Course:** CS-PD-2026 Product Development for Software Engineers  
 **Semester:** Spring 2026  
-**Institution:** Kutaisi International University  
+**Institution:** Kutaisi International University
 
 ## Team
 
-| Name | Role | GitHub |
-|------|------|--------|
-| Nikoloz Kvirikashili | Program Lead | [RonchegLemoncheg](https://github.com/RonchegLemoncheg)|
-| Nikoloz Modebadze | Discovery Lead | [NW0RK](https://github.com/NW0RK) |
-| Giorgi Mikaberidze | Tech Lead | [Nok1on1](https://github.com/Nok1on1)|
-| Besik Meskhia | Flexible | [Besika40k](https://github.com/Besika40k)|
+| Name                 | Role           | GitHub                                                  |
+| -------------------- | -------------- | ------------------------------------------------------- |
+| Nikoloz Kvirikashili | Program Lead   | [RonchegLemoncheg](https://github.com/RonchegLemoncheg) |
+| Nikoloz Modebadze    | Discovery Lead | [NW0RK](https://github.com/NW0RK)                       |
+| Giorgi Mikaberidze   | Tech Lead      | [Nok1on1](https://github.com/Nok1on1)                   |
+| Besik Meskhia        | Flexible       | [Besika40k](https://github.com/Besika40k)               |
 
 ## Project
 

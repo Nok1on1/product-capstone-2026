@@ -1,9 +1,9 @@
 # All Problem Statements
 
-**Team Name:** [Your team name]  
+**Team Name:** Bandersnatch
 **Course:** CS-PD-2026  
-**Lab 1 Date:** [March 13 or March 14, 2026]  
-**Last Updated:** [Date]
+**Lab 1 Date:** March 13 or March 14, 2026
+**Last Updated:** 3/18/2026
 
 ---
 
@@ -141,7 +141,7 @@ This leads to repeated financial strain (overspending on delivery or transport),
 
 ---
 
-## Giorgi Miqaberidze
+## Nikoloz Kvirikashvili
 
 ### H1 -- Hairband
 
@@ -188,20 +188,20 @@ This leads to repeated financial strain (overspending on delivery or transport),
 
 _Complete this section after the round-robin sharing round. This is a factual inventory -- not a ranking, not a vote._
 
-| #   | Problem (one-line summary) | Member | H Category                      | Severity            |
-| --- | -------------------------- | ------ | ------------------------------- | ------------------- |
-| 1   |                            |        | Hairband / Headache / Heartburn | Low / Medium / High |
-| 2   |                            |        |                                 |                     |
-| 3   |                            |        |                                 |                     |
-| 4   |                            |        |                                 |                     |
-| 5   |                            |        |                                 |                     |
-| 6   |                            |        |                                 |                     |
-| 7   |                            |        |                                 |                     |
-| 8   |                            |        |                                 |                     |
-| 9   |                            |        |                                 |                     |
-| 10  |                            |        |                                 |                     |
-| 11  |                            |        |                                 |                     |
-| 12  |                            |        |                                 |                     |
+| #   | Problem (one-line summary)    | Member        | H Category                      | Severity            |
+| --- | ----------------------------- | ------------- | ------------------------------- | ------------------- |
+| 1   | 3 number buss commute problem | Besik Meskhia | Hairband / Headache / Heartburn | Low / Medium / High |
+| 2   |                               |               |                                 |                     |
+| 3   |                               |               |                                 |                     |
+| 4   |                               |               |                                 |                     |
+| 5   |                               |               |                                 |                     |
+| 6   |                               |               |                                 |                     |
+| 7   |                               |               |                                 |                     |
+| 8   |                               |               |                                 |                     |
+| 9   |                               |               |                                 |                     |
+| 10  |                               |               |                                 |                     |
+| 11  |                               |               |                                 |                     |
+| 12  |                               |               |                                 |                     |
 
 **Total problems in pool:** [Number]  
 **Domains represented:** [List the broad areas -- e.g., education, transport, healthcare, productivity]

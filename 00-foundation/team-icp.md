@@ -1,6 +1,6 @@
 # Team ICP Candidates
 
-**Team Name:** [Your team name]  
+**Team Name:** Bandersnatch
 **Course:** CS-PD-2026  
 **Prepared by:** [Names of team members who drafted this]  
 **Date:** [Date -- must be submitted by Thursday March 19, 2026]

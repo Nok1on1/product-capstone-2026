@@ -1,9 +1,9 @@
 # Team Contract
 
-**Team Name:** [Bandersnatch]  
+**Team Name:** Bandersnatch
 **Course:** CS-PD-2026 Product Development for Software Engineers  
 **Date Created:** 3/17/2026
-**Last Updated:** 3/17/2026
+**Last Updated:** 3/18/2026
 
 ---
 
@@ -90,12 +90,12 @@ The team agrees to follow the KIU 4-Step Conflict Protocol:
 
 By committing this document, all team members confirm they have read, understood, and agreed to this contract.
 
-| Name          | GitHub Username | Date      |
-| ------------- | --------------- | --------- |
-| Besik Meshkia | @Besika40k      | 3/17/2026 |
-| [Nikoloz Modebadze]        | @[NW0RK]     | [3/17/2026]    |
-| [Name]        | @[username]     | [Date]    |
-| [Name if 4]   | @[username]     | [Date]    |
+| Name              | GitHub Username | Date        |
+| ----------------- | --------------- | ----------- |
+| Besik Meshkia     | @Besika40k      | 3/17/2026   |
+| Nikoloz Modebadze | @NW0RK          | [3/17/2026] |
+| [Name]            | @[username]     | [Date]      |
+| [Name if 4]       | @[username]     | [Date]      |
 
 ---
 
