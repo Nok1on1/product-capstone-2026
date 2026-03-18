@@ -146,39 +146,39 @@ This leads to repeated financial strain (overspending on delivery or transport),
 ### H1 -- Hairband
 
 **Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+A Computer Science student at KIU who regularly goes to the gym after classes has trouble maintaining a consistent workout schedule during weeks with heavy coursework and assignments, especially in the evenings after 18:00, and it matters because inconsistent training leads to loss of progress, reduced motivation, and difficulty maintaining physical health.
 
 **Where this observation comes from:**  
-[Your own experience]
+From my own experience. There are many weeks where I plan to go to the gym after classes, but due to assignments, projects, or being mentally tired, I end up skipping workouts or going at irregular times.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Rough severity estimate:** Medium  
+This affects long-term consistency and motivation. While not critical in the short term, over time it leads to frustration and loss of discipline in maintaining a healthy routine.
 
 ---
 
 ### H2 -- Headache
 
 **Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+KIU students preparing for exams have trouble managing their study time effectively in the days right before deadlines and exams, especially during late-night study sessions, and it matters because poor planning leads to stress, lack of sleep, and lower performance.
 
 **Where this observation comes from:**  
-[Describe what you witnessed]
+Observed among classmates and friends, especially during midterms and finals, where many students start studying too late, stay up all night, and struggle to cover all material.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Rough severity estimate:** High  
+This repeatedly leads to burnout, poor academic performance, and unhealthy sleep patterns, especially during important evaluation periods.
 
 ---
 
 ### H3 -- Heartburn
 
 **Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+KIU students who rely on campus or nearby housing have trouble finding affordable accommodation after recent price increases, especially at the beginning of semesters, and it matters because higher living costs create financial pressure and force students to either move farther away or compromise on living conditions.
 
 **Where this observation comes from:**  
-[Describe the community and your connection to it]
+Observed through conversations with other students and general awareness of rising housing prices around campus, where many students complain about increased rent and limited options.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Rough severity estimate:** High  
+This affects a large number of students and has long-term consequences on financial stability, commuting time, and overall student well-being.
 
 ---
 
