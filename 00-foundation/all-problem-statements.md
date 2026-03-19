@@ -188,23 +188,23 @@ This affects a large number of students and has long-term consequences on financ
 
 _Complete this section after the round-robin sharing round. This is a factual inventory -- not a ranking, not a vote._
 
-| #   | Problem (one-line summary)    | Member        | H Category                      | Severity            |
-| --- | ----------------------------- | ------------- | ------------------------------- | ------------------- |
-| 1   | 3 number buss commute problem | Besik Meskhia | Hairband / Headache / Heartburn | Low / Medium / High |
-| 2   |                               |               |                                 |                     |
-| 3   |                               |               |                                 |                     |
-| 4   |                               |               |                                 |                     |
-| 5   |                               |               |                                 |                     |
-| 6   |                               |               |                                 |                     |
-| 7   |                               |               |                                 |                     |
-| 8   |                               |               |                                 |                     |
-| 9   |                               |               |                                 |                     |
-| 10  |                               |               |                                 |                     |
-| 11  |                               |               |                                 |                     |
-| 12  |                               |               |                                 |                     |
+| # | Problem (one-line summary) | Member | H Category | Severity |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | 3 number bus commute problem | Besik Meskhia | Hairband | Medium-High |
+| 2 | Dorm laundry room usage conflicts | Besik Meskhia | Headache | Medium |
+| 3 | Lack of affordable food options near campus | Besik Meskhia | Heartburn | High |
+| 4 | LMS 2FA and repetitive login friction | Nikoloz Modebadze | Hairband | Low-Medium |
+| 5 | LMS file upload failures for professors | Nikoloz Modebadze | Headache | Medium |
+| 6 | LMS exam popup bug blocking access | Nikoloz Modebadze | Heartburn | High |
+| 7 | Missing LMS notifications for course updates | Giorgi Mikaberidze | Hairband | Medium |
+| 8 | Missing LMS notifications for group projects | Giorgi Mikaberidze | Headache | Medium |
+| 9 | Systemic lack of LMS notifications for university | Giorgi Mikaberidze | Heartburn | High |
+| 10 | Inconsistent gym schedule due to coursework | Nikoloz Kvirikashvili | Hairband | Medium |
+| 11 | Poor study time management before exams | Nikoloz Kvirikashvili | Headache | High |
+| 12 | Unaffordable student housing/rent increases | Nikoloz Kvirikashvili | Heartburn | High |
 
-**Total problems in pool:** [Number]  
-**Domains represented:** [List the broad areas -- e.g., education, transport, healthcare, productivity]
+**Total problems in pool:** 12  
+**Domains represented:** Transportation, Housing/Living, Dining/Nutrition, Educational Technology (LMS), Health/Fitness, and Academic Productivity
 
 ---
 

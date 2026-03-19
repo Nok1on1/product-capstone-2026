@@ -1,9 +1,9 @@
 # Team ICP Candidates
 
 **Team Name:** Bandersnatch
-**Course:** CS-PD-2026  
-**Prepared by:** [Names of team members who drafted this]  
-**Date:** [Date -- must be submitted by Thursday March 19, 2026]
+**Course:** CS-PD-2026
+**Prepared by:** Nikoloz Modebadze, Nikoloz Kvirikashvili, Besik Meskhia, Giorgi Mikaberidze
+**Date:** March 19, 2026
 
 ---
 
@@ -21,65 +21,57 @@ This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/
 
 ## Candidate ICP 1
 
-**Linked to problem:** [Quote the one-line problem from `all-problem-statements.md` that this ICP corresponds to]  
-**Submitted by (original problem author):** [Team member name]
+**Linked to problem:** LMS exam popup bug blocking access
+**Submitted by (original problem author):** Nikoloz Modebadze
 
 ---
 
 ### 1.1 Who Is This Person?
 
-**Segment label:** [A concise name for this user type -- e.g., "Freelance graphic designer" or "First-generation university student at a Georgian university"]
+**Segment label:** Time-Pressed University Test Taker
 
-**Demographics (as relevant to the problem):**  
-[Age range, occupation or student status, location or institution type, any other demographic detail that is actually relevant to WHY they experience this problem. Do not list demographics that do not connect to the problem.]
+**Demographics (as relevant to the problem):** * University students taking digital exams via the institutional Learning Management System (LMS).
+* Users navigating high-stakes academic environments where performance directly impacts their grades.
 
-**Psychographics (as relevant to the problem):**  
-[What do they care about? What motivates them? What are they afraid of? Only include what actually helps explain the problem.]
+**Psychographics (as relevant to the problem):** * Highly stressed and anxious about academic performance, specifically during exam periods.
+* Value reliability and fairness in technology; they are fearful of being penalised for technical errors outside of their control.
 
 ---
 
 ### 1.2 Their Context
 
-**Where do they experience this problem?**  
-[Physical setting, digital context, or both. Be specific -- "at their desk in the evening while reviewing lecture notes" is better than "at home".]
+**Where do they experience this problem?** * On their personal laptops or university lab computers while actively logged into the LMS digital exam interface.
 
-**When does this problem occur?**  
-[Time of day, point in a workflow, or triggering condition -- e.g., "in the three days before a group project deadline" or "every time they receive an invoice from a client in a foreign currency"]
+**When does this problem occur?** * Exclusively during the high-stakes exam phase, right when they are trying to access critical exam materials.
 
-**How often?**  
-[Daily, weekly, seasonally, at a specific life stage? Frequency matters for assessing severity.]
+**How often?** * Seasonally (during midterms and finals) or whenever a major digital assessment is scheduled.
 
 ---
 
 ### 1.3 Their Current Workaround
 
-**What do they do today to cope with this problem?**  
-[Describe the workaround or existing solution they use. Every problem has one, even if it is "they just live with it and complain."]
+**What do they do today to cope with this problem?** * They likely attempt to aggressively refresh the page, try alternative web browsers, or frantically contact the professor or IT support during the ongoing exam.
 
-**Why is the current workaround inadequate?**  
-[What does it cost them -- in time, money, stress, or quality? This is where the pain lives.]
+**Why is the current workaround inadequate?** * It completely blocks access to the exam materials, wasting irreplaceable, strictly timed exam minutes.
+* It causes severe panic and directly jeopardises academic performance due to an uncontrollable system error.
 
 ---
 
 ### 1.4 Why This Segment
 
-**Why is this a promising target segment?**  
-[2-3 sentences. Why does this person have this problem acutely? Why would they be motivated to try a better solution? Why can they be reached?]
+**Why is this a promising target segment?** This segment experiences a severe, acute pain point because the problem directly blocks their ability to complete mandatory academic requirements. The motivation for a solution is extremely high, and the segment is highly concentrated and easy to reach across the university campus.
 
-**What would need to be true for this to be a strong ICP?**  
-[What do you still not know about this person that would affect whether this is a good target? This is what you will try to learn in interviews.]
+**What would need to be true for this to be a strong ICP?** It must be true that this bug is a recurring, systemic issue rather than an isolated, one-time glitch, and that the university administration or IT department is open to implementing a third-party fix or alternative testing interface.
 
 ---
 
 ### 1.5 Confidence Assessment
 
-**Confidence in this ICP:** Low / Medium / High
+**Confidence in this ICP:** High
 
-**What is this confidence based on?**  
-[Direct observation? One person's experience? A pattern across multiple people you know? Be honest.]
+**What is this confidence based on?** Direct observation of a widespread issue affecting the broader student body at the university during examination periods.
 
-**What would increase your confidence?**  
-[What would 3-5 interviews with this type of person tell you?]
+**What would increase your confidence?** Conducting interviews with 3-5 students who recently missed or failed an exam due to this specific bug, as well as speaking with an IT staff member regarding the frequency of bug reports during finals week.
 
 ---
 
@@ -87,65 +79,57 @@ This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/
 
 ## Candidate ICP 2
 
-**Linked to problem:** [Quote the one-line problem from `all-problem-statements.md` that this ICP corresponds to]  
-**Submitted by (original problem author):** [Team member name]
+**Linked to problem:** Unaffordable student housing/rent increases
+**Submitted by (original problem author):** Nikoloz Kvirikashvili
 
 ---
 
 ### 2.1 Who Is This Person?
 
-**Segment label:** [Concise descriptor]
+**Segment label:** Budget-Constrained Student Renter
 
-**Demographics (relevant to the problem):**  
-[Only what connects to the problem]
+**Demographics (relevant to the problem):** * KIU students who rely on campus or nearby off-campus housing.
+* Individuals operating on strict, limited monthly financial allowances (often 400–600 GEL or less).
 
-**Psychographics (relevant to the problem):**  
-[Only what helps explain the problem and their motivation to solve it]
+**Psychographics (relevant to the problem):** * Highly financially conscious and stressed by rising costs of living.
+* Seeking stability and proximity to campus to minimise commute times and focus on studies, but frequently forced to compromise.
 
 ---
 
 ### 2.2 Their Context
 
-**Where do they experience this problem?**  
-[Specific setting]
+**Where do they experience this problem?** * In the local real estate market surrounding the university campus or within the university's housing application system.
 
-**When does this problem occur?**  
-[Triggering condition or time context]
+**When does this problem occur?** * Most acutely at the beginning of semesters when demand spikes, or when lease renewals coincide with rent increases.
 
-**How often?**  
-[Frequency]
+**How often?** * Seasonally (1-2 times a year during housing searches), but the financial strain is experienced daily.
 
 ---
 
 ### 2.3 Their Current Workaround
 
-**What do they do today to cope?**  
-[Their current solution or lack of one]
+**What do they do today to cope?** * They are forced to move farther away from campus, compromise heavily on living conditions, or overcrowd apartments with multiple roommates to split the inflated costs.
 
-**Why is the current workaround inadequate?**  
-[Cost in time, money, or quality]
+**Why is the current workaround inadequate?** * Moving farther away increases commuting time and transportation costs, while poor living conditions negatively impact mental health and academic focus.
+* It creates chronic financial pressure that degrades overall student well-being.
 
 ---
 
 ### 2.4 Why This Segment
 
-**Why is this a promising target?**  
-[2-3 sentences on acuteness of problem, motivation to change, and reachability]
+**Why is this a promising target?** Housing is a mandatory survival need, and rising costs represent a systemic, unavoidable issue for a massive portion of the student body. The pain is severe, constant, and shared by thousands of easily reachable peers.
 
-**What would need to be true for this to be a strong ICP?**  
-[Open questions to resolve in interviews]
+**What would need to be true for this to be a strong ICP?** It must be true that a student-led team can actually build a viable solution to a macroeconomic problem (e.g., creating a highly efficient roommate-matching platform to lower individual rent burdens, rather than just building another standard real-estate listing site).
 
 ---
 
 ### 2.5 Confidence Assessment
 
-**Confidence in this ICP:** Low / Medium / High
+**Confidence in this ICP:** High
 
-**What is this confidence based on?**  
-[Evidence basis]
+**What is this confidence based on?** General awareness of rising housing prices around campus and recurring conversations with classmates complaining about rent hikes and limited options.
 
-**What would increase your confidence?**  
-[What interviews would reveal]
+**What would increase your confidence?** Interviewing students who recently had to move due to rent increases to understand exactly *how* they found their new (cheaper) arrangements and what tools they felt were missing during that search.
 
 ---
 
@@ -153,25 +137,12 @@ This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/
 
 ## Comparison
 
-_Complete this section after writing both profiles. It will be useful in your Lab 2 Four Filters discussion._
+| Dimension | Candidate ICP 1 (Exam Bug) | Candidate ICP 2 (Housing) |
+| :--- | :--- | :--- |
+| Problem severity (your estimate) | High (Academic failure risk) | High (Financial/Well-being risk) |
+| How reachable is this person? | Extremely easy (Classmates) | Extremely easy (Classmates) |
+| Do you have personal connections to this segment? | Yes | Yes |
+| Workaround cost (time/money/pain) | Lost time, severe stress, grade risk | High financial cost, commute time, compromised living |
+| Your confidence in this ICP | High | High |
 
-| Dimension                                         | Candidate ICP 1 | Candidate ICP 2 |
-| ------------------------------------------------- | --------------- | --------------- |
-| Problem severity (your estimate)                  |                 |                 |
-| How reachable is this person?                     |                 |                 |
-| Do you have personal connections to this segment? |                 |                 |
-| Workaround cost (time/money/pain)                 |                 |                 |
-| Your confidence in this ICP                       |                 |                 |
-
-**Team observation after comparing both:**  
-[1-3 sentences. Not a decision -- just an honest observation about what you notice when you put them side by side. Do both feel equally real to you? Does one feel more grounded in observation than the other?]
-
----
-
-## What Happens Next
-
-In Lab 2 you will apply the Four Filters framework (Is the problem real? Is it frequent? Does it cause significant pain? Can we reach these people?) to both your candidate problems and both your candidate ICPs. This document will be your starting point for that conversation. Come to Lab 2 with it read and fresh in your mind.
-
----
-
-_CS-PD-2026 | Kutaisi International University | Spring 2026_
+**Team observation after comparing both:** Both ICPs address High-severity problems affecting our immediate peers, making customer discovery straightforward. However, the LMS bug is a strictly technical/institutional issue that might require university administrative approval to solve, whereas the housing affordability problem is a broader market issue that might be solvable through community-driven platforms (like roommate matching) independent of the university's IT infrastructure.
