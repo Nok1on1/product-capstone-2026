@@ -95,7 +95,7 @@ By committing this document, all team members confirm they have read, understood
 | Besik Meshkia     | @Besika40k      | 3/17/2026   |
 | Nikoloz Modebadze | @NW0RK          | [3/17/2026] |
 | Nikoloz Kvirikashvili| @RonchegLemoncheg|[3/18/2026]|
-| [Name if 4]       | @[username]     | [Date]      |
+| Giorgi Mikaberidze       | [@Nok1on1](https://github.com/Nok1on1)        | [3/19/2026]      |
 
 ---
 
