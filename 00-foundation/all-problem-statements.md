@@ -103,39 +103,39 @@ High — The problem completely blocks access to high-stakes exams. This not onl
 ### H1 -- Hairband
 
 **Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+A KIU student who regularly checks the LMS for course updates does not receive notifications when professors upload study materials or post announcements, forcing them to manually log in and search multiple times daily to avoid missing critical information.
 
 **Where this observation comes from:**  
-[Your own experience -- be specific]
+This is my own experience. I frequently miss assignment deadlines and material updates because I'm not alerted when professors post to the LMS.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Rough severity estimate:** Medium  
+This creates repeated wasted time checking manually and risk of missing deadlines, though the information is eventually accessible if you search actively.
 
 ---
 
 ### H2 -- Headache
 
 **Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+KIU students in group projects experience confusion and delayed coordination when professors upload assignment instructions or rubrics to the LMS without notification, causing team members to discover updates at different times and duplicate effort.
 
 **Where this observation comes from:**  
-[Describe what you witnessed]
+Observed among classmates working on collaborative assignments who miss synchronized updates due to lack of alerts.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Rough severity estimate:** Medium  
+This creates miscommunication, rework, and inefficient collaboration during time-sensitive group projects.
 
 ---
 
 ### H3 -- Heartburn
 
 **Problem:**  
-[WHO] has trouble with [WHAT], [WHEN/WHERE], and it matters because [WHY].
+KIU students relying on the LMS as their primary course communication channel consistently miss critical university announcements, assignment uploads, and grade postings because the system provides no notification mechanism, creating systemic information gaps across the entire student body.
 
 **Where this observation comes from:**  
-[Describe the community and your connection to it]
+Observed as a widespread issue across multiple courses and semesters where students frequently ask classmates about missing updates they never knew existed.
 
-**Rough severity estimate:** Low / Medium / High  
-[Reasoning]
+**Rough severity estimate:** High  
+This directly impacts academic performance, increases stress, and undermines the LMS's effectiveness as a communication platform for the entire university.
 
 ---
 
