@@ -3,65 +3,67 @@
 **Team Name:** Bandersnatch
 **Course:** CS-PD-2026
 **Prepared by:** Nikoloz Modebadze, Nikoloz Kvirikashvili, Besik Meskhia, Giorgi Mikaberidze
-**Date:** March 19, 2026
+**Date:** March 26, 2026
 
 ---
 
 ## About This Document
 
-This document contains **two candidate Ideal Customer Profiles**, each tied to a specific problem from your `all-problem-statements.md` pool.
-
-You are drafting two candidates because you have not yet selected a team problem. When you apply Four Filters in Lab 2 and commit to one problem, you will finalise one of these ICPs (or refine it based on what you learned).
-
-A common mistake is writing two ICPs that describe essentially the same person in two different industries. Avoid this. If your two top candidate problems are genuinely different, the ICPs should be meaningfully different.
-
-This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/team-icp.md` in your team repository.
+This document contains **two candidate Ideal Customer Profiles**, each tied to a specific problem from our evaluation. These profiles represent our hypotheses regarding who suffers most from these issues and will be refined through upcoming user interviews.
 
 ---
 
-## Candidate ICP 1
+## Candidate ICP 1 (Primary)
 
-**Linked to problem:** LMS exam popup bug blocking access
-**Submitted by (original problem author):** Nikoloz Modebadze
+**Linked to problem:** Missing LMS notifications for course updates
+**Submitted by (original problem author):** Giorgi Mikaberidze
 
 ---
 
 ### 1.1 Who Is This Person?
 
-**Segment label:** Time-Pressed University Test Taker
+**Segment label:** Deadline-Driven CS Student
 
-**Demographics (as relevant to the problem):** * University students taking digital exams via the institutional Learning Management System (LMS).
-* Users navigating high-stakes academic environments where performance directly impacts their grades.
+**Demographics (as relevant to the problem):** \* Third-year Computer Science students at Kutaisi International University.
 
-**Psychographics (as relevant to the problem):** * Highly stressed and anxious about academic performance, specifically during exam periods.
-* Value reliability and fairness in technology; they are fearful of being penalised for technical errors outside of their control.
+- Enrolled in multiple high-workload courses simultaneously.
+- Primary users of the institutional LMS for all academic communication.
+
+**Psychographics (as relevant to the problem):** \* Highly organized but prone to "FOMO" (fear of missing out) regarding academic updates.
+
+- Values efficiency and automated alerts; they feel anxious when they aren't "in the loop."
+- Stressed by the cognitive load of remembering to check multiple platforms manually.
 
 ---
 
 ### 1.2 Their Context
 
-**Where do they experience this problem?** * On their personal laptops or university lab computers while actively logged into the LMS digital exam interface.
+**Where do they experience this problem?** \* On mobile devices and laptops while away from their desks, or during study sessions in the library and dorms.
 
-**When does this problem occur?** * Exclusively during the high-stakes exam phase, right when they are trying to access critical exam materials.
+**When does this problem occur?** \* Whenever a professor uploads new materials, assignments, or grade changes without a manual email follow-up.
 
-**How often?** * Seasonally (during midterms and finals) or whenever a major digital assessment is scheduled.
+**How often?** \* Daily. Multiple times per course, especially during peak project weeks.
 
 ---
 
 ### 1.3 Their Current Workaround
 
-**What do they do today to cope with this problem?** * They likely attempt to aggressively refresh the page, try alternative web browsers, or frantically contact the professor or IT support during the ongoing exam.
+**What do they do today to cope with this problem?** \* They manually log into the LMS 5–10 times a day "just in case."
 
-**Why is the current workaround inadequate?** * It completely blocks access to the exam materials, wasting irreplaceable, strictly timed exam minutes.
-* It causes severe panic and directly jeopardises academic performance due to an uncontrollable system error.
+- They constantly poll peer group chats (WhatsApp/Messenger) asking, "Did the professor post anything yet?"
+
+**Why is the current workaround inadequate?** \* It is highly time-consuming and disruptive to deep work.
+
+- Relying on classmates is unreliable; if the "class representative" misses the update, everyone does.
+- It still results in missed deadlines if an update occurs late at night or right before a class.
 
 ---
 
 ### 1.4 Why This Segment
 
-**Why is this a promising target segment?** This segment experiences a severe, acute pain point because the problem directly blocks their ability to complete mandatory academic requirements. The motivation for a solution is extremely high, and the segment is highly concentrated and easy to reach across the university campus.
+**Why is this a promising target segment?** As CS students, this group is tech-savvy and expects a certain level of automation that the current system lacks. The pain is universal across the department, and the consequences (lower grades/missed info) are severe enough to make them desperate for a fix.
 
-**What would need to be true for this to be a strong ICP?** It must be true that this bug is a recurring, systemic issue rather than an isolated, one-time glitch, and that the university administration or IT department is open to implementing a third-party fix or alternative testing interface.
+**What would need to be true for this to be a strong ICP?** It must be true that the lack of notifications is a widespread technical limitation of the platform itself, rather than just a few professors forgetting to click a "notify" button.
 
 ---
 
@@ -69,57 +71,62 @@ This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/
 
 **Confidence in this ICP:** High
 
-**What is this confidence based on?** Direct observation of a widespread issue affecting the broader student body at the university during examination periods.
+**What is this confidence based on?** Direct personal experience of the team and informal "venting" sessions with at least 6 other classmates who expressed the same frustration.
 
-**What would increase your confidence?** Conducting interviews with 3-5 students who recently missed or failed an exam due to this specific bug, as well as speaking with an IT staff member regarding the frequency of bug reports during finals week.
-
----
+**What would increase your confidence?** Conducting formal interviews to see if students have actually missed a major deadline (and suffered a grade penalty) specifically because of the lack of notification.
 
 ---
 
-## Candidate ICP 2
+---
 
-**Linked to problem:** Unaffordable student housing/rent increases
-**Submitted by (original problem author):** Nikoloz Kvirikashvili
+## Candidate ICP 2 (Secondary)
+
+**Linked to problem:** Bus #3 unreliable commute (lack of real-time tracking)
+**Submitted by (original problem author):** Besik Meskhia
 
 ---
 
 ### 2.1 Who Is This Person?
 
-**Segment label:** Budget-Constrained Student Renter
+**Segment label:** The Off-Campus Morning Commuter
 
-**Demographics (relevant to the problem):** * KIU students who rely on campus or nearby off-campus housing.
-* Individuals operating on strict, limited monthly financial allowances (often 400–600 GEL or less).
+**Demographics (relevant to the problem):** \* KIU students living in Kutaisi city center or surrounding neighborhoods.
 
-**Psychographics (relevant to the problem):** * Highly financially conscious and stressed by rising costs of living.
-* Seeking stability and proximity to campus to minimise commute times and focus on studies, but frequently forced to compromise.
+- Students who do not own cars and rely 100% on public transport (specifically Route #3).
+
+**Psychographics (relevant to the problem):** \* Punctual and disciplined; they value sleep and want to minimize "dead time" spent standing at bus stops.
+
+- Frustrated by the lack of transparency in public services.
 
 ---
 
 ### 2.2 Their Context
 
-**Where do they experience this problem?** * In the local real estate market surrounding the university campus or within the university's housing application system.
+**Where do they experience this problem?** \* At city bus stops, often in unfavorable weather (rain/cold).
 
-**When does this problem occur?** * Most acutely at the beginning of semesters when demand spikes, or when lease renewals coincide with rent increases.
+**When does this problem occur?** \* Most acutely between 08:00 and 10:00 AM before early lectures.
 
-**How often?** * Seasonally (1-2 times a year during housing searches), but the financial strain is experienced daily.
+**How often?** \* Every weekday morning.
 
 ---
 
 ### 2.3 Their Current Workaround
 
-**What do they do today to cope?** * They are forced to move farther away from campus, compromise heavily on living conditions, or overcrowd apartments with multiple roommates to split the inflated costs.
+**What do they do today to cope?** \* They arrive at the stop 20 minutes early "to be safe," wasting productive time.
 
-**Why is the current workaround inadequate?** * Moving farther away increases commuting time and transportation costs, while poor living conditions negatively impact mental health and academic focus.
-* It creates chronic financial pressure that degrades overall student well-being.
+- They spend extra money on taxis/Bolts when the bus doesn't show up within 10 minutes of the "scheduled" time.
+
+**Why is the current workaround inadequate?** \* Taxis are financially unsustainable for a student budget over time.
+
+- Waiting in the dark/cold increases stress levels before classes even begin.
 
 ---
 
 ### 2.4 Why This Segment
 
-**Why is this a promising target?** Housing is a mandatory survival need, and rising costs represent a systemic, unavoidable issue for a massive portion of the student body. The pain is severe, constant, and shared by thousands of easily reachable peers.
+**Why is this a promising target?** The pain is physical and financial. There is a clear "before and after" state if real-time tracking were introduced. This segment is highly concentrated at specific locations (bus stops) making them easy to find and interview.
 
-**What would need to be true for this to be a strong ICP?** It must be true that a student-led team can actually build a viable solution to a macroeconomic problem (e.g., creating a highly efficient roommate-matching platform to lower individual rent burdens, rather than just building another standard real-estate listing site).
+**What would need to be true for this to be a strong ICP?** It must be true that the buses actually have GPS hardware installed that is currently just not being surfaced to a student-facing app.
 
 ---
 
@@ -127,9 +134,9 @@ This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/
 
 **Confidence in this ICP:** High
 
-**What is this confidence based on?** General awareness of rising housing prices around campus and recurring conversations with classmates complaining about rent hikes and limited options.
+**What is this confidence based on?** First-hand experience by a team member who commutes daily and observes the crowd of frustrated students at the stops.
 
-**What would increase your confidence?** Interviewing students who recently had to move due to rent increases to understand exactly *how* they found their new (cheaper) arrangements and what tools they felt were missing during that search.
+**What would increase your confidence?** Interviewing students at the bus stop during a rainy morning to capture the "peak pain" moment and asking exactly how much they spend on "emergency" taxis per month.
 
 ---
 
@@ -137,12 +144,18 @@ This document is due **Thursday, March 19, 2026 at 11:59 PM** as `00-foundation/
 
 ## Comparison
 
-| Dimension | Candidate ICP 1 (Exam Bug) | Candidate ICP 2 (Housing) |
-| :--- | :--- | :--- |
-| Problem severity (your estimate) | High (Academic failure risk) | High (Financial/Well-being risk) |
-| How reachable is this person? | Extremely easy (Classmates) | Extremely easy (Classmates) |
-| Do you have personal connections to this segment? | Yes | Yes |
-| Workaround cost (time/money/pain) | Lost time, severe stress, grade risk | High financial cost, commute time, compromised living |
-| Your confidence in this ICP | High | High |
+| Dimension                | Candidate ICP 1 (LMS Notifications) | Candidate ICP 2 (Bus #3)      |
+| :----------------------- | :---------------------------------- | :---------------------------- |
+| **Problem severity**     | High (Academic/Stress)              | High (Financial/Time/Comfort) |
+| **How reachable?**       | Extremely easy (Any CS lecture)     | Easy (Morning bus stops)      |
+| **Personal connection?** | Yes (All team members)              | Yes (One team member)         |
+| **Workaround cost**      | High cognitive load/wasted time     | High financial cost (taxis)   |
+| **Your confidence**      | High                                | High                          |
 
-**Team observation after comparing both:** Both ICPs address High-severity problems affecting our immediate peers, making customer discovery straightforward. However, the LMS bug is a strictly technical/institutional issue that might require university administrative approval to solve, whereas the housing affordability problem is a broader market issue that might be solvable through community-driven platforms (like roommate matching) independent of the university's IT infrastructure.
+**Team observation after comparing both:** While both are strong, the **LMS Notification** problem is slightly more attractive because we have 100% personal coverage of the pain within the team, and the solution likely falls more within our technical capabilities as developers compared to integrating with municipal transport data.
+
+---
+
+**Revision History**
+
+- v1.0 | March 26, 2026 | Initial hypothesis created for Lab 2 commitment.
