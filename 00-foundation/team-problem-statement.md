@@ -63,7 +63,7 @@ All team members have read and agreed to this problem statement.
 | Name                  | Date           | Signature        |
 | --------------------- | -------------- | ---------------- |
 | Besik Meskhia         | March 26, 2026 | Besik Meskhia    |
-| Nikoloz Modebadze     | March 26, 2026 | \***\*\_\_\*\*** |
+| Nikoloz Modebadze     | March 26, 2026 | Nikoloz Modebadze|
 | Giorgi Mikaberidze    | March 26, 2026 | Giorgi Mikaberidze |
 | Nikoloz Kvirikashvili | March 26, 2026 | \***\*\_\_\*\*** |
 
