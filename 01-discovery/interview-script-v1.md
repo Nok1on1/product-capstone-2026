@@ -104,13 +104,16 @@ Do you ever use other buses to get to university? Which ones?
 **Question 12:**  
 When you use those other buses, do you run into the same kinds of problems Or is the experience different?
 
+**Question 13:**  
+What about the university's internal shuttles? Do you use them? And if so, do you experience the same issues, or do they work better for you?
+
 ---
 
 ## Phase 5: Close (5 minutes — 1 question minimum)
 
 Goal: Capture final insights and referrals.
 
-**Question 13 (catch-all):**  
+**Question 14 (catch-all):**  
 "Is there anything about your commute experience that I didn't ask about but you think is important?"
 
 **Referral question:**  
