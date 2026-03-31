@@ -152,7 +152,7 @@ This document contains **two candidate Ideal Customer Profiles**, each tied to a
 | **Workaround cost**      | High cognitive load/wasted time     | High financial cost (taxis)   |
 | **Your confidence**      | High                                | High                          |
 
-**Team observation after comparing both:** While both are strong, the **LMS Notification** problem is slightly more attractive because we have 100% personal coverage of the pain within the team, and the solution likely falls more within our technical capabilities as developers compared to integrating with municipal transport data.
+**Team observation after comparing both:** While both are strong, the **LMS Notification** problem was slightly more attractive because we have 100% personal coverage of the pain within the team, but after we wrote this they aleady integrated LMS notifications into outlook, and with further assitance of the professor we chose to not go with the first idea, instead we will focus on the second one (Bus #3)
 
 ---
 

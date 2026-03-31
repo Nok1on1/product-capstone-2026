@@ -1,7 +1,7 @@
 # Interview Outreach Tracker
 
 **Team Name:** Bandersnatch  
-**Problem:** KIU students miss important course updates because the LMS does not provide notifications, leading to missed deadlines and repeated manual checking.  
+**Problem:** KIU students relying on Bus #3 face unreliable commute due to lack of real-time tracking, leading to wasted time, stress, and additional transportation costs.  
 **Target:** 10 completed interviews by end of Week 4 (by 9 April 2026)  
 **Minimum for Lab 2 homework:** 5 contacts identified and outreach initiated by 25 March 2026
 
@@ -11,29 +11,29 @@
 
 Before logging a contact, confirm they match your ICP. The screener questions are in your interview script. Do not interview people who do not match — bad interviews produce misleading data.
 
-**Your ICP in one sentence:** Third-year KIU Computer Science students who actively use the LMS and rely on it for course updates and assignments.
+**Your ICP in one sentence:** KIU students living off-campus who rely on Bus #3 as their primary transportation to university.
 
 ---
 
 ## Contact Log
 
-| #   | Contact | ICP match reason                              | Outreach method | Date contacted | Interview date | Status     | Interviewed by | Notes                  |
-| :-- | :------ | :-------------------------------------------- | :-------------- | :------------- | :------------- | :--------- | :------------- | :--------------------- |
-| 1   | M. K.   | 3rd year CS student, active LMS user          | Messenger       | Mar 25         | Mar 27         | Scheduled  | Besik          | Group project teammate |
-| 2   | M. P.   | 3rd year CS student, multiple courses         | In person       | Mar 25         | Mar 28         | Scheduled  | Giorgi         | Met in class           |
-| 3   | T. C.   | 3rd year CS student, checks LMS daily         | Messenger       | Mar 25         | Mar 29         | Contacted  | Nikoloz M      | Waiting reply          |
-| 4   | A. C.   | 3rd year CS student, uses LMS for assignments | WhatsApp        | Mar 25         | Mar 30         | Scheduled  | Nikoloz K      | Dorm friend            |
-| 5   | A. P.   | 3rd year CS student, frequent LMS complaints  | In person       | Mar 25         | Mar 27         | Scheduled  | Besik          | Library                |
-| 6   | B. T.   | 3rd year CS student, regular LMS use          | Messenger       | Mar 26         | -              | Contacted  | Giorgi         | No response yet        |
-| 7   | D. K.   | 3rd year CS student, group project user       | In person       | Mar 26         | Mar 31         | Scheduled  | Nikoloz M      | Classmate              |
-| 8   | E. M.   | 3rd year CS student, LMS dependent            | Messenger       | Mar 26         | -              | Identified | Nikoloz K      | Will contact           |
-| 9   | G. T.   | 3rd year CS student, daily LMS checking       | WhatsApp        | Mar 26         | -              | Contacted  | Besik          | Awaiting reply         |
-| 10  | M. L.   | 3rd year CS student, active coursework        | In person       | Mar 26         | Apr 1          | Scheduled  | Giorgi         | Lab partner            |
-| 11  | M. D.   | 3rd year CS student, uses LMS frequently      | Messenger       | Mar 26         | -              | Identified | Nikoloz M      | Not contacted yet      |
-| 12  | M. B.   | 3rd year CS student, assignment tracking      | Messenger       | Mar 26         | -              | Contacted  | Nikoloz K      | Waiting reply          |
-| 13  | N. M.   | 3rd year CS student, heavy LMS reliance       | In person       | Mar 26         | Apr 2          | Scheduled  | Besik          | Dorm                   |
-| 14  | S. A.   | 3rd year CS student, multiple courses         | WhatsApp        | Mar 26         | -              | Contacted  | Giorgi         | Might reschedule       |
-| 15  | B. K.   | 3rd year CS student, LMS user                 | Messenger       | Mar 26         | -              | Identified | Nikoloz K      | Backup contact         |
+| #   | Contact | ICP match reason                                | Outreach method | Date contacted | Interview date | Status     | Interviewed by | Notes                  |
+| :-- | :------ | :---------------------------------------------- | :-------------- | :------------- | :------------- | :--------- | :------------- | :--------------------- |
+| 1   | M. K.   | Uses Bus #3 daily for morning commute           | Messenger       | Mar 25         | Mar 27         | Scheduled  | Besik          | Group project teammate |
+| 2   | M. P.   | Relies on public transport, no personal vehicle | In person       | Mar 25         | Mar 28         | Scheduled  | Giorgi         | Met in class           |
+| 3   | T. C.   | Commutes from city center using Bus #3          | Messenger       | Mar 25         | Mar 29         | Contacted  | Nikoloz M      | Waiting reply          |
+| 4   | A. C.   | Daily commuter, depends on morning bus          | WhatsApp        | Mar 25         | Mar 30         | Scheduled  | Nikoloz K      | Dorm friend            |
+| 5   | A. P.   | Frequently experiences delays with Bus #3       | In person       | Mar 25         | Mar 27         | Scheduled  | Besik          | Library                |
+| 6   | B. T.   | Uses bus regularly, no alternative transport    | Messenger       | Mar 26         | -              | Contacted  | Giorgi         | No response yet        |
+| 7   | D. K.   | Commutes from Choma area using Bus #3           | In person       | Mar 26         | Mar 31         | Scheduled  | Nikoloz M      | Classmate              |
+| 8   | E. M.   | Fully dependent on public transport             | Messenger       | Mar 26         | -              | Identified | Nikoloz K      | Will contact           |
+| 9   | G. T.   | Morning commuter, waits at bus stops daily      | WhatsApp        | Mar 26         | -              | Contacted  | Besik          | Awaiting reply         |
+| 10  | M. L.   | Uses Bus #3 for lectures regularly              | In person       | Mar 26         | Apr 1          | Scheduled  | Giorgi         | Lab partner            |
+| 11  | M. D.   | Relies on bus, no private transport             | Messenger       | Mar 26         | -              | Identified | Nikoloz M      | Not contacted yet      |
+| 12  | M. B.   | Frequent delays experienced with Bus #3         | Messenger       | Mar 26         | -              | Contacted  | Nikoloz K      | Waiting reply          |
+| 13  | N. M.   | Daily commuter, uses Bus #3 every morning       | In person       | Mar 26         | Apr 2          | Scheduled  | Besik          | Dorm                   |
+| 14  | S. A.   | Uses public transport for university commute    | WhatsApp        | Mar 26         | -              | Contacted  | Giorgi         | Might reschedule       |
+| 15  | B. K.   | Off-campus student relying on bus               | Messenger       | Mar 26         | -              | Identified | Nikoloz K      | Backup contact         |
 
 ---
 
@@ -54,11 +54,11 @@ Before logging a contact, confirm they match your ICP. The screener questions ar
 
 ### Template A: Friend or classmate
 
-> "Hey [Name], I'm working on a project this semester researching how students keep track of course updates and assignments. I'm trying to understand how the LMS experience works for people. Would you have 20-30 minutes sometime this week for a quick conversation? Coffee on me if you're on campus."
+> "Hey [Name], I'm working on a project this semester about student commuting and the reliability of Bus #3. I'm trying to understand how people deal with delays and waiting times. Would you have 20–30 minutes sometime this week for a quick chat? Coffee on me if you're on campus."
 
 ### Template B: Acquaintance or warm introduction
 
-> "Hi [Name], [Mutual contact] suggested I reach out. I'm working on a university research project around LMS communication. I'm looking to have a few conversations with 3rd-year CS students who use the LMS daily. Would you be open to a 20-30 minute chat this week? It would really help our research."
+> "Hi [Name], [Mutual contact] suggested I reach out. I'm working on a university project researching commuting challenges, specifically Bus #3. I'm looking to speak with students who rely on it regularly. Would you be open to a 20–30 minute conversation this week? It would really help our research."
 
 ---
 
@@ -84,8 +84,8 @@ Before logging a contact, confirm they match your ICP. The screener questions ar
 
 ## Notes and Observations
 
-- Students who frequently use LMS are more willing to participate.
-- In-person and Messenger outreach gives the highest response rate.
-- Classmates and lab partners are the easiest to schedule.
-- Dorm students are more accessible during evening hours.
-- Follow-ups or "pings" are often necessary to get a reply.
+- Students who rely fully on Bus #3 are more willing to participate.
+- In-person outreach at bus stops is highly effective.
+- Messenger and WhatsApp provide good response rates.
+- Morning commuters are easiest to reach near bus stops.
+- Follow-ups are often necessary to secure responses.
