@@ -19,9 +19,9 @@ Before logging a contact, confirm they match your ICP. The screener questions ar
 
 | #   | Contact | ICP match reason                                | Outreach method | Date contacted | Interview date | Status     | Interviewed by | Notes                  |
 | :-- | :------ | :---------------------------------------------- | :-------------- | :------------- | :------------- | :--------- | :------------- | :--------------------- |
-| 1   | M. K.   | Uses Bus #3 daily for morning commute           | Messenger       | Mar 25         | Mar 27         | Scheduled  | Besik          | Group project teammate |
+| 1   | D. A.   | Uses Bus #3 daily for morning commute           | In person       | Mar 25         | Mar 31         | Completed  | Besik          | Group project teammate |
 | 2   | M. P.   | Relies on public transport, no personal vehicle | In person       | Mar 25         | Mar 28         | Scheduled  | Giorgi         | Met in class           |
-| 3   | T. C.   | Commutes from city center using Bus #3          | Messenger       | Mar 25         | Mar 29         | Contacted  | Nikoloz M      | Waiting reply          |
+| 3   | D. K.   | Commutes from city center using Bus #3          | In person       | Mar 25         | Mar 29         | Completed  | Nikoloz M      | Waiting reply          |
 | 4   | A. C.   | Daily commuter, depends on morning bus          | WhatsApp        | Mar 25         | Mar 30         | Scheduled  | Nikoloz K      | Dorm friend            |
 | 5   | A. P.   | Frequently experiences delays with Bus #3       | In person       | Mar 25         | Mar 27         | Scheduled  | Besik          | Library                |
 | 6   | B. T.   | Uses bus regularly, no alternative transport    | Messenger       | Mar 26         | -              | Contacted  | Giorgi         | No response yet        |
