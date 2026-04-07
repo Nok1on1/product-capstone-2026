@@ -17,36 +17,39 @@ Before logging a contact, confirm they match your ICP. The screener questions ar
 
 ## Contact Log
 
-| #   | Contact | ICP match reason                                | Outreach method | Date contacted | Interview date | Status     | Interviewed by | Notes                  |
-| :-- | :------ | :---------------------------------------------- | :-------------- | :------------- | :------------- | :--------- | :------------- | :--------------------- |
-| 1   | D. A.   | Uses Bus #3 daily for morning commute           | In person       | Mar 25         | Mar 31         | Completed  | Besik          | Group project teammate |
-| 2   | M. P.   | Relies on public transport, no personal vehicle | In person       | Mar 25         | Mar 28         | Scheduled  | Giorgi         | Met in class           |
-| 3   | D. K.   | Commutes from city center using Bus #3          | In person       | Mar 25         | Mar 29         | Completed  | Nikoloz M      | Waiting reply          |
-| 4   | A. C.   | Daily commuter, depends on morning bus          | WhatsApp        | Mar 25         | Mar 30         | Scheduled  | Nikoloz K      | Dorm friend            |
-| 5   | A. P.   | Frequently experiences delays with Bus #3       | In person       | Mar 25         | Mar 27         | Scheduled  | Besik          | Library                |
-| 6   | B. T.   | Uses bus regularly, no alternative transport    | Messenger       | Mar 26         | -              | Contacted  | Giorgi         | No response yet        |
-| 7   | D. K.   | Commutes from Choma area using Bus #3           | In person       | Mar 26         | Mar 31         | Scheduled  | Nikoloz M      | Classmate              |
-| 8   | E. M.   | Fully dependent on public transport             | Messenger       | Mar 26         | -              | Identified | Nikoloz K      | Will contact           |
-| 9   | G. T.   | Morning commuter, waits at bus stops daily      | WhatsApp        | Mar 26         | -              | Contacted  | Besik          | Awaiting reply         |
-| 10  | M. L.   | Uses Bus #3 for lectures regularly              | In person       | Mar 26         | Apr 1          | Scheduled  | Giorgi         | Lab partner            |
-| 11  | M. D.   | Relies on bus, no private transport             | Messenger       | Mar 26         | -              | Identified | Nikoloz M      | Not contacted yet      |
-| 12  | M. B.   | Frequent delays experienced with Bus #3         | Messenger       | Mar 26         | -              | Contacted  | Nikoloz K      | Waiting reply          |
-| 13  | N. M.   | Daily commuter, uses Bus #3 every morning       | In person       | Mar 26         | Apr 2          | Scheduled  | Besik          | Dorm                   |
-| 14  | S. A.   | Uses public transport for university commute    | WhatsApp        | Mar 26         | -              | Contacted  | Giorgi         | Might reschedule       |
-| 15  | B. K.   | Off-campus student relying on bus               | Messenger       | Mar 26         | -              | Identified | Nikoloz K      | Backup contact         |
+| # | Contact | ICP match reason | Outreach method | Date contacted | Interview date | Status | Interviewed by | Notes |
+| :-- | :------ | :---------------------------------------------- | :-------------- | :------------- | :------------- | :---------- | :------------- | :----------------------------------------------------- |
+| 1 | D. A. | Uses Bus #3 daily for morning commute | In person | Mar 25 | Mar 31 | Completed | Besik | Group project teammate |
+| 2 | M. P. | Relies on public transport, no personal vehicle | In person | Mar 25 | Mar 28 | Completed | Giorgi | Met in class |
+| 3 | D. K. | Commutes from city center using Bus #3 | In person | Mar 25 | Mar 29 | Completed | Nikoloz M | Completed |
+| 4 | A. C. | Daily commuter, depends on morning bus | WhatsApp | Mar 25 | Mar 30 | Completed | Nikoloz K | Dorm friend |
+| 5 | A. P. | Frequently experiences delays with Bus #3 | In person | Mar 25 | Mar 27 | Completed | Besik | Library |
+| 6 | B. T. | Uses bus regularly, no alternative transport | Messenger | Mar 26 | - | Declined | Giorgi | No response after two attempts |
+| 7 | D. K. | Commutes from Choma area using Bus #3 | In person | Mar 26 | Mar 31 | Completed | Nikoloz M | Classmate |
+| 8 | E. M. | Fully dependent on public transport | Messenger | Mar 26 | - | Contacted | Nikoloz K | Awaiting reply |
+| 9 | G. T. | Morning commuter, waits at bus stops daily | WhatsApp | Mar 26 | - | Contacted | Besik | Awaiting reply |
+| 10 | M. L. | Uses Bus #3 for lectures regularly | In person | Mar 26 | Apr 1 | Scheduled | Giorgi | Lab partner |
+| 11 | M. D. | Relies on bus, no private transport | Messenger | Mar 26 | - | Identified | Nikoloz M | Not contacted yet |
+| 12 | M. B. | Frequent delays experienced with Bus #3 | Messenger | Mar 26 | - | Contacted | Nikoloz K | Waiting reply |
+| 13 | N. M. | Daily commuter, uses Bus #3 every morning | In person | Mar 26 | Apr 2 | Scheduled | Besik | Dorm |
+| 14 | S. A. | Uses public transport for university commute | WhatsApp | Mar 26 | - | Contacted | Giorgi | Might reschedule |
+| 15 | B. K. | Off-campus student relying on bus | Messenger | Mar 26 | - | Identified | Nikoloz K | Backup contact |
+| 16 | G. A. | First-year, off-campus, Bus #3 primary route | In person (stop) | Mar 31 | Mar 31 | Completed | Bandersnatch | First-year perspective; missed 4-5 quizzes; walked sweating |
+| 17 | G. A. | Third-year, off-campus, Bus #3 only affordable | In person | Mar 31 | Mar 31 | Completed | Bandersnatch | App abandoned; calls mum for taxi; advisor said "known issue" |
+| 18 | G. A. | Second-year, off-campus with family, Bus #3 primary | Referral | Mar 31 | Mar 31 | Completed | Bandersnatch | Lied to parents about bus; "just tell me the truth"; willing to pay |
 
 ---
 
 ## Status Key
 
-| Status          | Meaning                                            |
+| Status | Meaning |
 | :-------------- | :------------------------------------------------- |
-| **Identified**  | You know who this person is and plan to reach out  |
-| **Contacted**   | You have sent the outreach message                 |
-| **Scheduled**   | Interview date and time confirmed                  |
-| **Completed**   | Interview done, log written                        |
-| **Declined**    | They said no or did not respond after two attempts |
-| **Rescheduled** | Was scheduled, moved to a new date                 |
+| **Identified** | You know who this person is and plan to reach out |
+| **Contacted** | You have sent the outreach message |
+| **Scheduled** | Interview date and time confirmed |
+| **Completed** | Interview done, log written |
+| **Declined** | They said no or did not respond after two attempts |
+| **Rescheduled** | Was scheduled, moved to a new date |
 
 ---
 
@@ -64,21 +67,21 @@ Before logging a contact, confirm they match your ICP. The screener questions ar
 
 ## Progress Summary
 
-| Week               | Target interviews        | Completed | Running total |
+| Week | Target interviews | Completed | Running total |
 | :----------------- | :----------------------- | :-------- | :------------ |
-| Week 2 (by 25 Mar) | 0 completed, 5 contacted | 0         | 0             |
-| Week 3 (by 1 Apr)  | 4 completed              | 0         | 0             |
-| Week 4 (by 9 Apr)  | 10 completed             | 0         | 0             |
+| Week 2 (by 25 Mar) | 0 completed, 5 contacted | 0 | 0 |
+| Week 3 (by 1 Apr) | 4 completed | 7 | 7 |
+| Week 4 (by 9 Apr) | 10 completed | — | — |
 
 ---
 
 ## Referral Log
 
-| Referred by | Referred person | Contact info | Status        |
+| Referred by | Referred person | Contact info | Status |
 | :---------- | :-------------- | :----------- | :------------ |
-| 1. L K      | -               | Messenger    | Not contacted |
-| 2. N A      | -               | WhatsApp     | Contacted     |
-| 5. M K      | -               | In person    | Scheduled     |
+| 1. L K | - | Messenger | Not contacted |
+| 2. N A | - | WhatsApp | Contacted |
+| 5. M K | - | In person | Scheduled |
 
 ---
 
@@ -89,3 +92,7 @@ Before logging a contact, confirm they match your ICP. The screener questions ar
 - Messenger and WhatsApp provide good response rates.
 - Morning commuters are easiest to reach near bus stops.
 - Follow-ups are often necessary to secure responses.
+- First-year students show highest frustration and least normalisation.
+- Trust in the tracking app follows a decay arc: reliance → disappointment → abandonment.
+- Students explicitly value honest information over optimistic predictions.
+- Some participants have expressed willingness to pay for accurate real-time data.
