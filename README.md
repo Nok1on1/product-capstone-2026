@@ -25,4 +25,4 @@ We are currently in the problem discovery phase (Week 2). Problem selection happ
 
 ## Status
 
-Week 2 -- Team formation complete. Problem brainstorming in progress.
+Week 6 -- Interviews Taken and Processed
