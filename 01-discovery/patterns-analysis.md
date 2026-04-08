@@ -8,13 +8,13 @@
 
 ## Frequency Table
 
-| Rank | Pattern Name | Interviews Mentioning | Percentage | Pain Intensity (1–5) | Combined Score |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Fear-based early departure as daily norm | 12 / 12 | 100% | 5 | 5.0 |
-| 2 | Tracking tools are actively misleading | 10 / 12 | 83% | 5 | 4.2 |
-| 3 | Financial penalty when the bus fails | 10 / 12 | 83% | 4 | 3.3 |
-| 4 | Direct academic harm (quizzes, grades, GPA) | 9 / 12 | 75% | 4 | 3.0 |
-| 5 | Overcrowding as a physical and health burden | 5 / 12 | 42% | 3 | 1.3 |
+| Rank | Pattern Name                                 | Interviews Mentioning | Percentage | Pain Intensity (1–5) | Combined Score |
+| ---- | -------------------------------------------- | --------------------- | ---------- | -------------------- | -------------- |
+| 1    | Fear-based early departure as daily norm     | 12 / 12               | 100%       | 5                    | 5.0            |
+| 2    | Tracking tools are actively misleading       | 10 / 12               | 83%        | 5                    | 4.2            |
+| 3    | Financial penalty when the bus fails         | 10 / 12               | 83%        | 4                    | 3.3            |
+| 4    | Direct academic harm (quizzes, grades, GPA)  | 9 / 12                | 75%        | 4                    | 3.0            |
+| 5    | Overcrowding as a physical and health burden | 5 / 12                | 42%        | 3                    | 1.3            |
 
 ---
 
@@ -61,12 +61,12 @@ Answer: The tracking system was likely designed around published timetables, not
 
 ### Current Workarounds
 
-| Workaround | Who Uses It | How Well It Works | Why It Falls Short |
-| --- | --- | --- | --- |
-| Leaving 1.5–3 hours before class | P01, P02, P03, P04, P05, P07, P08, P09, P10, P11 | Prevents most late arrivals | Consumes hours of productive time daily; still fails in worst-case cancellations |
-| Coordinating with friends who have cars | P12 | Works occasionally | Unreliable; depends on a friend having class at the same time |
-| Walking the full route to campus | P05 | Guarantees arrival | Physically exhausting; student arrives sweating and unable to participate normally |
-| Sitting in KIU lobby for hours | P10 | Eliminates bus risk entirely | 2.5 hours of daily dead time for a working student losing billable hours |
+| Workaround                              | Who Uses It                                      | How Well It Works            | Why It Falls Short                                                                 |
+| --------------------------------------- | ------------------------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------- |
+| Leaving 1.5–3 hours before class        | P01, P02, P03, P04, P05, P07, P08, P09, P10, P11 | Prevents most late arrivals  | Consumes hours of productive time daily; still fails in worst-case cancellations   |
+| Coordinating with friends who have cars | P12                                              | Works occasionally           | Unreliable; depends on a friend having class at the same time                      |
+| Walking the full route to campus        | P05                                              | Guarantees arrival           | Physically exhausting; student arrives sweating and unable to participate normally |
+| Sitting in KIU lobby for hours          | P10                                              | Eliminates bus risk entirely | 2.5 hours of daily dead time for a working student losing billable hours           |
 
 ---
 
@@ -114,12 +114,12 @@ Answer: The university advisor acknowledged it as a "known issue" with no action
 
 ### Current Workarounds
 
-| Workaround | Who Uses It | How Well It Works | Why It Falls Short |
-| --- | --- | --- | --- |
-| Abandoned the app entirely | P04, P06 | Removes false expectations | Student is left with no information at all |
-| Check Messenger group chats | P11 | Occasional real reports from peers | Groups are "echo chambers of complaints," not reliable data |
-| Screenshot the app to track changes over time | P06 | Provided some insight for a while | Eventually stopped working as trust eroded |
-| Ask locals at the stop | P12 | Sometimes yields a real answer | Depends on someone nearby having current knowledge |
+| Workaround                                    | Who Uses It | How Well It Works                  | Why It Falls Short                                          |
+| --------------------------------------------- | ----------- | ---------------------------------- | ----------------------------------------------------------- |
+| Abandoned the app entirely                    | P04, P06    | Removes false expectations         | Student is left with no information at all                  |
+| Check Messenger group chats                   | P11         | Occasional real reports from peers | Groups are "echo chambers of complaints," not reliable data |
+| Screenshot the app to track changes over time | P06         | Provided some insight for a while  | Eventually stopped working as trust eroded                  |
+| Ask locals at the stop                        | P12         | Sometimes yields a real answer     | Depends on someone nearby having current knowledge          |
 
 ---
 
@@ -168,12 +168,12 @@ Answer: The system doesn't know — or doesn't communicate — when a bus is can
 
 ### Current Workarounds
 
-| Workaround | Who Uses It | How Well It Works | Why It Falls Short |
-| --- | --- | --- | --- |
-| Call a Maxim / taxi as emergency rescue | P03, P04, P09, P11 | Gets them to campus | Costs 6–10 GEL; often eats into food or daily budget |
-| Borrow money from parents via transfer | P04 | Solves the immediate problem | Humiliating; unsustainable as a daily fallback |
-| Walk the full route | P05 | Free | 40+ minutes; student arrives physically exhausted |
-| Skip the session entirely | P11 | Avoids the cost | Academic consequence replaces financial one |
+| Workaround                              | Who Uses It        | How Well It Works            | Why It Falls Short                                   |
+| --------------------------------------- | ------------------ | ---------------------------- | ---------------------------------------------------- |
+| Call a Maxim / taxi as emergency rescue | P03, P04, P09, P11 | Gets them to campus          | Costs 6–10 GEL; often eats into food or daily budget |
+| Borrow money from parents via transfer  | P04                | Solves the immediate problem | Humiliating; unsustainable as a daily fallback       |
+| Walk the full route                     | P05                | Free                         | 40+ minutes; student arrives physically exhausted    |
+| Skip the session entirely               | P11                | Avoids the cost              | Academic consequence replaces financial one          |
 
 ---
 
@@ -222,12 +222,12 @@ Answer: The university and the city transit system operate entirely independentl
 
 ### Current Workarounds
 
-| Workaround | Who Uses It | How Well It Works | Why It Falls Short |
-| --- | --- | --- | --- |
-| Negotiate a retake with the professor | P12 | Sometimes granted | Requires individual advocacy; not always available; adds an hour to the student's day |
-| Arrive 2+ hours early as insurance | P01, P03, P09 | Prevents most late arrivals | Time cost is enormous; still fails during full cancellations |
-| Text a classmate to sign attendance | Not stated | Unknown | Risk of academic dishonesty if formally prohibited |
-| Accept the absence and move on | P11 | Avoids the argument | Permanent grade damage; contributes to academic disengagement |
+| Workaround                            | Who Uses It   | How Well It Works           | Why It Falls Short                                                                    |
+| ------------------------------------- | ------------- | --------------------------- | ------------------------------------------------------------------------------------- |
+| Negotiate a retake with the professor | P12           | Sometimes granted           | Requires individual advocacy; not always available; adds an hour to the student's day |
+| Arrive 2+ hours early as insurance    | P01, P03, P09 | Prevents most late arrivals | Time cost is enormous; still fails during full cancellations                          |
+| Text a classmate to sign attendance   | Not stated    | Unknown                     | Risk of academic dishonesty if formally prohibited                                    |
+| Accept the absence and move on        | P11           | Avoids the argument         | Permanent grade damage; contributes to academic disengagement                         |
 
 ---
 
@@ -275,11 +275,11 @@ Answer: No evidence of demand data being collected or shared with the operator. 
 
 ### Current Workarounds
 
-| Workaround | Who Uses It | How Well It Works | Why It Falls Short |
-| --- | --- | --- | --- |
-| Walk between stops to board at a less crowded point | P07 | Slightly less crowded | Adds walking time; still overcrowded at any stop along a busy route |
-| Schedule "recovery time" after the commute | P07 | Protects commitments later in the day | Destroys schedule flexibility; reinforces "waiting mode" |
-| Leave earlier to board before peak crowd | P08, P09 | Sometimes secures a seat | Extends the daily buffer further; doesn't solve safety risk |
+| Workaround                                          | Who Uses It | How Well It Works                     | Why It Falls Short                                                  |
+| --------------------------------------------------- | ----------- | ------------------------------------- | ------------------------------------------------------------------- |
+| Walk between stops to board at a less crowded point | P07         | Slightly less crowded                 | Adds walking time; still overcrowded at any stop along a busy route |
+| Schedule "recovery time" after the commute          | P07         | Protects commitments later in the day | Destroys schedule flexibility; reinforces "waiting mode"            |
+| Leave earlier to board before peak crowd            | P08, P09    | Sometimes secures a seat              | Extends the daily buffer further; doesn't solve safety risk         |
 
 ---
 
@@ -298,6 +298,6 @@ Pattern 5 (overcrowding) is partially independent but connected. Reducing cancel
 ## Team Sign-Off
 
 - [x] Nikoloz Modebadze
-- [ ] Besik Meskhia
+- [x] Besik Meskhia
 - [ ] Nikoloz Kvirikashvili
 - [ ] Giorgi Miqaberidze
