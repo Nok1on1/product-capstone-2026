@@ -12,6 +12,57 @@
 
 ---
 
+## Ideal Customer Profile (ICP)
+
+**Primary ICP:** KIU undergraduate students in years 2–4, carrying 5+ courses per semester, who live off-campus in Kutaisi or surrounding areas (Terjola, Samtredia, Khoni) and rely on municipal Bus #3 as their sole or primary commute method to campus.
+
+**ICP Characteristics:**
+- Commutes 5+ days per week via Bus #3
+- Has early morning classes (9:00 AM or earlier) at least 3 days per week
+- Limited disposable income (taxi fare competes with food budget)
+- No personal vehicle or reliable alternative transportation
+- Intercity commuters (Terjola/Samtredia) are a high-pain subsegment facing multi-stage journeys
+
+**Evidence:** "I wake up at like 7:00 AM in Samtredia. I have to catch a marshrutka to get into Kutaisi. By the time I get to the #3 bus stop, it's already 8:00 AM. I just stand there leaning against a wall, hoping the bus shows up so I don't miss my first lecture." (P11 — Tsira B.)
+
+---
+
+## Pain Intensity and Frequency Assessment
+
+| Pain Point | Frequency | Intensity (1–5) | Evidence |
+| --- | --- | --- | --- |
+| Tracking app/tableau provides false information | 10/12 (83%) | 5 | "I arrived at a stop... when I see that number three is coming in five minutes. Five minutes pass and countdown starts again and it says 59 minutes." (P01) |
+| Extreme early departure as coping strategy | 12/12 (100%) | 5 | "I wake up at least three hours before my lecture. So if I have it on 9am, I get up at 6am." (P03) |
+| Financial penalty when bus fails | 10/12 (83%) | 4 | "I had to call taxi — not just regular taxi but also express taxi which costed me extra funds and as a university student I don't have that kind of funds." (P03) |
+| Direct academic harm (missed quizzes, GPA drop) | 9/12 (75%) | 4 | "It affected my GPA. I mean, I was late on quizzes, seminars, so scores went down and GPA went down." (P01) |
+| Overcrowding as physical burden | 5/12 (42%) | 3 | "I physically could not breathe. There were so many people packed in there... I had to get down because I couldn't breathe." (P07) |
+
+**Overall Pain Score:** 4.2 / 5 (Weighted average across all participants)  
+**Confirmation Rate:** 100% (12/12 interviews confirmed problem exists)
+
+---
+
+## Why Existing Solutions Are Insufficient
+
+### Current Workarounds Students Use
+
+| Solution | How Students Use It | Why It Fails |
+| --- | --- | --- |
+| **Official tracking app/tableau** | Check countdown before leaving home or at stop | Actively misleading — countdowns reset, freeze, or show buses that never arrive; 10 of 12 students abandoned it |
+| **Extreme early departure (1.5–3 hour buffer)** | Leave home 2+ hours before class to guarantee arrival | Consumes 5–12 hours per week; sleep disruption; still fails during full cancellations |
+| **Emergency taxi/Maxim** | Call taxi when bus is >20 min late or cancelled | Costs 6–10 GEL per incident; competes with food budget; described as "embarrassing" when borrowing from parents |
+| **Walking the full route** | Walk 40+ minutes to campus when bus fails | Arrives exhausted and sweating; dignity cost; impossible in bad weather |
+| **Messenger/WhatsApp groups** | Ask peers about bus status in group chats | "Echo chamber of complaints" — no real-time data; anecdotal and unreliable |
+| **Checking Instagram/TikTok** | Scroll social media at stop while waiting | Time wasted; no actual information gained |
+
+### Root Cause of Solution Failure
+
+The official tracking tools fail because they were built as **timetable broadcasting systems**, not real-time operational tools. The university and municipal transit operator operate independently with no shared accountability. Students have learned through repeated failure that the system cannot be trusted, forcing them into costly coping behaviors that consume time, money, and wellbeing.
+
+**Evidence:** "I stopped using it after it told me the bus was two minutes away for thirty minutes straight. I just stood there like an idiot. Now I just go early and hope." (P04 — Mariam)
+
+---
+
 ## Component Breakdown
 
 ### WHO
