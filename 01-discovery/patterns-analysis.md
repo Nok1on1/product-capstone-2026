@@ -299,5 +299,5 @@ Pattern 5 (overcrowding) is partially independent but connected. Reducing cancel
 
 - [x] Nikoloz Modebadze
 - [x] Besik Meskhia
-- [ ] Nikoloz Kvirikashvili
+- [X] Nikoloz Kvirikashvili
 - [x] Giorgi Miqaberidze
