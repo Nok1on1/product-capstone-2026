@@ -14,7 +14,7 @@
 | Total stickies | 61 |
 | Tool | Miro |
 | Board link | <https://miro.com/app/board/uXjVGmcZpw8=/?share_link_id=197920000861> |
-| Image file | <img width="1293" height="289" alt="image" src="https://github.com/user-attachments/assets/60758385-14b0-496c-a578-3042377bff75" /> |
+| Image file | ![Affinity Map](Affinity%20Map.jpg) |
 | Team members present | Nikoloz Modebadze, Giorgi Mikaberidze, Nikoloz Kvirikashvili, Besik Meskhia |
 | --- | --- |
 
