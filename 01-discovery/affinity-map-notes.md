@@ -16,8 +16,6 @@
 | Board link | <https://miro.com/app/board/uXjVGmcZpw8=/?share_link_id=197920000861> |
 | Image file | ![Affinity Map](Affinity%20Map.jpg) |
 | Team members present | Nikoloz Modebadze, Giorgi Mikaberidze, Nikoloz Kvirikashvili, Besik Meskhia |
-| --- | --- |
-
 ---
 
 ## Clusters
