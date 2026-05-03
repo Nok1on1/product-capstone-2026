@@ -1,3 +1,4 @@
+<img width="1080" height="1080" alt="Eye" src="https://github.com/user-attachments/assets/3bd67dca-5df7-4dc0-8b21-1db488f90e13" />
 # Bandersnatch -- Product Capstone 2026
 
 **Course:** CS-PD-2026 Product Development for Software Engineers
