@@ -4,16 +4,16 @@
 **Product:** Bus #3 Real-Time Tracker
 **Tool:** Google Stitch (https://stitch.withgoogle.com)
 **Created:** April 21, 2026
-**Status:** Draft (Lab 5) / Final (by April 23)
+**Status:** Finished
 
 ---
 
 ## Prototype Link
 
 **Stitch shareable link:**
-[Paste your Stitch shareable link here after creating in Lab 5]
+<https://stitch.withgoogle.com/projects/2218021865639894004>
 
-**Tested in incognito window:** ☐ Yes ☐ No (must be Yes before submission)
+**Tested in incognito window:** Yes
 
 ---
 
@@ -25,7 +25,7 @@ User opens the app, selects their bus stop, receives a confirmed bus arrival sta
 **Screens included:**
 
 | Screen | Purpose | Activation Event Fired |
-|--------|---------|----------------------|
+| --- | --- | --- |
 | Home/Landing Screen | User opens app, sees welcome and bus stop selector | None |
 | Bus Stop Selection | User selects their bus stop (e.g., KIU Main Gate) | None |
 | Status Display | User sees confirmed bus arrival status | `bus_status_confirmed` (activation) |
@@ -39,7 +39,7 @@ User opens the app, selects their bus stop, receives a confirmed bus arrival sta
 
 ## Stitch Brief Used
 
-```
+```plaintext
 Product name: Bus #3 Real-Time Tracker (Bandersnatch)
 
 Primary user: KIU university students who commute via Bus #3 and need reliable, honest real-time bus arrival information to eliminate fear-based early departure.
@@ -93,15 +93,6 @@ This prototype is the design blueprint. Lab 6 adds:
 
 **Live app URL (completed after Lab 6):**
 [Paste Vercel deployment URL here after Lab 6]
-
----
-
-## Export (if available)
-
-If Stitch offered a code export option, note it here:
-
-**Export format:** HTML/CSS/JS
-**Export file location in repo:** `02-design/prototypes/high-fidelity/stitch-export/`
 
 ---
 

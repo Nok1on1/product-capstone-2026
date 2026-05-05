@@ -9,7 +9,7 @@
 
 ## Our North Star Metric
 
-```
+```plaintext
 [Number] of [action] per [user/team] per [time period]
 ```
 
@@ -38,7 +38,7 @@ If we ship a bad release that provides false or misleading information, users wi
 ## What Our NSM Is Not
 
 | Alternative Metric | Why We Rejected It |
-|-------------------|--------------------|
+| --- | --- |
 | Daily active users | Active doing what? Checking the app is not the same as receiving value. A user could open the app and see wrong info. |
 | Total signups | Measures acquisition, not value. A user can sign up and never return if the information is unreliable. |
 | Number of bus status queries | Activity metric, not outcome. A user could query 10 times and still not trust the information. |
@@ -79,9 +79,9 @@ Which screen in our Stitch prototype directly drives this metric?
 All team members reviewed and agreed on this NSM:
 
 | Name | Role | Agreement |
-|------|------|-----------|
+| --- | --- | --- |
 | Nikoloz Kvirikashvili | Program Lead | ☐ Agreed |
-| Nikoloz Modebadze | Discovery Lead | ☐ Agreed |
+| Nikoloz Modebadze | Discovery Lead | ☑ Agreed |
 | Giorgi Mikaberidze | Tech Lead | ☐ Agreed |
 | Besik Meskhia | Flexible | ☐ Agreed |
 
@@ -92,7 +92,7 @@ All team members reviewed and agreed on this NSM:
 ## Change Log
 
 | Date | Change | Reason |
-|------|--------|--------|
+| --- | --- | --- |
 | April 21, 2026 | Initial definition | Lab 5 |
 
 ---
