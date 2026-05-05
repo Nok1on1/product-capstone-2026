@@ -33,7 +33,10 @@ function buildOsrmCoords(stops: BusStop[]): string {
 }
 
 async function fetchRoadRoute(stops: BusStop[]): Promise<[number, number][]> {
-  const url = `https://router.project-osrm.org/route/v1/driving/${buildOsrmCoords(stops)}?overview=full&geometries=geojson`;
+  const coords = buildOsrmCoords(stops);
+  // Using waypoints=0;N-1 tells OSRM to treat intermediate stops as "via" points 
+  // rather than destinations that end a leg, resulting in a smoother single-leg route.
+  const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&waypoints=0;${stops.length - 1}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`OSRM ${res.status}`);
   const data = await res.json();
@@ -43,34 +46,13 @@ async function fetchRoadRoute(stops: BusStop[]): Promise<[number, number][]> {
   );
 }
 
-// ─── Bearing between two [lat,lng] points (degrees, 0=North, clockwise) ──────
-function bearing(a: [number, number], b: [number, number]): number {
-  const toRad = (d: number) => (d * Math.PI) / 180;
-  const dLng = toRad(b[1] - a[1]);
-  const lat1 = toRad(a[0]);
-  const lat2 = toRad(b[0]);
-  const y = Math.sin(dLng) * Math.cos(lat2);
-  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
-  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
-}
-
-// ─── Arrow divIcon ────────────────────────────────────────────────────────────
-function arrowIcon(deg: number, color: string): L.DivIcon {
-  return L.divIcon({
-    html: `<div style="
-      width:0;height:0;
-      border-left:6px solid transparent;
-      border-right:6px solid transparent;
-      border-bottom:12px solid ${color};
-      transform:rotate(${deg}deg);
-      transform-origin:center center;
-      opacity:0.9;
-    "></div>`,
-    className: "",
-    iconSize: [12, 12],
-    iconAnchor: [6, 6],
-  });
-}
+// ─── Stop Icons ─────────────────────────────────────────────────────────────
+const stopIcon = (color: string) => L.divIcon({
+  html: `<div style="background-color:${color};width:12px;height:12px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>`,
+  className: "custom-stop-icon",
+  iconSize: [12, 12],
+  iconAnchor: [6, 6],
+});
 
 // ─── OffsetPolyline – imperatively adds an offset polyline via the plugin ─────
 interface OffsetPolylineProps {
@@ -84,7 +66,6 @@ interface OffsetPolylineProps {
 function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: OffsetPolylineProps) {
   const map = useMap();
   const layerRef = useRef<L.Polyline | null>(null);
-  const arrowsRef = useRef<L.Marker[]>([]);
 
   useEffect(() => {
     if (coords.length < 2) return;
@@ -96,30 +77,12 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
         layerRef.current.remove();
         layerRef.current = null;
       }
-      arrowsRef.current.forEach((m) => m.remove());
-      arrowsRef.current = [];
 
       // Offset polyline – cast to any because `offset` is injected by the plugin
       // and is not present in the standard Leaflet PolylineOptions types.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const line = L.polyline(coords, { color, weight, opacity, offset } as any).addTo(map);
       layerRef.current = line;
-
-      // Direction arrows – sample every ~20 points along the decoded geometry
-      const step = Math.max(1, Math.floor(coords.length / 20));
-      for (let i = 0; i + 1 < coords.length; i += step) {
-        const a = coords[i];
-        const b = coords[Math.min(i + 1, coords.length - 1)];
-        const deg = bearing(a, b);
-        const midLat = (a[0] + b[0]) / 2;
-        const midLng = (a[1] + b[1]) / 2;
-        const marker = L.marker([midLat, midLng], {
-          icon: arrowIcon(deg, color),
-          interactive: false,
-          zIndexOffset: 500,
-        }).addTo(map);
-        arrowsRef.current.push(marker);
-      }
     });
 
     return () => {
@@ -127,8 +90,6 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
         layerRef.current.remove();
         layerRef.current = null;
       }
-      arrowsRef.current.forEach((m) => m.remove());
-      arrowsRef.current = [];
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords, color, offset, map]);
@@ -138,7 +99,6 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
 
 // ─── Simulated bus ────────────────────────────────────────────────────────────
 function SimulatedBus() {
-  const [currentIdx, setCurrentIdx] = useState(0);
   const [position, setPosition] = useState<[number, number]>([
     toStationStops[0].lat,
     toStationStops[0].lng,
@@ -146,12 +106,10 @@ function SimulatedBus() {
   const map = useMap();
 
   useEffect(() => {
+    let idx = 0;
     const interval = setInterval(() => {
-      setCurrentIdx((prev) => {
-        const next = (prev + 1) % toStationStops.length;
-        setPosition([toStationStops[next].lat, toStationStops[next].lng]);
-        return next;
-      });
+      idx = (idx + 1) % toStationStops.length;
+      setPosition([toStationStops[idx].lat, toStationStops[idx].lng]);
     }, 3000);
     return () => clearInterval(interval);
   }, [map]);
@@ -173,6 +131,7 @@ export default function LiveMap() {
   const [toStationRoute, setToStationRoute] = useState<[number, number][]>([]);
   const [toCityRoute, setToCityRoute] = useState<[number, number][]>([]);
   const [routeError, setRouteError] = useState(false);
+  const [visibleRoute, setVisibleRoute] = useState<"none" | "station" | "city" | "both">("none");
 
   useEffect(() => {
     let cancelled = false;
@@ -226,13 +185,21 @@ export default function LiveMap() {
           url={tileUrl}
         />
 
-        {/* Offset polylines with directional arrows */}
-        <OffsetPolyline coords={toStationRoute} color="#2563eb" offset={-4} />
-        <OffsetPolyline coords={toCityRoute}    color="#d97706" offset={4}  />
+        {/* Offset polylines shown conditionally */}
+        {(visibleRoute === "station" || visibleRoute === "both") && (
+          <OffsetPolyline coords={toStationRoute} color="#2563eb" offset={-4} />
+        )}
+        {(visibleRoute === "city" || visibleRoute === "both") && (
+          <OffsetPolyline coords={toCityRoute}    color="#d97706" offset={4}  />
+        )}
 
-        {/* Stop markers – To Station */}
+        {/* Stop markers – To Station (Color Coded) */}
         {toStationStops.map((stop) => (
-          <Marker key={`station-${stop.id}`} position={[stop.lat, stop.lng]}>
+          <Marker 
+            key={`station-${stop.id}`} 
+            position={[stop.lat, stop.lng]}
+            icon={stopIcon("#2563eb")}
+          >
             <Popup className="font-sans">
               <div className="font-bold">{stop.name}</div>
               <div className="text-xs text-slate-500">To Station · Stop #{stop.id}</div>
@@ -240,9 +207,13 @@ export default function LiveMap() {
           </Marker>
         ))}
 
-        {/* Stop markers – To City Centre */}
+        {/* Stop markers – To City Centre (Color Coded) */}
         {toCityCentreStops.map((stop) => (
-          <Marker key={`city-${stop.id}`} position={[stop.lat, stop.lng]}>
+          <Marker 
+            key={`city-${stop.id}`} 
+            position={[stop.lat, stop.lng]}
+            icon={stopIcon("#d97706")}
+          >
             <Popup className="font-sans">
               <div className="font-bold">{stop.name}</div>
               <div className="text-xs text-slate-500">To City Centre · Stop #{stop.id}</div>
@@ -253,26 +224,70 @@ export default function LiveMap() {
         <SimulatedBus />
       </MapContainer>
 
-      {/* Legend overlay */}
-      <div className="absolute top-4 left-4 z-[400] bg-white dark:bg-slate-900 rounded-lg shadow-md p-3 border border-outline-variant dark:border-slate-800 max-w-[220px] transition-colors duration-200">
-        <div className="flex items-center gap-2 mb-2">
+      {/* Legend & Toggle overlay */}
+      <div className="absolute top-4 left-4 z-[400] bg-white dark:bg-slate-900 rounded-lg shadow-md p-3 border border-outline-variant dark:border-slate-800 max-w-[240px] transition-colors duration-200">
+        <div className="flex items-center gap-2 mb-3">
           <span className="material-symbols-outlined text-primary-container dark:text-blue-400">route</span>
           <h2 className="font-bold text-on-surface dark:text-slate-100">Route #3</h2>
         </div>
-        <div className="flex items-center gap-2 mb-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-blue-600 shrink-0" />
-          <p className="text-xs text-on-surface-variant dark:text-slate-400 leading-tight">
-            To Station: Colchis Fountain → Rioni
-          </p>
+        
+        <div className="space-y-3">
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400">
+              Show Route
+            </label>
+            <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-md">
+              <button 
+                onClick={() => setVisibleRoute(prev => {
+                  if (prev === "station") return "none";
+                  if (prev === "both") return "city";
+                  if (prev === "city") return "both";
+                  return "station";
+                })}
+                className={`text-[10px] py-1 rounded transition-all ${
+                  visibleRoute === "station" || visibleRoute === "both" 
+                    ? "bg-blue-600 text-white shadow-sm" 
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                To Station
+              </button>
+              <button 
+                onClick={() => setVisibleRoute(prev => {
+                  if (prev === "city") return "none";
+                  if (prev === "both") return "station";
+                  if (prev === "station") return "both";
+                  return "city";
+                })}
+                className={`text-[10px] py-1 rounded transition-all ${
+                  visibleRoute === "city" || visibleRoute === "both" 
+                    ? "bg-amber-600 text-white shadow-sm" 
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                To City
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="inline-block w-2 h-2 rounded-full bg-blue-600 shrink-0" />
+              <p className="text-[10px] text-on-surface-variant dark:text-slate-400 leading-tight">
+                Blue markers: To Station
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0" />
+              <p className="text-[10px] text-on-surface-variant dark:text-slate-400 leading-tight">
+                Amber markers: To City
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-block w-3 h-3 rounded-full bg-amber-600 shrink-0" />
-          <p className="text-xs text-on-surface-variant dark:text-slate-400 leading-tight">
-            To City: Railway Station → Colchis
-          </p>
-        </div>
+
         {routeError && (
-          <p className="text-xs text-red-400 mt-2 leading-tight">
+          <p className="text-[10px] text-red-400 mt-2 leading-tight">
             Road routing unavailable — showing straight lines
           </p>
         )}
