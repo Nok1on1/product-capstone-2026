@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/ThemeProvider";
 import { useEffect, useState } from "react";
 
 export function TopNav({ lang }: { lang: string }) {

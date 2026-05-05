@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { toStationStops, toCityCentreStops, BusStop } from "@/data/route3";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/ThemeProvider";
 
 // ─── Leaflet default icon fix ────────────────────────────────────────────────
 const DefaultIcon = L.icon({
