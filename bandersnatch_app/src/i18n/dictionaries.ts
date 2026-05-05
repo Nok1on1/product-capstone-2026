@@ -21,9 +21,12 @@ const dictionaries = {
     routes: {
       title: "Bus #3",
       subtitle: "Daily Schedule",
-      infoTitle: "Reduced Evening Service",
+      operatingHours: "Operating Hours",
+      operatingHoursValue: "7:30 AM - 10:00 PM",
+      frequency: "Frequency",
+      frequencyValue: "Every 30 minutes",
+      infoTitle: "Exceptions",
       infoText: "Please note that the 8:00 PM bus does not run. After this time, only one bus continues making trips until 10:00 PM.",
-      skipped: "Skipped"
     },
     feedback: {
       title: "How was the ride?",
@@ -62,9 +65,12 @@ const dictionaries = {
     routes: {
       title: "ავტობუსი #3",
       subtitle: "ყოველდღიური განრიგი",
-      infoTitle: "შემცირებული საღამოს სერვისი",
+      operatingHours: "სამუშაო საათები",
+      operatingHoursValue: "07:30 - 22:00",
+      frequency: "ინტერვალი",
+      frequencyValue: "ყოველ 30 წუთში",
+      infoTitle: "გამონაკლისები",
       infoText: "გთხოვთ გაითვალისწინოთ, რომ 20:00 საათზე ავტობუსი არ მოძრაობს. ამ დროის შემდეგ მხოლოდ ერთი ავტობუსი აგრძელებს მუშაობას 22:00 საათამდე.",
-      skipped: "გამოტოვებული"
     },
     feedback: {
       title: "როგორი მგზავრობა იყო?",

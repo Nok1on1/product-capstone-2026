@@ -13,7 +13,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const dict = getDictionary(lang as Locale).home;
   
   const { profile, updateProfile } = useAuth();
-  const [stop, setStop] = useState("kiu");
+  const [stop, setStop] = useState("10");
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [loadingMessage, setLoadingMessage] = useState(dict.checking);
   const [crowding, setCrowding] = useState<"Low" | "Medium" | "High">("Medium");
@@ -159,7 +159,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
             <span className="material-symbols-outlined text-lg">directions_bus</span>
             <span className="font-bold text-sm">{dict.activeBuses}</span>
           </div>
-          <div className="text-3xl font-black text-primary-container dark:text-blue-400">4</div>
+          <div className="text-3xl font-black text-primary-container dark:text-blue-400">2</div>
         </motion.div>
         <motion.div whileTap={{ scale: 0.95 }} className="bg-surface-container dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-3 flex flex-col justify-between h-24 shadow-sm cursor-pointer hover:shadow-md transition-all">
           <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">

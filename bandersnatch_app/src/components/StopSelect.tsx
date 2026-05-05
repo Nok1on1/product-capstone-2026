@@ -2,14 +2,12 @@
 
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { route3Stops } from "@/data/route3";
 
-const stops = [
-  { id: "kiu", name: "KIU Main Gate" },
-  { id: "kutaisi", name: "Kutaisi Central" },
-  { id: "terjola", name: "Terjola" },
-  { id: "samtredia", name: "Samtredia" },
-  { id: "khoni", name: "Khoni" },
-];
+const stops = route3Stops.map(stop => ({
+  id: stop.id.toString(),
+  name: stop.name
+}));
 
 interface StopSelectProps {
   value: string;

@@ -16,7 +16,7 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [stop, setStop] = useState("kiu");
+  const [stop, setStop] = useState("10");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();

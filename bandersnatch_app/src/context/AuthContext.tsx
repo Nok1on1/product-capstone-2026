@@ -38,11 +38,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (docSnap.exists()) {
             setProfile(docSnap.data() as UserProfile);
           } else {
-            setProfile({ defaultStop: "kiu" });
+            setProfile({ defaultStop: "10" });
           }
         } catch (error) {
           console.error("Error fetching profile", error);
-          setProfile({ defaultStop: "kiu" });
+          setProfile({ defaultStop: "10" });
         }
       } else {
         setProfile(null);

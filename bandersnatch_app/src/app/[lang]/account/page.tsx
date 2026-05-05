@@ -62,7 +62,7 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
           <div className="relative z-20">
             <label className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide">Saved Primary Stop</label>
             <StopSelect 
-              value={profile?.defaultStop || "kiu"} 
+              value={profile?.defaultStop || "10"} 
               onChange={(value) => updateProfile(value)} 
             />
           </div>
