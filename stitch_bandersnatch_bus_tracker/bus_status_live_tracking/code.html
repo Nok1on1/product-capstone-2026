@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bandersnatch - Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#ffeed1",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed": "#00174b",
+                    "secondary-container": "#7cf994",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "primary-fixed": "#dbe1ff",
+                    "on-tertiary-fixed-variant": "#5a4300",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface": "#faf8ff",
+                    "tertiary-fixed-dim": "#f7be1d",
+                    "secondary-fixed-dim": "#62df7d",
+                    "secondary-fixed": "#7ffc97",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed": "#002109",
+                    "surface-bright": "#faf8ff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary-container": "#007230",
+                    "tertiary-fixed": "#ffdf9a",
+                    "surface-dim": "#d2d9f4",
+                    "tertiary": "#6c5100",
+                    "background": "#faf8ff",
+                    "surface-container-high": "#e2e7ff",
+                    "surface-container": "#eaedff",
+                    "outline": "#737686",
+                    "secondary": "#006e2d",
+                    "surface-container-highest": "#dae2fd",
+                    "on-surface": "#131b2e",
+                    "on-tertiary-fixed": "#251a00",
+                    "primary-container": "#2563eb",
+                    "inverse-on-surface": "#eef0ff",
+                    "surface-tint": "#0053db",
+                    "inverse-primary": "#b4c5ff",
+                    "on-surface-variant": "#434655",
+                    "on-primary-container": "#eeefff",
+                    "tertiary-container": "#8a6800",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "on-background": "#131b2e",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#004ac6",
+                    "error-container": "#ffdad6",
+                    "surface-variant": "#dae2fd",
+                    "surface-container-low": "#f2f3ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed-variant": "#005320",
+                    "inverse-surface": "#283044"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "gutter": "16px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "sm": "12px",
+                    "xs": "8px",
+                    "base": "4px",
+                    "container-padding": "20px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Lexend"],
+                    "headline-lg": ["Lexend"],
+                    "label-sm": ["Lexend"],
+                    "body-md": ["Lexend"],
+                    "headline-md": ["Lexend"],
+                    "body-lg": ["Lexend"]
+            },
+            "fontSize": {
+                    "label-bold": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "26px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-[80px]">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-5 h-16 w-full bg-white border-b border-slate-200 docked full-width top-0 sticky z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-blue-600">directions_bus</span>
+<h1 class="text-xl font-black text-blue-600 uppercase font-headline-md tracking-tight">Bandersnatch</h1>
+</div>
+<div class="hidden md:flex items-center gap-md">
+<a class="text-blue-600 font-label-bold hover:bg-slate-50 px-3 py-2 rounded" href="#">Tracker</a>
+<a class="text-slate-500 font-label-bold hover:bg-slate-50 px-3 py-2 rounded" href="#">Broadcast</a>
+<a class="text-slate-500 font-label-bold hover:bg-slate-50 px-3 py-2 rounded" href="#">History</a>
+</div>
+</header>
+<main class="p-container-padding max-w-3xl mx-auto space-y-md">
+<!-- Status Header Card -->
+<section class="bg-white border border-[#E2E8F0] p-md flex flex-col items-center justify-center space-y-xs text-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
+<div class="flex items-center gap-base justify-center mt-base">
+<span class="bg-[#16A34A] text-white font-label-bold px-2 py-1 rounded-sm uppercase tracking-wider text-xs">CONFIRMED</span>
+<span class="bg-blue-100 text-blue-800 font-label-bold px-2 py-1 rounded-sm text-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">sensors</span> Live Student Tracking
+                </span>
+</div>
+<h2 class="text-headline-lg font-headline-lg text-primary-container mt-sm">12 min</h2>
+<p class="font-body-lg text-on-surface-variant">Estimated Arrival at <span class="font-bold">Student Union</span></p>
+<p class="font-body-md text-slate-500 flex items-center justify-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">groups</span> Medium Capacity
+            </p>
+</section>
+<!-- Crowdsource Broadcast Toggle -->
+<section class="bg-[#F8FAFC] border border-[#E2E8F0] p-md rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<div class="bg-blue-100 p-2 rounded-full text-blue-600">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</div>
+<div>
+<h3 class="font-headline-md text-[18px] text-on-surface">I'm on Bus #3</h3>
+<p class="font-body-md text-sm text-slate-500">Broadcast location to help others</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</section>
+<!-- Reporting Action -->
+<section class="grid grid-cols-2 gap-sm">
+<button class="bg-white border-2 border-[#E2E8F0] py-sm px-md flex flex-col items-center justify-center gap-xs active:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-slate-400 text-2xl">visibility_off</span>
+<span class="font-label-bold text-on-surface">Not Here</span>
+</button>
+<button class="bg-primary-container text-white py-sm px-md flex flex-col items-center justify-center gap-xs active:bg-blue-700 transition-colors">
+<span class="material-symbols-outlined text-white text-2xl">check_circle</span>
+<span class="font-label-bold text-white">Bus is Here</span>
+</button>
+</section>
+<!-- Upcoming Stops -->
+<section class="bg-white border border-[#E2E8F0] mt-md">
+<div class="p-md border-b border-[#E2E8F0] bg-[#F8FAFC]">
+<h3 class="font-headline-md text-[18px] text-on-surface">Upcoming Stops</h3>
+</div>
+<div class="p-0">
+<div class="flex items-start gap-md p-md border-b border-slate-100 relative">
+<div class="flex flex-col items-center absolute left-md top-md bottom-0">
+<div class="w-3 h-3 rounded-full bg-primary-container mt-1"></div>
+<div class="w-0.5 h-full bg-slate-200 my-1"></div>
+</div>
+<div class="ml-xl flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-bold text-on-surface text-[16px]">Engineering Bldg</h4>
+<span class="font-label-bold text-primary-container">4 min</span>
+</div>
+<p class="font-body-md text-sm text-slate-500">Stop 12</p>
+</div>
+</div>
+<div class="flex items-start gap-md p-md border-b border-slate-100 relative">
+<div class="flex flex-col items-center absolute left-md top-md bottom-0">
+<div class="w-3 h-3 rounded-full bg-white border-2 border-primary-container mt-1"></div>
+<div class="w-0.5 h-full bg-slate-200 my-1"></div>
+</div>
+<div class="ml-xl flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-bold text-on-surface text-[16px]">Library South</h4>
+<span class="font-label-bold text-slate-600">8 min</span>
+</div>
+<p class="font-body-md text-sm text-slate-500">Stop 13</p>
+</div>
+</div>
+<div class="flex items-start gap-md p-md relative">
+<div class="flex flex-col items-center absolute left-md top-md bottom-0">
+<div class="w-3 h-3 rounded-full bg-white border-2 border-primary-container mt-1"></div>
+</div>
+<div class="ml-xl flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-label-bold text-on-surface text-[16px]">Student Union</h4>
+<span class="font-label-bold text-slate-600">12 min</span>
+</div>
+<p class="font-body-md text-sm text-slate-500">Stop 14 • Current Destination</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-white border-t border-slate-200 md:hidden min-h-[48px]">
+<button class="flex flex-col items-center justify-center bg-blue-50 text-blue-600 rounded-lg py-2 px-4 active:bg-slate-100">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-lexend text-xs font-bold">Tracker</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 py-2 px-4 hover:text-blue-600 active:bg-slate-100">
+<span class="material-symbols-outlined mb-1">sensors</span>
+<span class="font-lexend text-xs font-bold">Broadcast</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-500 py-2 px-4 hover:text-blue-600 active:bg-slate-100">
+<span class="material-symbols-outlined mb-1">history</span>
+<span class="font-lexend text-xs font-bold">History</span>
+</button>
+</nav>
+</body></html>

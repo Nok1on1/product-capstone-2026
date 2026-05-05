@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Route Map View</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#0053db",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed-dim": "#f7be1d",
+                        "surface-variant": "#dae2fd",
+                        "surface-container": "#eaedff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdf9a",
+                        "secondary-fixed-dim": "#62df7d",
+                        "surface-container-highest": "#dae2fd",
+                        "background": "#faf8ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-fixed": "#00174b",
+                        "primary-container": "#2563eb",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#131b2e",
+                        "on-secondary-fixed": "#002109",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-surface-variant": "#434655",
+                        "surface-bright": "#faf8ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-secondary-fixed-variant": "#005320",
+                        "on-primary-container": "#eeefff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#7ffc97",
+                        "surface": "#faf8ff",
+                        "on-background": "#131b2e",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "primary": "#004ac6",
+                        "outline": "#737686",
+                        "on-secondary-container": "#007230",
+                        "on-tertiary-container": "#ffeed1",
+                        "on-tertiary-fixed-variant": "#5a4300",
+                        "tertiary-container": "#8a6800",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#283044",
+                        "tertiary": "#6c5100",
+                        "secondary-container": "#7cf994",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary": "#006e2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "lg": "24px",
+                        "container-padding": "20px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "xs": "8px",
+                        "base": "4px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Lexend"],
+                        "headline-lg": ["Lexend"],
+                        "headline-md": ["Lexend"],
+                        "body-lg": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "label-bold": ["Lexend"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background antialiased selection:bg-primary selection:text-on-primary font-body-md text-body-md min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-white flex items-center justify-between px-5 h-16 w-full border-b-2 border-slate-100 fixed top-0 z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-blue-600" style="font-variation-settings: 'FILL' 1;">directions_bus</span>
+<span class="text-xl font-black tracking-tighter text-blue-600">Bandersnatch</span>
+</div>
+<button class="active:scale-95 transition-all duration-150 rounded-full hover:bg-slate-50 p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-blue-600" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="pt-[88px] pb-[104px] px-container-padding max-w-2xl mx-auto w-full">
+<!-- Header Section -->
+<div class="mb-xl flex items-center justify-between bg-surface-container-low p-md rounded-xl border border-outline-variant">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-base">Bus #3</h1>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-base">
+<span class="material-symbols-outlined text-[18px]">route</span>
+                    Campus to City Center
+                </p>
+</div>
+<div class="bg-[#16A34A] text-white font-label-bold text-label-bold px-sm py-xs rounded uppercase tracking-wider shadow-sm">
+                Active
+            </div>
+</div>
+<!-- Vertical Timeline Route Map -->
+<div class="relative pl-xs">
+<!-- High-Contrast Timeline Line -->
+<div class="absolute left-[23px] top-6 bottom-8 w-1 bg-primary rounded-full"></div>
+<!-- Stop 1: KIU Main Gate -->
+<div class="relative flex gap-md mb-xs">
+<div class="relative z-10 w-10 h-10 rounded-full border-2 border-primary bg-surface-container-lowest flex items-center justify-center shrink-0 mt-1 shadow-sm">
+<div class="w-4 h-4 rounded-full bg-primary"></div>
+</div>
+<div class="flex-1 pt-2 pb-sm border-b border-outline-variant/30">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-base">KIU Main Gate</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                        Current Location
+                    </p>
+</div>
+</div>
+<!-- Travel Time 1 -->
+<div class="relative flex gap-md mb-xs pl-[40px] py-xs">
+<div class="flex items-center gap-sm bg-surface-container py-xs px-sm rounded-lg border border-outline-variant/50 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-bold text-label-bold">15 mins</span>
+</div>
+</div>
+<!-- Stop 2: Kutaisi Central -->
+<div class="relative flex gap-md mb-xs">
+<div class="relative z-10 w-10 h-10 rounded-full border-2 border-primary bg-surface-container-lowest flex items-center justify-center shrink-0 mt-1 shadow-sm">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-primary"></div>
+</div>
+<div class="flex-1 pt-2 pb-sm border-b border-outline-variant/30">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-base">Kutaisi Central</h2>
+</div>
+</div>
+<!-- Travel Time 2 -->
+<div class="relative flex gap-md mb-xs pl-[40px] py-xs">
+<div class="flex items-center gap-sm bg-surface-container py-xs px-sm rounded-lg border border-outline-variant/50 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-bold text-label-bold">20 mins</span>
+</div>
+</div>
+<!-- Stop 3: Terjola -->
+<div class="relative flex gap-md mb-xs">
+<div class="relative z-10 w-10 h-10 rounded-full border-2 border-primary bg-surface-container-lowest flex items-center justify-center shrink-0 mt-1 shadow-sm">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-primary"></div>
+</div>
+<div class="flex-1 pt-2 pb-sm border-b border-outline-variant/30">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-base">Terjola</h2>
+</div>
+</div>
+<!-- Travel Time 3 -->
+<div class="relative flex gap-md mb-xs pl-[40px] py-xs">
+<div class="flex items-center gap-sm bg-surface-container py-xs px-sm rounded-lg border border-outline-variant/50 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-bold text-label-bold">15 mins</span>
+</div>
+</div>
+<!-- Stop 4: Samtredia -->
+<div class="relative flex gap-md mb-xs">
+<div class="relative z-10 w-10 h-10 rounded-full border-2 border-primary bg-surface-container-lowest flex items-center justify-center shrink-0 mt-1 shadow-sm">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-primary"></div>
+</div>
+<div class="flex-1 pt-2 pb-sm border-b border-outline-variant/30">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-base">Samtredia</h2>
+</div>
+</div>
+<!-- Travel Time 4 -->
+<div class="relative flex gap-md mb-xs pl-[40px] py-xs">
+<div class="flex items-center gap-sm bg-surface-container py-xs px-sm rounded-lg border border-outline-variant/50 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="font-label-bold text-label-bold">25 mins</span>
+</div>
+</div>
+<!-- Stop 5: Khoni -->
+<div class="relative flex gap-md mb-xs">
+<div class="relative z-10 w-10 h-10 rounded-full border-2 border-primary bg-surface-container-lowest flex items-center justify-center shrink-0 mt-1 shadow-sm">
+<div class="w-4 h-4 rounded-full bg-surface-container-lowest border-2 border-primary"></div>
+</div>
+<div class="flex-1 pt-2 pb-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-base">Khoni</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">flag</span>
+                        Terminus
+                    </p>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-white border-t-2 border-slate-100 fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe z-50 rounded-t-none">
+<!-- Active: Map -->
+<button class="flex flex-col items-center justify-center text-blue-600 bg-blue-50 rounded-lg py-1 px-3 active:scale-90 transition-transform duration-100 hover:text-blue-500 w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-['Lexend'] text-[12px] font-semibold mt-1">Map</span>
+</button>
+<!-- Inactive: Schedule -->
+<button class="flex flex-col items-center justify-center text-slate-400 py-1 px-3 active:scale-90 transition-transform duration-100 hover:text-blue-500 w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">calendar_month</span>
+<span class="font-['Lexend'] text-[12px] font-semibold mt-1">Schedule</span>
+</button>
+<!-- Inactive: Feedback -->
+<button class="flex flex-col items-center justify-center text-slate-400 py-1 px-3 active:scale-90 transition-transform duration-100 hover:text-blue-500 w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">thumbs_up_down</span>
+<span class="font-['Lexend'] text-[12px] font-semibold mt-1">Feedback</span>
+</button>
+<!-- Inactive: Profile -->
+<button class="flex flex-col items-center justify-center text-slate-400 py-1 px-3 active:scale-90 transition-transform duration-100 hover:text-blue-500 w-16">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-['Lexend'] text-[12px] font-semibold mt-1">Profile</span>
+</button>
+</nav>
+</body></html>

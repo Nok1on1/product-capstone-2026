@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bus Status Display</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#7cf994",
+                        "on-primary-fixed": "#00174b",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#006e2d",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error": "#ba1a1a",
+                        "background": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "on-tertiary-container": "#ffeed1",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#dae2fd",
+                        "tertiary-fixed": "#ffdf9a",
+                        "on-surface": "#131b2e",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-container": "#2563eb",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-fixed-variant": "#005320",
+                        "outline": "#737686",
+                        "surface-bright": "#faf8ff",
+                        "primary": "#004ac6",
+                        "surface-tint": "#0053db",
+                        "surface-variant": "#dae2fd",
+                        "surface-container": "#eaedff",
+                        "secondary-fixed": "#7ffc97",
+                        "error-container": "#ffdad6",
+                        "on-background": "#131b2e",
+                        "on-secondary-fixed": "#002109",
+                        "surface": "#faf8ff",
+                        "surface-container-low": "#f2f3ff",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "inverse-surface": "#283044",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#5a4300",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "on-surface-variant": "#434655",
+                        "tertiary-fixed-dim": "#f7be1d",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-secondary-container": "#007230",
+                        "tertiary": "#6c5100",
+                        "inverse-on-surface": "#eef0ff",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-container-high": "#e2e7ff",
+                        "tertiary-container": "#8a6800",
+                        "secondary-fixed-dim": "#62df7d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "20px",
+                        "xl": "32px",
+                        "base": "4px",
+                        "xs": "8px",
+                        "sm": "12px",
+                        "lg": "24px",
+                        "gutter": "16px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "body-md": ["Lexend"],
+                        "headline-md": ["Lexend"],
+                        "body-lg": ["Lexend"],
+                        "headline-lg": ["Lexend"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-14 px-4 w-full sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-4">
+<button class="text-blue-600 dark:text-blue-500 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded-full active:opacity-80 transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-xl font-black text-blue-600 dark:text-blue-500 tracking-tighter font-['Lexend']">Bandersnatch</h1>
+</div>
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden border border-slate-200">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-container-padding pb-32 max-w-3xl mx-auto w-full flex flex-col gap-lg">
+<!-- Status Header Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg flex flex-col items-center text-center gap-md">
+<div class="flex flex-col items-center gap-xs">
+<div class="h-16 w-16 bg-primary-container rounded-full flex items-center justify-center text-on-primary-container mb-2">
+<span class="material-symbols-outlined text-[32px]" data-icon="directions_bus">directions_bus</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Bus #3</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">North Campus Route</p>
+</div>
+<!-- Arrival Time -->
+<div class="py-md">
+<div class="font-headline-lg text-[64px] leading-none tracking-tighter text-primary">
+                    12 <span class="font-headline-md text-headline-md text-on-surface-variant">min</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Estimated Arrival</p>
+</div>
+<!-- Badges -->
+<div class="flex gap-sm justify-center w-full mt-2">
+<span class="bg-[#16A34A] text-white font-label-bold text-label-bold px-4 py-2 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    CONFIRMED
+                </span>
+<!-- Example of Estimated Badge (Hidden normally, shown for reference if needed)
+                <span class="bg-[#EAB308] text-[#0F172A] font-label-bold text-label-bold px-4 py-2 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[16px]">schedule</span>
+                    ESTIMATED
+                </span>
+                -->
+</div><div class="w-full mt-6 p-4 bg-tertiary-container text-on-tertiary-container rounded-xl flex flex-col gap-3 shadow-sm">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[24px]">local_taxi</span>
+<p class="font-body-md text-sm font-semibold">Bus delayed? Split a taxi with other students</p>
+</div>
+<button class="w-full bg-tertiary text-on-tertiary py-2 px-4 rounded-lg font-label-bold text-label-bold hover:opacity-90 active:scale-[0.98] transition-all">
+        FIND PARTNERS
+    </button>
+</div><div class="w-full pt-6 mt-6 border-t border-outline-variant flex flex-col items-center gap-4">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">Is the bus here?</h3>
+<div class="flex gap-3 w-full">
+<button class="flex-1 bg-[#16A34A] text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">thumb_up</span>
+            Yes, it's here
+        </button>
+<button class="flex-1 bg-error text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]">thumb_down</span>
+            No, it's late
+        </button>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm">
+<span class="material-symbols-outlined text-[16px]">person</span>
+<span>4 students reported recently</span>
+</div>
+</div>
+</section>
+<!-- Details Bento Grid -->
+<div class="grid grid-cols-2 gap-sm">
+<!-- Crowding Level -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="group">group</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Capacity</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface flex items-end gap-2">
+                    Low Crowding
+                    <div class="flex gap-1 mb-2">
+<div class="h-2 w-2 rounded-full bg-[#16A34A]"></div>
+<div class="h-2 w-2 rounded-full bg-outline-variant"></div>
+<div class="h-2 w-2 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+</div>
+<!-- Next Stop -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="pin_drop">pin_drop</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">Next Stop</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface truncate">
+                    Library Main
+                </div>
+</div>
+</div>
+<!-- Progress Timeline -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg mt-sm">
+<h3 class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider mb-6">Upcoming Stops</h3>
+<div class="flex flex-col gap-0 relative">
+<!-- Line -->
+<div class="absolute left-[11px] top-4 bottom-8 w-[2px] bg-outline-variant z-0"></div>
+<!-- Stop 1 -->
+<div class="flex items-start gap-4 relative z-10 pb-6">
+<div class="mt-1 h-6 w-6 rounded-full bg-primary flex items-center justify-center border-2 border-surface-container-lowest">
+<div class="h-2 w-2 rounded-full bg-white"></div>
+</div>
+<div class="flex-1">
+<h4 class="font-headline-md text-headline-md text-on-surface text-[18px]">Library Main</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Arriving in 12 min</p>
+</div>
+</div>
+<!-- Stop 2 -->
+<div class="flex items-start gap-4 relative z-10 pb-6">
+<div class="mt-1 h-6 w-6 rounded-full bg-surface-container-highest flex items-center justify-center border-2 border-surface-container-lowest">
+</div>
+<div class="flex-1">
+<h4 class="font-body-lg text-body-lg text-on-surface text-[18px]">Student Union</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">~ 18 min</p>
+</div>
+</div>
+<!-- Stop 3 -->
+<div class="flex items-start gap-4 relative z-10">
+<div class="mt-1 h-6 w-6 rounded-full bg-surface-container-highest flex items-center justify-center border-2 border-surface-container-lowest">
+</div>
+<div class="flex-1">
+<h4 class="font-body-lg text-body-lg text-on-surface text-[18px]">Engineering Bldg</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">~ 25 min</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bus Schedule</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#0053db",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-primary": "#b4c5ff",
+                        "tertiary-fixed-dim": "#f7be1d",
+                        "surface-variant": "#dae2fd",
+                        "surface-container": "#eaedff",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdf9a",
+                        "secondary-fixed-dim": "#62df7d",
+                        "surface-container-highest": "#dae2fd",
+                        "background": "#faf8ff",
+                        "outline-variant": "#c3c6d7",
+                        "on-primary-fixed": "#00174b",
+                        "primary-container": "#2563eb",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-surface": "#131b2e",
+                        "on-secondary-fixed": "#002109",
+                        "inverse-on-surface": "#eef0ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed": "#251a00",
+                        "on-surface-variant": "#434655",
+                        "surface-bright": "#faf8ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-secondary-fixed-variant": "#005320",
+                        "on-primary-container": "#eeefff",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#7ffc97",
+                        "surface": "#faf8ff",
+                        "on-background": "#131b2e",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f2f3ff",
+                        "primary": "#004ac6",
+                        "outline": "#737686",
+                        "on-secondary-container": "#007230",
+                        "on-tertiary-container": "#ffeed1",
+                        "on-tertiary-fixed-variant": "#5a4300",
+                        "tertiary-container": "#8a6800",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#283044",
+                        "tertiary": "#6c5100",
+                        "secondary-container": "#7cf994",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary": "#006e2d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "lg": "24px",
+                        "container-padding": "20px",
+                        "xl": "32px",
+                        "gutter": "16px",
+                        "xs": "8px",
+                        "base": "4px",
+                        "sm": "12px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Lexend"],
+                        "headline-lg": ["Lexend"],
+                        "headline-md": ["Lexend"],
+                        "body-lg": ["Lexend"],
+                        "label-sm": ["Lexend"],
+                        "label-bold": ["Lexend"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-white dark:bg-slate-950 fixed top-0 w-full z-50 border-b-2 border-slate-100 dark:border-slate-800 flat no shadows flex items-center justify-between px-5 h-16 w-full">
+<button class="text-blue-600 dark:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-900 active:scale-95 transition-all duration-150 p-2 -ml-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="directions_bus">directions_bus</span>
+</button>
+<h1 class="text-xl font-black tracking-tighter text-blue-600 dark:text-blue-400 font-['Lexend'] font-bold text-lg truncate px-4">Bandersnatch</h1>
+<button class="text-blue-600 dark:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-900 active:scale-95 transition-all duration-150 p-2 -mr-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="pt-[88px] pb-[120px] px-container-padding max-w-3xl mx-auto flex flex-col gap-xl">
+<!-- Page Title Header -->
+<div class="flex flex-col gap-base">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Bus #3</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Daily Schedule</p>
+</div>
+<!-- Morning Section -->
+<section class="flex flex-col gap-md">
+<div class="flex flex-col border-b-2 border-outline-variant pb-xs">
+<h3 class="font-headline-md text-headline-md text-primary">Morning</h3>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">7:00 AM - 12:00 PM</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    7:00 AM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    7:45 AM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    8:30 AM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    9:15 AM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    10:00 AM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    11:30 AM
+                </div>
+</div>
+</section>
+<!-- Afternoon Section -->
+<section class="flex flex-col gap-md">
+<div class="flex flex-col border-b-2 border-outline-variant pb-xs">
+<h3 class="font-headline-md text-headline-md text-primary">Afternoon</h3>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">12:00 PM - 5:00 PM</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    12:15 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    1:00 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    2:30 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    3:15 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    4:00 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    4:45 PM
+                </div>
+</div>
+</section>
+<!-- Evening Section -->
+<section class="flex flex-col gap-md">
+<div class="flex flex-col border-b-2 border-outline-variant pb-xs">
+<h3 class="font-headline-md text-headline-md text-primary">Evening</h3>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">5:00 PM - 10:00 PM</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    5:30 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    6:15 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    7:00 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    8:30 PM
+                </div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg h-[64px] flex items-center justify-center font-headline-md text-headline-md text-on-surface active:scale-95 transition-transform">
+                    9:45 PM
+                </div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-white dark:bg-slate-950 fixed bottom-0 w-full z-50 rounded-t-none border-t-2 border-slate-100 dark:border-slate-800 flat no shadows fixed bottom-0 left-0 w-full h-20 flex justify-around items-center px-4 pb-safe font-['Lexend'] text-[12px] font-semibold md:hidden">
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 py-1 px-3 hover:text-blue-500 dark:hover:text-blue-300 active:scale-90 transition-transform duration-100 flex-1">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="map">map</span>
+<span>Map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded-lg py-1 px-3 hover:text-blue-500 dark:hover:text-blue-300 active:scale-90 transition-transform duration-100 flex-1">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="calendar_month" data-weight="fill" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+<span>Schedule</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 py-1 px-3 hover:text-blue-500 dark:hover:text-blue-300 active:scale-90 transition-transform duration-100 flex-1">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="thumbs_up_down">thumbs_up_down</span>
+<span>Feedback</span>
+</button>
+<button class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 py-1 px-3 hover:text-blue-500 dark:hover:text-blue-300 active:scale-90 transition-transform duration-100 flex-1">
+<span class="material-symbols-outlined mb-1 text-[24px]" data-icon="person">person</span>
+<span>Profile</span>
+</button>
+</nav>
+</body></html>

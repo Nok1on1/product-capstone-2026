@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/* Force Tailwind v4 to use class-based dark mode */
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary-container: #2563eb;
+  --color-on-primary-container: #eeefff;
+  --color-on-primary: #ffffff;
+  
+  --color-background: var(--background);
+  --color-on-background: var(--on-background);
+  
+  --color-surface: var(--surface);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  
+  --color-success: #006e2d;
+  --color-success-container: #7cf994;
+  --color-warning: #8a6800;
+  --color-warning-container: #ffdf9a;
+}
+
+:root {
+  --background: #faf8ff;
+  --on-background: #131b2e;
+  --surface: #faf8ff;
+  --on-surface: #131b2e;
+  --on-surface-variant: #434655;
+  --surface-container: #eaedff;
+  --surface-container-lowest: #ffffff;
+  --outline: #737686;
+  --outline-variant: #c3c6d7;
+}
+
+.dark {
+  --background: #0f172a; /* slate-950 */
+  --on-background: #f1f5f9; /* slate-100 */
+  --surface: #0f172a;
+  --on-surface: #f1f5f9;
+  --on-surface-variant: #94a3b8; /* slate-400 */
+  --surface-container: #1e293b; /* slate-800 */
+  --surface-container-lowest: #0f172a;
+  --outline: #475569; /* slate-600 */
+  --outline-variant: #334155; /* slate-700 */
+}
+
+body {
+  background-color: var(--background);
+  color: var(--on-background);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
