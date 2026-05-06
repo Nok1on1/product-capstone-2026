@@ -32,9 +32,7 @@ export function TopNav({ lang }: { lang: string }) {
   return (
     <header className="flex justify-between items-center h-14 px-4 w-full sticky top-0 z-50 bg-white dark:bg-slate-950 border-b border-outline-variant dark:border-slate-800 shadow-sm transition-colors duration-200">
       <div className="flex items-center">
-        <button className="text-primary-container dark:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-900 active:opacity-80 transition-all duration-200 p-2 rounded-full flex items-center justify-center md:hidden">
-          <span className="material-symbols-outlined">menu</span>
-        </button>
+
         <Link href={`/${lang}`} className="text-xl font-black text-primary-container dark:text-blue-400 tracking-tighter">
           Bandersnatch
         </Link>
