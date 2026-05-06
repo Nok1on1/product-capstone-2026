@@ -19,13 +19,19 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+<<<<<<< Updated upstream
 const busIcon = L.divIcon({
+=======
+// ─── Bus icons ───────────────────────────────────────────────────────────────
+const busIconBlue = L.divIcon({
+>>>>>>> Stashed changes
   html: `<div style="background-color:#2563eb;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);border:2px solid white;"><span class="material-symbols-outlined" style="font-size:18px;">directions_bus</span></div>`,
   className: "custom-bus-icon",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
 });
 
+<<<<<<< Updated upstream
 const userLocationIcon = L.divIcon({
   html: `<div style="position:relative;width:0;height:0;">
     <div style="position:absolute;top:-8px;left:-8px;width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 6px rgba(66,133,244,0.5);z-index:1000;"></div>
@@ -36,6 +42,16 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [0, 0],
 });
 
+=======
+const busIconAmber = L.divIcon({
+  html: `<div style="background-color:#d97706;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);border:2px solid white;"><span class="material-symbols-outlined" style="font-size:18px;">directions_bus</span></div>`,
+  className: "custom-bus-icon",
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+});
+
+// ─── OSRM helper ─────────────────────────────────────────────────────────────
+>>>>>>> Stashed changes
 function buildOsrmCoords(stops: BusStop[]): string {
   return stops.map((s) => `${s.lng},${s.lat}`).join(";");
 }
@@ -96,7 +112,12 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
   return null;
 }
 
+<<<<<<< Updated upstream
 function SimulatedBus() {
+=======
+// ─── Simulated bus – To Station (Blue) ───────────────────────────────────────
+function SimulatedBusStation() {
+>>>>>>> Stashed changes
   const [position, setPosition] = useState<[number, number]>([
     toStationStops[0].lat,
     toStationStops[0].lng,
@@ -113,7 +134,7 @@ function SimulatedBus() {
   }, [map]);
 
   return (
-    <Marker position={position} icon={busIcon} zIndexOffset={1000}>
+    <Marker position={position} icon={busIconBlue} zIndexOffset={1000}>
       <Popup className="font-sans">
         <div className="font-bold text-primary-container">Bus #3</div>
         <div className="text-sm">Heading to Rioni Station</div>
@@ -122,6 +143,7 @@ function SimulatedBus() {
   );
 }
 
+<<<<<<< Updated upstream
 function UserMarker() {
   const { location } = useUserLocation();
 
@@ -139,6 +161,36 @@ function UserMarker() {
   );
 }
 
+=======
+// ─── Simulated bus – To City Centre (Amber) ──────────────────────────────────
+function SimulatedBusCity() {
+  const [position, setPosition] = useState<[number, number]>([
+    toCityCentreStops[0].lat,
+    toCityCentreStops[0].lng,
+  ]);
+  const map = useMap();
+
+  useEffect(() => {
+    let idx = 0;
+    const interval = setInterval(() => {
+      idx = (idx + 1) % toCityCentreStops.length;
+      setPosition([toCityCentreStops[idx].lat, toCityCentreStops[idx].lng]);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [map]);
+
+  return (
+    <Marker position={position} icon={busIconAmber} zIndexOffset={1000}>
+      <Popup className="font-sans">
+        <div className="font-bold text-amber-600">Bus #3</div>
+        <div className="text-sm">Heading to City Centre</div>
+      </Popup>
+    </Marker>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+>>>>>>> Stashed changes
 export default function LiveMap() {
   const { resolvedTheme } = useTheme();
   const { location, startTracking } = useUserLocation();
@@ -243,8 +295,13 @@ export default function LiveMap() {
           </Marker>
         ))}
 
+<<<<<<< Updated upstream
         <SimulatedBus />
         <UserMarker />
+=======
+        <SimulatedBusStation />
+        <SimulatedBusCity />
+>>>>>>> Stashed changes
       </MapContainer>
 
       <div className="absolute top-4 left-4 z-[400] bg-white dark:bg-slate-900 rounded-lg shadow-md p-3 border border-outline-variant dark:border-slate-800 max-w-[240px] transition-colors duration-200">
@@ -296,13 +353,29 @@ export default function LiveMap() {
             <div className="flex items-center gap-2 mb-1">
               <span className="inline-block w-2 h-2 rounded-full bg-blue-600 shrink-0" />
               <p className="text-[10px] text-on-surface-variant dark:text-slate-400 leading-tight">
-                Blue markers: To Station
+                Blue: To Station (stops + route)
               </p>
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0" />
               <p className="text-[10px] text-on-surface-variant dark:text-slate-400 leading-tight">
-                Amber markers: To City
+                Amber: To City Centre (stops + route)
+              </p>
+            </div>
+            <div className="flex items-center gap-2 mt-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+              <div className="w-4 h-4 rounded-full bg-blue-600 border border-white flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-white" style={{ fontSize: 10 }}>directions_bus</span>
+              </div>
+              <p className="text-[10px] text-on-surface-variant dark:text-slate-400 leading-tight">
+                Blue bus: To Station
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 rounded-full bg-amber-600 border border-white flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-white" style={{ fontSize: 10 }}>directions_bus</span>
+              </div>
+              <p className="text-[10px] text-on-surface-variant dark:text-slate-400 leading-tight">
+                Amber bus: To City Centre
               </p>
             </div>
           </div>
