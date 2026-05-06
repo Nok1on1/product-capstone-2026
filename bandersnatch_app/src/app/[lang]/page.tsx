@@ -1,46 +1,53 @@
 "use client";
-/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useState, useEffect, use } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useUserLocation } from "@/hooks/useUserLocation";
-import { useBusTracking } from "@/hooks/useBusTracking";
 import { findNearestStopOnRoute } from "@/lib/location-utils";
 import { OnBusBanner } from "@/components/OnBusBanner";
 import { OnBusButton } from "@/components/OnBusButton";
+import { getNextScheduledBus } from "@/lib/timetable";
 
 export default function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
   const dict = getDictionary(lang as Locale).home;
   const onBusDict = getDictionary(lang as Locale).onBus;
+  const tripDict = getDictionary(lang as Locale).tripDetails;
+  const router = useRouter();
 
   const { profile, updateProfile } = useAuth();
+  const {
+    hydrated,
+    isOnBus,
+    currentStop: ctxCurrentStop,
+    setCurrentUserLocation,
+    setDestination,
+    hasLiveData,
+    setHasLiveData,
+  } = useBusState();
+
   const [stop, setStop] = useState("10");
+  const [destinationStop, setDestinationStop] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [loadingMessage, setLoadingMessage] = useState(dict.checking);
-  const [crowding, setCrowding] = useState<"Low" | "Medium" | "High">("Medium");
+  const [crowding, setCrowding] = useState<"Low" | "Medium" | "High" | null>(null);
   const [showDetectedIndicator, setShowDetectedIndicator] = useState(false);
+  const [timetableETA, setTimetableETA] = useState<number | null>(null);
 
-  const {
-    location,
-    startTracking,
-    stopTracking,
-  } = useUserLocation();
+  const { location, startTracking } = useUserLocation();
 
-  const {
-    isOnBus,
-    currentStop,
-    nextStop,
-    direction,
-    etaMinutes,
-    boardBus,
-    disembark,
-  } = useBusTracking(location);
+  useEffect(() => {
+    if (location) {
+      setCurrentUserLocation(location);
+    }
+  }, [location, setCurrentUserLocation]);
 
   useEffect(() => {
     if (profile?.defaultStop) {
@@ -61,10 +68,9 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
         setStop(stopId);
         updateProfile(stopId);
         setShowDetectedIndicator(true);
-        stopTracking();
       }
     }
-  }, [location, isOnBus, stopTracking, updateProfile]);
+  }, [location, isOnBus, updateProfile]);
 
   useEffect(() => {
     if (showDetectedIndicator) {
@@ -72,6 +78,16 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
       return () => clearTimeout(timer);
     }
   }, [showDetectedIndicator]);
+
+  useEffect(() => {
+    const { minutes } = getNextScheduledBus("station");
+    setTimetableETA(minutes);
+    const interval = setInterval(() => {
+      const { minutes: m } = getNextScheduledBus("station");
+      setTimetableETA(m);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleStopChange = (newStop: string) => {
     setStop(newStop);
@@ -89,10 +105,21 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        if (data.crowding) setCrowding(data.crowding as "Low" | "Medium" | "High");
+        if (data.crowding) {
+          setCrowding(data.crowding as "Low" | "Medium" | "High");
+          setHasLiveData(true);
+        } else {
+          setCrowding(null);
+          setHasLiveData(false);
+        }
+      } else {
+        setCrowding(null);
+        setHasLiveData(false);
       }
     } catch (e) {
       console.error("Error fetching live status", e);
+      setCrowding(null);
+      setHasLiveData(false);
     }
 
     setTimeout(() => {
@@ -101,23 +128,24 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
     }, 1500);
   };
 
-  const handleBoardBus = () => {
-    startTracking();
-    boardBus();
-  };
-
-  const handleDisembark = () => {
-    disembark();
-    stopTracking();
+  const handleLiveTracker = () => {
+    const dir = isOnBus && ctxCurrentStop
+      ? (ctxCurrentStop.id >= 1 && ctxCurrentStop.id <= 14 ? "station" : "city")
+      : "station";
+    const params = new URLSearchParams();
+    params.set("currentStop", stop);
+    if (destinationStop) params.set("destination", destinationStop);
+    params.set("direction", dir);
+    router.push(`/${lang}/trip-details?${params.toString()}`);
   };
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-5 pb-32">
       <AnimatePresence>
-        {isOnBus && (
+        {hydrated && isOnBus && (
           <OnBusBanner
-            nextStop={nextStop}
-            etaMinutes={etaMinutes}
+            nextStop={null}
+            etaMinutes={null}
             title={onBusDict.bannerTitle}
             nextStopLabel={onBusDict.nextStop}
           />
@@ -137,7 +165,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           <p className="text-on-surface-variant dark:text-slate-400">{dict.subtitle}</p>
         </motion.div>
 
-        <motion.div layout="position" className="mb-6 z-20 relative">
+        <motion.div layout="position" className="mb-4 z-20 relative">
           <label
             className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide"
             htmlFor="stop-selector"
@@ -160,66 +188,23 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           </AnimatePresence>
         </motion.div>
 
+        <motion.div layout="position" className="mb-6 z-20 relative">
+          <label
+            className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide"
+            htmlFor="destination-selector"
+          >
+            {tripDict.destinationOptional}
+          </label>
+          <StopSelect
+            value={destinationStop ?? ""}
+            onChange={(val) => {
+              setDestinationStop(val || null);
+              setDestination(val || null);
+            }}
+          />
+        </motion.div>
+
         <AnimatePresence mode="popLayout">
-          {isOnBus && (
-            <motion.div
-              key="on-bus"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full bg-surface-container dark:bg-slate-800 rounded-lg border border-outline-variant dark:border-slate-700 p-4 space-y-4 transition-colors"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <span className="material-symbols-outlined text-success dark:text-green-400 text-2xl">
-                  directions_bus
-                </span>
-                <h2 className="text-lg font-bold text-on-surface dark:text-slate-100">
-                  {onBusDict.onBusTitle}
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-3">
-                  <p className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-1">
-                    {onBusDict.currentStopLabel}
-                  </p>
-                  <p className="text-sm font-bold text-on-surface dark:text-slate-100 truncate">
-                    {currentStop?.name || "—"}
-                  </p>
-                </div>
-                <div className="bg-slate-50 dark:bg-slate-700 rounded-lg p-3">
-                  <p className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-1">
-                    {onBusDict.nextStopLabel}
-                  </p>
-                  <p className="text-sm font-bold text-on-surface dark:text-slate-100 truncate">
-                    {nextStop?.name || "—"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-700 rounded-lg p-3">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-1">
-                    {onBusDict.etaLabel}
-                  </p>
-                  <p className="text-2xl font-black text-primary-container dark:text-blue-400">
-                    {etaMinutes != null && etaMinutes > 0 ? `${etaMinutes} min` : onBusDict.noEta}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-1">
-                    Direction
-                  </p>
-                  <p className="text-sm font-bold text-on-surface dark:text-slate-100">
-                    {direction === "station"
-                      ? onBusDict.tripDirectionStation
-                      : onBusDict.tripDirectionCity}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
           {!isOnBus && status === "idle" && (
             <motion.div
               key="idle"
@@ -268,12 +253,22 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <div className="inline-flex items-center gap-1 bg-success-container dark:bg-green-900 text-success dark:text-green-300 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2">
-                    <span className="material-symbols-outlined text-[14px]">check_circle</span>
-                    {dict.confirmed}
+                  <div
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2 ${
+                      hasLiveData
+                        ? "bg-success-container dark:bg-green-900 text-success dark:text-green-300"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-[14px]">
+                      {hasLiveData ? "check_circle" : "help_outline"}
+                    </span>
+                    {hasLiveData ? dict.confirmed : tripDict.unconfirmed}
                   </div>
                   <h2 className="text-4xl font-black text-on-surface dark:text-slate-100 tracking-tighter">
-                    7{" "}
+                    {hasLiveData
+                      ? "7"
+                      : timetableETA ?? "?"}{" "}
                     <span className="text-lg font-medium text-on-surface-variant dark:text-slate-400">
                       {dict.mins}
                     </span>
@@ -286,25 +281,40 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                   <div className="text-xs font-bold text-on-surface-variant dark:text-slate-400 uppercase tracking-wider mb-1">
                     {dict.crowding}
                   </div>
-                  <div
-                    className={`flex items-center gap-1 ${
-                      crowding === "Low"
-                        ? "text-success dark:text-green-400"
-                        : crowding === "Medium"
-                        ? "text-warning dark:text-yellow-400"
-                        : "text-red-600 dark:text-red-400"
-                    }`}
-                  >
-                    <span
-                      className="material-symbols-outlined"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
+                  {hasLiveData && crowding ? (
+                    <div
+                      className={`flex items-center gap-1 ${
+                        crowding === "Low"
+                          ? "text-success dark:text-green-400"
+                          : crowding === "Medium"
+                          ? "text-warning dark:text-yellow-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
                     >
-                      groups
-                    </span>
-                    <span className="font-bold text-sm">{crowding}</span>
-                  </div>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        groups
+                      </span>
+                      <span className="font-bold text-sm">{crowding}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                      <span className="material-symbols-outlined text-[18px]">help_outline</span>
+                      <span className="font-bold text-sm">{tripDict.unknown}</span>
+                    </div>
+                  )}
                 </div>
               </div>
+              <motion.button
+                whileTap={{ scale: 0.96 }}
+                onClick={handleLiveTracker}
+                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-xl py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm transition-colors"
+              >
+                <span className="material-symbols-outlined">route</span>
+                {tripDict.title}
+              </motion.button>
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => setStatus("idle")}
@@ -347,15 +357,11 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
         </motion.div>
       </motion.div>
 
-      <AnimatePresence>
-        <OnBusButton
-          isOnBus={isOnBus}
-          onBoard={handleBoardBus}
-          onDisembark={handleDisembark}
-          onBusLabel={onBusDict.onBusButton}
-          offBusLabel={onBusDict.offBusButton}
-        />
-      </AnimatePresence>
+      {hydrated && (
+        <AnimatePresence>
+          <OnBusButton />
+        </AnimatePresence>
+      )}
     </main>
   );
 }

@@ -1,22 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useBusState } from "@/context/BusStateContext";
+import { useDictionary } from "@/hooks/useDictionary";
 
-interface OnBusButtonProps {
-  isOnBus: boolean;
-  onBoard: () => void;
-  onDisembark: () => void;
-  onBusLabel: string;
-  offBusLabel: string;
-}
+export function OnBusButton() {
+  const { isOnBus, boardBus, disembark } = useBusState();
+  const dict = useDictionary();
+  const labels = dict.onBus;
 
-export function OnBusButton({
-  isOnBus,
-  onBoard,
-  onDisembark,
-  onBusLabel,
-  offBusLabel,
-}: OnBusButtonProps) {
   return (
     <motion.div
       className="fixed bottom-24 right-5 z-50 md:bottom-28"
@@ -27,7 +19,7 @@ export function OnBusButton({
     >
       <motion.button
         whileTap={{ scale: 0.92 }}
-        onClick={isOnBus ? onDisembark : onBoard}
+        onClick={isOnBus ? disembark : boardBus}
         className={`flex items-center gap-2 px-5 py-3 rounded-full shadow-lg font-semibold text-sm transition-colors ${
           isOnBus
             ? "bg-red-500 hover:bg-red-600 text-white"
@@ -37,7 +29,7 @@ export function OnBusButton({
         <span className="material-symbols-outlined text-lg">
           {isOnBus ? "directions_bus" : "directions_bus"}
         </span>
-        {isOnBus ? offBusLabel : onBusLabel}
+        {isOnBus ? labels.offBusButton : labels.onBusButton}
       </motion.button>
     </motion.div>
   );

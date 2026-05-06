@@ -33,7 +33,8 @@ const SLOW_SPEED_THRESHOLD_KMH = 5;
 const SLOW_SPEED_TIMEOUT_MS = 5 * 60 * 1000;
 
 export function useBusTracking(
-  userLocation: LocationData | null
+  userLocation: LocationData | null,
+  startTracking: () => void
 ): UseBusTrackingReturn {
   const [isOnBus, setIsOnBus] = useState(false);
   const [currentStop, setCurrentStop] = useState<BusStop | null>(null);

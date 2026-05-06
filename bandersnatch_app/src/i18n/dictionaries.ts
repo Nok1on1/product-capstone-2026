@@ -1,6 +1,12 @@
 const dictionaries = {
   en: {
-    nav: { home: "Home", map: "Live Map", schedule: "Schedule", feedback: "Feedback", account: "Account" },
+    nav: {
+      home: "Home",
+      map: "Live Map",
+      schedule: "Schedule",
+      feedback: "Feedback",
+      account: "Account",
+    },
     home: {
       title: "Where are you?",
       subtitle: "Select your stop to see live bus times.",
@@ -26,7 +32,8 @@ const dictionaries = {
       frequency: "Frequency",
       frequencyValue: "Every 30 minutes",
       infoTitle: "Exceptions",
-      infoText: "Please note that the 8:00 PM bus does not run. After this time, only one bus continues making trips until 10:00 PM.",
+      infoText:
+        "Please note that the 8:00 PM bus does not run. After this time, only one bus continues making trips until 10:00 PM.",
     },
     feedback: {
       title: "How was the ride?",
@@ -39,7 +46,7 @@ const dictionaries = {
       packedDesc: "Hardly any room to stand",
       thankYou: "Thank You!",
       thankYouDesc: "Your feedback helps everyone.",
-      returning: "Returning to home..."
+      returning: "Returning to home...",
     },
     common: { login: "Log In", signup: "Sign Up", logout: "Log Out" },
     onBus: {
@@ -57,10 +64,51 @@ const dictionaries = {
       noEta: "Calculating...",
       tripDirectionStation: "To Station",
       tripDirectionCity: "To City Centre",
-    }
+    },
+    tripDetails: {
+      title: "Live Tracker",
+      confirmed: "CONFIRMED",
+      unconfirmed: "Unconfirmed",
+      liveTracking: "Live Student Tracking",
+      estimatedArrival: "Estimated Arrival at Student Union",
+      capacity: "Medium Capacity",
+      capacityUnknown: "Unknown",
+      imOnBus: "I'm on Bus #3",
+      broadcastHelp: "Broadcast location to help others",
+      notHere: "Not Here",
+      busIsHere: "Bus is Here",
+      upcomingStops: "Upcoming Stops",
+      currentDestination: "Current Destination",
+      stop: "Stop",
+      min: "min",
+      splitRide: "SPLIT A RIDE",
+      splitRideSub: "Find others to share a taxi",
+      findGroup: "Find Group",
+      capacityLabel: "CAPACITY",
+      capacityFull: "Full",
+      nextStopLabel: "NEXT STOP",
+      nextStopValue: "Library S...",
+      reportCrowding: "ON BOARD? REPORT CROWDING",
+      seatsAvailable: "Seats Available",
+      standingRoom: "Standing Room Only",
+      fullDoNotBoard: "Full / Do Not Board",
+      destination: "Destination",
+      destinationOptional: "Destination (optional)",
+      timeToDestination: "Time to Destination",
+      happyDriving: "Happy driving!",
+      selectDestination: "Select Destination",
+      reported: "Reported",
+      unknown: "Unknown",
+    },
   },
   ka: {
-    nav: { home: "მთავარი", map: "რუკა", schedule: "განრიგი", feedback: "შეფასება", account: "პროფილი" },
+    nav: {
+      home: "მთავარი",
+      map: "რუკა",
+      schedule: "განრიგი",
+      feedback: "შეფასება",
+      account: "პროფილი",
+    },
     home: {
       title: "სად ხართ?",
       subtitle: "აირჩიეთ გაჩერება დროის სანახავად.",
@@ -86,7 +134,8 @@ const dictionaries = {
       frequency: "ინტერვალი",
       frequencyValue: "ყოველ 30 წუთში",
       infoTitle: "გამონაკლისები",
-      infoText: "გთხოვთ გაითვალისწინოთ, რომ 20:00 საათზე ავტობუსი არ მოძრაობს. ამ დროის შემდეგ მხოლოდ ერთი ავტობუსი აგრძელებს მუშაობას 22:00 საათამდე.",
+      infoText:
+        "გთხოვთ გაითვალისწინოთ, რომ 20:00 საათზე ავტობუსი არ მოძრაობს. ამ დროის შემდეგ მხოლოდ ერთი ავტობუსი აგრძელებს მუშაობას 22:00 საათამდე.",
     },
     feedback: {
       title: "როგორი მგზავრობა იყო?",
@@ -99,7 +148,7 @@ const dictionaries = {
       packedDesc: "დასადგომი ადგილიც კი ძლივს არის",
       thankYou: "გმადლობთ!",
       thankYouDesc: "თქვენი შეფასება ყველას ეხმარება.",
-      returning: "მთავარზე დაბრუნება..."
+      returning: "მთავარზე დაბრუნება...",
     },
     common: { login: "შესვლა", signup: "რეგისტრაცია", logout: "გასვლა" },
     onBus: {
@@ -117,10 +166,46 @@ const dictionaries = {
       noEta: "ითვლება...",
       tripDirectionStation: "სადგურისკენ",
       tripDirectionCity: "ქალებისკენ",
-    }
-  }
+    },
+    tripDetails: {
+      title: "ლაივ ტრეკერი",
+      confirmed: "დადასტურებულია",
+      unconfirmed: "დაუდასტურებელი",
+      liveTracking: "სტუდენტების ლაივ-თრექინგი",
+      estimatedArrival: "მისვლის სავარაუდო დრო: სტუდენტთა კავშირი",
+      capacity: "საშუალოდ სავსე",
+      capacityUnknown: "უცნობია",
+      imOnBus: "N3 ავტობუსში ვარ",
+      broadcastHelp: "გააზიარე ლოკაცია სხვების დასახმარებლად",
+      notHere: "არ მოსულა",
+      busIsHere: "ავტობუსი მოვიდა",
+      upcomingStops: "შემდეგი გაჩერებები",
+      currentDestination: "მიმდინარე დანიშნულება",
+      stop: "გაჩერება",
+      min: "წთ",
+      splitRide: "გაინაწილე მგზავრობა",
+      splitRideSub: "იპოვე თანამგზავრები ტაქსის გასანაწილებლად",
+      findGroup: "მოძებნე ჯგუფი",
+      capacityLabel: "ტევადობა",
+      capacityFull: "სავსეა",
+      nextStopLabel: "შემდეგი გაჩერება",
+      nextStopValue: "ბიბლიოთეკა...",
+      reportCrowding: "ავტობუსში ხართ? შეაფასეთ ტევადობა",
+      seatsAvailable: "თავისუფალი ადგილებია",
+      standingRoom: "მხოლოდ ფეხზე სადგომი",
+      fullDoNotBoard: "სავსეა / არ ახვიდეთ",
+      destination: "დანიშნულების ადგილი",
+      destinationOptional: "დანიშნულების ადგილი (სურვილისამებრ)",
+      timeToDestination: "დრო დანიშნულებამდე",
+      happyDriving: "ბედნიერ მგზავრობას გისურვებთ!",
+      selectDestination: "აირჩიეთ დანიშნულების ადგილი",
+      reported: "შეტყობინება გაგზავნილია",
+      unknown: "უცნობია",
+    },
+  },
 };
 
 export type Locale = keyof typeof dictionaries;
 
-export const getDictionary = (locale: Locale) => dictionaries[locale] || dictionaries.en;
+export const getDictionary = (locale: Locale) =>
+  dictionaries[locale] || dictionaries.en;
