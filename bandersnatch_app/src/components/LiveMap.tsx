@@ -6,8 +6,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { toStationStops, toCityCentreStops, BusStop } from "@/data/route3";
 import { useTheme } from "@/components/ThemeProvider";
+import { useUserLocation } from "@/hooks/useUserLocation";
 
-// ─── Leaflet default icon fix ────────────────────────────────────────────────
 const DefaultIcon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
   iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
@@ -19,7 +19,6 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// ─── Bus icon ────────────────────────────────────────────────────────────────
 const busIcon = L.divIcon({
   html: `<div style="background-color:#2563eb;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);border:2px solid white;"><span class="material-symbols-outlined" style="font-size:18px;">directions_bus</span></div>`,
   className: "custom-bus-icon",
@@ -27,15 +26,22 @@ const busIcon = L.divIcon({
   iconAnchor: [16, 16],
 });
 
-// ─── OSRM helper ─────────────────────────────────────────────────────────────
+const userLocationIcon = L.divIcon({
+  html: `<div style="position:relative;width:0;height:0;">
+    <div style="position:absolute;top:-8px;left:-8px;width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 6px rgba(66,133,244,0.5);z-index:1000;"></div>
+    <div style="position:absolute;top:-20px;left:-20px;width:40px;height:40px;background:rgba(66,133,244,0.15);border-radius:50%;z-index:999;"></div>
+  </div>`,
+  className: "custom-user-location",
+  iconSize: [0, 0],
+  iconAnchor: [0, 0],
+});
+
 function buildOsrmCoords(stops: BusStop[]): string {
   return stops.map((s) => `${s.lng},${s.lat}`).join(";");
 }
 
 async function fetchRoadRoute(stops: BusStop[]): Promise<[number, number][]> {
   const coords = buildOsrmCoords(stops);
-  // Using waypoints=0;N-1 tells OSRM to treat intermediate stops as "via" points 
-  // rather than destinations that end a leg, resulting in a smoother single-leg route.
   const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson&waypoints=0;${stops.length - 1}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`OSRM ${res.status}`);
@@ -46,7 +52,6 @@ async function fetchRoadRoute(stops: BusStop[]): Promise<[number, number][]> {
   );
 }
 
-// ─── Stop Icons ─────────────────────────────────────────────────────────────
 const stopIcon = (color: string) => L.divIcon({
   html: `<div style="background-color:${color};width:12px;height:12px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>`,
   className: "custom-stop-icon",
@@ -54,11 +59,10 @@ const stopIcon = (color: string) => L.divIcon({
   iconAnchor: [6, 6],
 });
 
-// ─── OffsetPolyline – imperatively adds an offset polyline via the plugin ─────
 interface OffsetPolylineProps {
   coords: [number, number][];
   color: string;
-  offset: number;         // pixels; negative = left, positive = right
+  offset: number;
   weight?: number;
   opacity?: number;
 }
@@ -70,16 +74,12 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
   useEffect(() => {
     if (coords.length < 2) return;
 
-    // Dynamically import the plugin so it patches L.Polyline once on the client
     import("leaflet-polylineoffset").then(() => {
-      // Remove previous layer
       if (layerRef.current) {
         layerRef.current.remove();
         layerRef.current = null;
       }
 
-      // Offset polyline – cast to any because `offset` is injected by the plugin
-      // and is not present in the standard Leaflet PolylineOptions types.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const line = L.polyline(coords, { color, weight, opacity, offset } as any).addTo(map);
       layerRef.current = line;
@@ -91,13 +91,11 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
         layerRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coords, color, offset, map]);
 
   return null;
 }
 
-// ─── Simulated bus ────────────────────────────────────────────────────────────
 function SimulatedBus() {
   const [position, setPosition] = useState<[number, number]>([
     toStationStops[0].lat,
@@ -124,9 +122,28 @@ function SimulatedBus() {
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
+function UserMarker() {
+  const { location } = useUserLocation();
+
+  if (!location) return null;
+
+  return (
+    <>
+      <Marker position={[location.lat, location.lng]} icon={userLocationIcon} zIndexOffset={2000}>
+        <Popup className="font-sans">
+          <div className="font-bold">Your Location</div>
+          <div className="text-xs text-slate-500">Accuracy: ~{Math.round(location.accuracy)}m</div>
+        </Popup>
+      </Marker>
+    </>
+  );
+}
+
 export default function LiveMap() {
   const { resolvedTheme } = useTheme();
+  const { location, startTracking } = useUserLocation();
+  const mapRef = useRef<L.Map | null>(null);
+  const hasCenteredRef = useRef(false);
 
   const [toStationRoute, setToStationRoute] = useState<[number, number][]>([]);
   const [toCityRoute, setToCityRoute] = useState<[number, number][]>([]);
@@ -158,6 +175,13 @@ export default function LiveMap() {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    if (location && mapRef.current && !hasCenteredRef.current) {
+      mapRef.current.flyTo([location.lat, location.lng], 15, { duration: 1.2 });
+      hasCenteredRef.current = true;
+    }
+  }, [location]);
+
   const bounds: L.LatLngBoundsExpression = [
     [42.18, 42.695],
     [42.28, 42.73],
@@ -179,13 +203,13 @@ export default function LiveMap() {
         maxBounds={bounds}
         maxBoundsViscosity={1.0}
         minZoom={12}
+        ref={(map) => { if (map) mapRef.current = map; }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url={tileUrl}
         />
 
-        {/* Offset polylines shown conditionally */}
         {(visibleRoute === "station" || visibleRoute === "both") && (
           <OffsetPolyline coords={toStationRoute} color="#2563eb" offset={-4} />
         )}
@@ -193,7 +217,6 @@ export default function LiveMap() {
           <OffsetPolyline coords={toCityRoute}    color="#d97706" offset={4}  />
         )}
 
-        {/* Stop markers – To Station (Color Coded) */}
         {toStationStops.map((stop) => (
           <Marker 
             key={`station-${stop.id}`} 
@@ -207,7 +230,6 @@ export default function LiveMap() {
           </Marker>
         ))}
 
-        {/* Stop markers – To City Centre (Color Coded) */}
         {toCityCentreStops.map((stop) => (
           <Marker 
             key={`city-${stop.id}`} 
@@ -222,9 +244,9 @@ export default function LiveMap() {
         ))}
 
         <SimulatedBus />
+        <UserMarker />
       </MapContainer>
 
-      {/* Legend & Toggle overlay */}
       <div className="absolute top-4 left-4 z-[400] bg-white dark:bg-slate-900 rounded-lg shadow-md p-3 border border-outline-variant dark:border-slate-800 max-w-[240px] transition-colors duration-200">
         <div className="flex items-center gap-2 mb-3">
           <span className="material-symbols-outlined text-primary-container dark:text-blue-400">route</span>
@@ -292,6 +314,28 @@ export default function LiveMap() {
           </p>
         )}
       </div>
+
+      {location && (
+        <button
+          onClick={() => {
+            if (mapRef.current) {
+              mapRef.current.flyTo([location.lat, location.lng], 15, { duration: 1 });
+            }
+          }}
+          className="absolute bottom-4 right-4 z-[400] bg-white dark:bg-slate-900 rounded-full shadow-md p-2 border border-outline-variant dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+        >
+          <span className="material-symbols-outlined text-primary-container dark:text-blue-400 text-xl">my_location</span>
+        </button>
+      )}
+
+      {!location && (
+        <button
+          onClick={startTracking}
+          className="absolute bottom-4 right-4 z-[400] bg-white dark:bg-slate-900 rounded-full shadow-md p-2 border border-outline-variant dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+        >
+          <span className="material-symbols-outlined text-primary-container dark:text-blue-400 text-xl">my_location</span>
+        </button>
+      )}
     </div>
   );
 }

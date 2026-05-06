@@ -41,7 +41,23 @@ const dictionaries = {
       thankYouDesc: "Your feedback helps everyone.",
       returning: "Returning to home..."
     },
-    common: { login: "Log In", signup: "Sign Up", logout: "Log Out" }
+    common: { login: "Log In", signup: "Sign Up", logout: "Log Out" },
+    onBus: {
+      onBusButton: "I'm on the bus",
+      offBusButton: "I'm off the bus",
+      bannerTitle: "You're on Bus #3",
+      nextStop: "Next stop",
+      nearestStopDetected: "Nearest stop detected",
+      locating: "Finding your location...",
+      locateMe: "Locate me",
+      onBusTitle: "You're riding Bus #3",
+      currentStopLabel: "Current stop",
+      nextStopLabel: "Next stop",
+      etaLabel: "ETA",
+      noEta: "Calculating...",
+      tripDirectionStation: "To Station",
+      tripDirectionCity: "To City Centre",
+    }
   },
   ka: {
     nav: { home: "მთავარი", map: "რუკა", schedule: "განრიგი", feedback: "შეფასება", account: "პროფილი" },
@@ -85,7 +101,23 @@ const dictionaries = {
       thankYouDesc: "თქვენი შეფასება ყველას ეხმარება.",
       returning: "მთავარზე დაბრუნება..."
     },
-    common: { login: "შესვლა", signup: "რეგისტრაცია", logout: "გასვლა" }
+    common: { login: "შესვლა", signup: "რეგისტრაცია", logout: "გასვლა" },
+    onBus: {
+      onBusButton: "ავტობუსში ვარ",
+      offBusButton: "ავტობუსიდან ჩამოვედი",
+      bannerTitle: "თქვენ ხართ ავტობუსში #3",
+      nextStop: "შემდეგი გაჩერება",
+      nearestStopDetected: "უახლოესი გაჩერება აღმოჩენილია",
+      locating: "ადგილმდებარეობის პოვნა...",
+      locateMe: "ჩემი პოვნა",
+      onBusTitle: "თქვენ ხართ ავტობუსში #3",
+      currentStopLabel: "მიმდინარე გაჩერება",
+      nextStopLabel: "შემდეგი გაჩერება",
+      etaLabel: "დარჩენილი დრო",
+      noEta: "ითვლება...",
+      tripDirectionStation: "სადგურისკენ",
+      tripDirectionCity: "ქალებისკენ",
+    }
   }
 };
 
