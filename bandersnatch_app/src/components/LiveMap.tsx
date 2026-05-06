@@ -19,19 +19,14 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-<<<<<<< Updated upstream
-const busIcon = L.divIcon({
-=======
 // ─── Bus icons ───────────────────────────────────────────────────────────────
 const busIconBlue = L.divIcon({
->>>>>>> Stashed changes
   html: `<div style="background-color:#2563eb;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);border:2px solid white;"><span class="material-symbols-outlined" style="font-size:18px;">directions_bus</span></div>`,
   className: "custom-bus-icon",
   iconSize: [32, 32],
   iconAnchor: [16, 16],
 });
 
-<<<<<<< Updated upstream
 const userLocationIcon = L.divIcon({
   html: `<div style="position:relative;width:0;height:0;">
     <div style="position:absolute;top:-8px;left:-8px;width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 6px rgba(66,133,244,0.5);z-index:1000;"></div>
@@ -42,7 +37,6 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [0, 0],
 });
 
-=======
 const busIconAmber = L.divIcon({
   html: `<div style="background-color:#d97706;color:white;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.3);border:2px solid white;"><span class="material-symbols-outlined" style="font-size:18px;">directions_bus</span></div>`,
   className: "custom-bus-icon",
@@ -51,7 +45,6 @@ const busIconAmber = L.divIcon({
 });
 
 // ─── OSRM helper ─────────────────────────────────────────────────────────────
->>>>>>> Stashed changes
 function buildOsrmCoords(stops: BusStop[]): string {
   return stops.map((s) => `${s.lng},${s.lat}`).join(";");
 }
@@ -112,12 +105,8 @@ function OffsetPolyline({ coords, color, offset, weight = 5, opacity = 0.8 }: Of
   return null;
 }
 
-<<<<<<< Updated upstream
-function SimulatedBus() {
-=======
 // ─── Simulated bus – To Station (Blue) ───────────────────────────────────────
 function SimulatedBusStation() {
->>>>>>> Stashed changes
   const [position, setPosition] = useState<[number, number]>([
     toStationStops[0].lat,
     toStationStops[0].lng,
@@ -143,7 +132,6 @@ function SimulatedBusStation() {
   );
 }
 
-<<<<<<< Updated upstream
 function UserMarker() {
   const { location } = useUserLocation();
 
@@ -161,7 +149,6 @@ function UserMarker() {
   );
 }
 
-=======
 // ─── Simulated bus – To City Centre (Amber) ──────────────────────────────────
 function SimulatedBusCity() {
   const [position, setPosition] = useState<[number, number]>([
@@ -190,7 +177,6 @@ function SimulatedBusCity() {
 }
 
 // ─── Main component ───────────────────────────────────────────────────────────
->>>>>>> Stashed changes
 export default function LiveMap() {
   const { resolvedTheme } = useTheme();
   const { location, startTracking } = useUserLocation();
@@ -295,13 +281,9 @@ export default function LiveMap() {
           </Marker>
         ))}
 
-<<<<<<< Updated upstream
-        <SimulatedBus />
         <UserMarker />
-=======
         <SimulatedBusStation />
         <SimulatedBusCity />
->>>>>>> Stashed changes
       </MapContainer>
 
       <div className="absolute top-4 left-4 z-[400] bg-white dark:bg-slate-900 rounded-lg shadow-md p-3 border border-outline-variant dark:border-slate-800 max-w-[240px] transition-colors duration-200">
