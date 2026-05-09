@@ -14,6 +14,7 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
   const { lang } = use(params);
   const dict = getDictionary(lang as Locale).common;
   
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [stop, setStop] = useState("10");
@@ -23,6 +24,10 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (displayName.trim().length < 2) {
+      setError("Display name must be at least 2 characters.");
+      return;
+    }
     if (password.length < 8) {
       setError("Password must be at least 8 characters.");
       return;
@@ -32,10 +37,14 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // Create user document with preference
+      // Create comprehensive user profile with trust score system
       await setDoc(doc(db, "users", userCredential.user.uid), {
+        displayName,
         email,
         defaultStop: stop,
+        role: null, // Manual admin assignment later
+        trustScore: 50, // Neutral starting point
+        totalReportsMade: 0,
         createdAt: new Date().toISOString(),
       });
       router.push(`/${lang}`);
@@ -56,6 +65,17 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
         {error && <div className="mb-4 text-red-600 bg-red-50 dark:bg-red-950/30 p-3 rounded-lg text-sm">{error}</div>}
 
         <form onSubmit={handleSignup} className="space-y-4">
+          <div>
+            <label className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide">Display Name</label>
+            <input 
+              type="text" 
+              required 
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="block w-full px-3 py-3 border border-outline-variant dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-on-surface dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-container"
+              placeholder="e.g., Besik M."
+            />
+          </div>
           <div>
             <label className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide">Email</label>
             <input 

@@ -54,7 +54,18 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
           </div>
           <div>
             <h1 className="text-xl font-bold text-on-surface dark:text-slate-100 tracking-tight">{navDict.account}</h1>
-            <p className="text-sm text-on-surface-variant dark:text-slate-400">{user.email}</p>
+            <p className="text-sm text-on-surface-variant dark:text-slate-400">{profile?.displayName || user.email}</p>
+          </div>
+        </div>
+
+        <div className="mb-6 grid grid-cols-2 gap-4">
+          <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{profile?.trustScore || 50}</div>
+            <div className="text-xs text-blue-600 dark:text-blue-400 font-medium mt-1">Trust Score</div>
+          </div>
+          <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900/30 rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{profile?.totalReportsMade || 0}</div>
+            <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">Reports Made</div>
           </div>
         </div>
 
@@ -63,7 +74,7 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
             <label className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide">Saved Primary Stop</label>
             <StopSelect 
               value={profile?.defaultStop || "10"} 
-              onChange={(value) => updateProfile(value)} 
+              onChange={(value) => updateProfile({ defaultStop: value })} 
             />
           </div>
         </div>
