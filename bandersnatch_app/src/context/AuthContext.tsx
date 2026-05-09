@@ -4,16 +4,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebase";
-
-type UserProfile = {
-  defaultStop: string;
-};
+import { UserProfile } from "@/types/user";
 
 type AuthContextType = {
   user: User | null;
   profile: UserProfile | null;
   loading: boolean;
-  updateProfile: (stop: string) => Promise<void>;
+  updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -38,11 +35,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (docSnap.exists()) {
             setProfile(docSnap.data() as UserProfile);
           } else {
-            setProfile({ defaultStop: "10" });
+            // Fallback default profile (shouldn't happen after signup)
+            setProfile({
+              displayName: "User",
+              email: currentUser.email || "",
+              role: null,
+              trustScore: 50,
+              totalReportsMade: 0,
+              defaultStop: "10",
+              createdAt: new Date().toISOString(),
+            });
           }
         } catch (error) {
           console.error("Error fetching profile", error);
-          setProfile({ defaultStop: "10" });
+          setProfile({
+            displayName: "User",
+            email: currentUser.email || "",
+            role: null,
+            trustScore: 50,
+            totalReportsMade: 0,
+            defaultStop: "10",
+            createdAt: new Date().toISOString(),
+          });
         }
       } else {
         setProfile(null);
@@ -53,12 +67,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const updateProfile = async (stop: string) => {
+  const updateProfile = async (updates: Partial<UserProfile>) => {
     if (!user) return;
     try {
       const docRef = doc(db, "users", user.uid);
-      await setDoc(docRef, { defaultStop: stop }, { merge: true });
-      setProfile({ defaultStop: stop });
+      await setDoc(docRef, updates, { merge: true });
+      
+      // Update local state
+      setProfile((prev) =>
+        prev ? { ...prev, ...updates } : null
+      );
     } catch (error) {
       console.error("Error updating profile", error);
     }

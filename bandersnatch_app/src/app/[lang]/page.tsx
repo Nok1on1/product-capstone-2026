@@ -66,7 +66,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
       if (nearest) {
         const stopId = nearest.stop.id.toString();
         setStop(stopId);
-        updateProfile(stopId);
+        updateProfile({ defaultStop: stopId });
         setShowDetectedIndicator(true);
       }
     }
@@ -91,7 +91,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
   const handleStopChange = (newStop: string) => {
     setStop(newStop);
-    updateProfile(newStop);
+    updateProfile({ defaultStop: newStop });
   };
 
   const handleCheckStatus = async () => {
