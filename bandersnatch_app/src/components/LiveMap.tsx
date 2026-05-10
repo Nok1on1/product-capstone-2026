@@ -32,8 +32,8 @@ const busIconBlue = L.divIcon({
 
 const userLocationIcon = L.divIcon({
   html: `<div style="position:relative;width:0;height:0;">
+    <div class="pulse-ring" style="position:absolute;top:-20px;left:-20px;width:40px;height:40px;background:rgba(66,133,244,0.15);border-radius:50%;z-index:999;"></div>
     <div style="position:absolute;top:-8px;left:-8px;width:16px;height:16px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 6px rgba(66,133,244,0.5);z-index:1000;"></div>
-    <div style="position:absolute;top:-20px;left:-20px;width:40px;height:40px;background:rgba(66,133,244,0.15);border-radius:50%;z-index:999;"></div>
   </div>`,
   className: "custom-user-location",
   iconSize: [40, 40],
@@ -130,11 +130,50 @@ function SimulatedBusStation() {
 
   useEffect(() => {
     let idx = 0;
-    const interval = setInterval(() => {
-      idx = (idx + 1) % toStationStops.length;
-      setPosition([toStationStops[idx].lat, toStationStops[idx].lng]);
-    }, 3000);
-    return () => clearInterval(interval);
+    let startTime = performance.now();
+    let startPos = position;
+    let targetPos: [number, number] = [
+      toStationStops[1].lat,
+      toStationStops[1].lng,
+    ];
+    const duration = 2800;
+
+    function lerp(a: number, b: number, t: number) {
+      return a + (b - a) * t;
+    }
+
+    function easeInOutCubic(t: number): number {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    let rafId: number;
+    function animate() {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeInOutCubic(progress);
+
+      const newPos: [number, number] = [
+        lerp(startPos[0], targetPos[0], eased),
+        lerp(startPos[1], targetPos[1], eased),
+      ];
+      setPosition(newPos);
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        idx = (idx + 1) % toStationStops.length;
+        startPos = targetPos;
+        targetPos = [
+          toStationStops[(idx + 1) % toStationStops.length].lat,
+          toStationStops[(idx + 1) % toStationStops.length].lng,
+        ];
+        startTime = performance.now();
+        rafId = requestAnimationFrame(animate);
+      }
+    }
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
   }, [map]);
 
   return (
@@ -176,11 +215,50 @@ function SimulatedBusCity() {
 
   useEffect(() => {
     let idx = 0;
-    const interval = setInterval(() => {
-      idx = (idx + 1) % toCityCentreStops.length;
-      setPosition([toCityCentreStops[idx].lat, toCityCentreStops[idx].lng]);
-    }, 3000);
-    return () => clearInterval(interval);
+    let startTime = performance.now();
+    let startPos = position;
+    let targetPos: [number, number] = [
+      toCityCentreStops[1].lat,
+      toCityCentreStops[1].lng,
+    ];
+    const duration = 2800;
+
+    function lerp(a: number, b: number, t: number) {
+      return a + (b - a) * t;
+    }
+
+    function easeInOutCubic(t: number): number {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    let rafId: number;
+    function animate() {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeInOutCubic(progress);
+
+      const newPos: [number, number] = [
+        lerp(startPos[0], targetPos[0], eased),
+        lerp(startPos[1], targetPos[1], eased),
+      ];
+      setPosition(newPos);
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        idx = (idx + 1) % toCityCentreStops.length;
+        startPos = targetPos;
+        targetPos = [
+          toCityCentreStops[(idx + 1) % toCityCentreStops.length].lat,
+          toCityCentreStops[(idx + 1) % toCityCentreStops.length].lng,
+        ];
+        startTime = performance.now();
+        rafId = requestAnimationFrame(animate);
+      }
+    }
+
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
   }, [map]);
 
   return (

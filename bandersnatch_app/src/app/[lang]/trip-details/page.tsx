@@ -13,7 +13,7 @@ import {
   getNextStopFromCurrent,
 } from "@/lib/timetable";
 import { toStationStops, toCityCentreStops } from "@/data/route3";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Locate,
   EyeOff,
@@ -241,16 +241,19 @@ export default function TripDetailsPage({
         <span>{dict.title}</span>
       </motion.button>
 
-      {reportFeedback && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="bg-success-container dark:bg-green-900/30 text-success dark:text-green-400 text-sm font-medium py-2 px-4 rounded-lg text-center"
-        >
-          {reportFeedback}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {reportFeedback && (
+          <motion.div
+            initial={{ opacity: 0, y: -12, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -12, height: 0 }}
+            transition={{ type: "spring", bounce: 0, duration: 0.35 }}
+            className="bg-success-container dark:bg-green-900/30 text-success dark:text-green-400 text-sm font-medium py-2 px-4 rounded-lg text-center overflow-hidden"
+          >
+            {reportFeedback}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.div
         initial={{ opacity: 0, y: 10 }}
@@ -373,16 +376,16 @@ export default function TripDetailsPage({
           </p>
         </div>
         <div
-          className={`w-12 h-7 rounded-full relative flex-shrink-0 transition-colors ${
+          className={`w-12 h-7 rounded-full relative flex-shrink-0 ${
             isLocationSharing
               ? "bg-blue-500"
               : "bg-slate-200 dark:bg-slate-700"
           }`}
         >
-          <div
-            className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform ${
-              isLocationSharing ? "translate-x-5" : "left-0.5"
-            }`}
+          <motion.div
+            className="absolute top-0.5 w-6 h-6 bg-white rounded-full shadow-sm"
+            animate={{ x: isLocationSharing ? 22 : 2 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
           />
         </div>
       </motion.div>

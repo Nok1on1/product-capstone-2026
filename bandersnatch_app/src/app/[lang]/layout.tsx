@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import "@/app/globals.css";
+import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClientProviders } from "@/app/client-providers";
@@ -65,7 +66,9 @@ export default async function RootLayout({
           <AuthProvider>
             <ClientProviders>
               <TopNav lang={lang} />
-              {children}
+              <AnimatePresence mode="wait">
+                {children}
+              </AnimatePresence>
               <BottomNav lang={lang} />
             </ClientProviders>
           </AuthProvider>

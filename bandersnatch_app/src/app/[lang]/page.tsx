@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
@@ -14,6 +14,51 @@ import { findNearestStopOnRoute } from "@/lib/location-utils";
 import { OnBusBanner } from "@/components/OnBusBanner";
 import { OnBusButton } from "@/components/OnBusButton";
 import { getNextScheduledBus } from "@/lib/timetable";
+
+function BackgroundAnimation() {
+  const buses = useMemo(() =>
+    Array.from({ length: 5 }, (_, i) => ({
+      startX: `${15 + (i * 17) % 70}%`,
+      startY: `${10 + (i * 23) % 75}%`,
+      endX: `${80 - (i * 13) % 60}%`,
+      endY: `${15 + (i * 29 + 10) % 70}%`,
+      scale: 0.5 + i * 0.1,
+      duration: 20 + i * 8,
+      delay: i * 4,
+    })),
+  []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+      {buses.map((bus, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          initial={{ x: bus.startX, y: bus.startY, rotate: 0, opacity: 0 }}
+          animate={{
+            x: bus.endX,
+            y: bus.endY,
+            rotate: [0, 10, -10, 0],
+            opacity: [0, 0.12, 0.12, 0],
+          }}
+          transition={{
+            duration: bus.duration,
+            repeat: Infinity,
+            ease: "linear",
+            delay: bus.delay,
+          }}
+        >
+          <span
+            className="material-symbols-outlined text-blue-300/30 dark:text-blue-500/20"
+            style={{ fontSize: `${24 * bus.scale}px` }}
+          >
+            directions_bus
+          </span>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 export default function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
@@ -141,6 +186,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-5 pb-32">
+      <BackgroundAnimation />
       <AnimatePresence>
         {hydrated && isOnBus && (
           <OnBusBanner
@@ -165,7 +211,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           <p className="text-on-surface-variant dark:text-slate-400">{dict.subtitle}</p>
         </motion.div>
 
-        <motion.div layout="position" className="mb-4 z-20 relative">
+        <motion.div layout="position" className="mb-4 z-30 relative">
           <label
             className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide"
             htmlFor="stop-selector"
@@ -188,7 +234,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           </AnimatePresence>
         </motion.div>
 
-        <motion.div layout="position" className="mb-6 z-20 relative">
+        <motion.div layout="position" className="mb-6 relative">
           <label
             className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide"
             htmlFor="destination-selector"

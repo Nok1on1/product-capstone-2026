@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { AnimatedIcon } from "@/components/AnimatedIcon";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useTheme } from "@/components/ThemeProvider";
 import { useEffect, useState } from "react";
@@ -80,7 +81,7 @@ export function TopNav({ lang }: { lang: string }) {
           {lang === "en" ? "KA" : "EN"}
         </button>
         <Link href={`/${lang}/account`} className={`hover:bg-slate-50 dark:hover:bg-slate-900 active:opacity-80 transition-all duration-200 p-1 rounded-full flex items-center justify-center ${pathname.includes("/account") ? "text-primary-container dark:text-blue-400" : "text-outline dark:text-slate-400"}`}>
-          <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: pathname.includes("/account") ? "'FILL' 1" : "'FILL' 0" }}>account_circle</span>
+          <AnimatedIcon icon="account_circle" isActive={pathname.includes("/account")} className="text-3xl" />
         </Link>
       </div>
     </header>

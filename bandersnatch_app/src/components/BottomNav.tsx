@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
+import { AnimatedIcon } from "@/components/AnimatedIcon";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 
 export function BottomNav({ lang }: { lang: string }) {
@@ -37,13 +38,9 @@ export function BottomNav({ lang }: { lang: string }) {
                 transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
               />
             )}
-            <motion.span 
-              className="material-symbols-outlined"
-              style={{ fontVariationSettings: isActive ? "'FILL' 1" : "'FILL' 0" }}
-              whileTap={{ scale: 0.8 }}
-            >
-              {item.icon}
-            </motion.span>
+            <motion.div whileTap={{ scale: 0.8 }}>
+              <AnimatedIcon icon={item.icon} isActive={isActive} className="text-[24px]" />
+            </motion.div>
             <span className="text-[10px] sm:text-[12px] font-semibold uppercase tracking-wider mt-1 truncate w-full text-center">
               {item.name}
             </span>

@@ -59,10 +59,23 @@ export default function FeedbackPage({ params }: { params: Promise<{ lang: strin
               <p className="text-lg text-on-surface-variant dark:text-slate-400">{dict.subtitle}</p>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <motion.div
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
+              }}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col gap-4"
+            >
               {options.map((opt) => (
                 <motion.button
                   key={opt.level}
+                  variants={{
+                    hidden: { opacity: 0, y: 24, scale: 0.95 },
+                    visible: { opacity: 1, y: 0, scale: 1 },
+                  }}
+                  transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                   whileTap={{ scale: 0.96 }}
                   disabled={submitting !== null}
                   onClick={() => handleFeedback(opt.level)}
@@ -87,7 +100,7 @@ export default function FeedbackPage({ params }: { params: Promise<{ lang: strin
                   </div>
                 </motion.button>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         ) : (
           <motion.div
