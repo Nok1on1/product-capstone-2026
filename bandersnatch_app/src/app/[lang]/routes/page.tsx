@@ -2,6 +2,7 @@
 
 import { use } from "react";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
+import RouteMap from "@/components/RouteMap";
 
 export default function RoutesPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
@@ -38,6 +39,9 @@ export default function RoutesPage({ params }: { params: Promise<{ lang: string 
           </div>
         </div>
       </div>
+
+      {/* Route Map */}
+      <RouteMap />
 
       {/* Exceptions */}
       <div className="bg-red-50 dark:bg-red-950/20 border border-red-100 dark:border-red-900/30 rounded-xl p-4 flex items-start gap-3 transition-colors duration-200">

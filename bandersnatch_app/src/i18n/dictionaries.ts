@@ -34,6 +34,8 @@ const dictionaries = {
       infoTitle: "Exceptions",
       infoText:
         "Please note that the 8:00 PM bus does not run. After this time, only one bus continues making trips until 10:00 PM.",
+      departure: "Departure",
+      terminus: "Terminus",
     },
     feedback: {
       title: "How was the ride?",
@@ -136,6 +138,8 @@ const dictionaries = {
       infoTitle: "გამონაკლისები",
       infoText:
         "გთხოვთ გაითვალისწინოთ, რომ 20:00 საათზე ავტობუსი არ მოძრაობს. ამ დროის შემდეგ მხოლოდ ერთი ავტობუსი აგრძელებს მუშაობას 22:00 საათამდე.",
+      departure: "გამგზავრება",
+      terminus: "ტერმინალი",
     },
     feedback: {
       title: "როგორი მგზავრობა იყო?",
