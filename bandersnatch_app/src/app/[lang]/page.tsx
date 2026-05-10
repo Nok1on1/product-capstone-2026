@@ -14,6 +14,7 @@ import { findNearestStopOnRoute } from "@/lib/location-utils";
 import { OnBusBanner } from "@/components/OnBusBanner";
 import { OnBusButton } from "@/components/OnBusButton";
 import { getNextScheduledBus } from "@/lib/timetable";
+import Skeleton from "@/components/Skeleton";
 
 function BackgroundAnimation() {
   const buses = useMemo(() =>
@@ -81,7 +82,6 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const [stop, setStop] = useState("10");
   const [destinationStop, setDestinationStop] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
-  const [loadingMessage, setLoadingMessage] = useState(dict.checking);
   const [crowding, setCrowding] = useState<"Low" | "Medium" | "High" | null>(null);
   const [showDetectedIndicator, setShowDetectedIndicator] = useState(false);
   const [timetableETA, setTimetableETA] = useState<number | null>(null);
@@ -141,9 +141,6 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
   const handleCheckStatus = async () => {
     setStatus("loading");
-    setLoadingMessage(dict.checking);
-
-    const timeoutId = setTimeout(() => setLoadingMessage(dict.stillChecking), 3000);
 
     try {
       const docRef = doc(db, "bus_data", "current_status");
@@ -168,7 +165,6 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
     }
 
     setTimeout(() => {
-      clearTimeout(timeoutId);
       setStatus("success");
     }, 1500);
   };
@@ -281,12 +277,8 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full py-6 flex flex-col items-center justify-center space-y-4 bg-surface-container dark:bg-slate-800 rounded-lg border border-outline-variant dark:border-slate-700 transition-colors"
             >
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-container dark:border-blue-400"></div>
-              <p className="text-on-surface dark:text-slate-200 font-medium animate-pulse">
-                {loadingMessage}
-              </p>
+              <Skeleton.Card />
             </motion.div>
           )}
 

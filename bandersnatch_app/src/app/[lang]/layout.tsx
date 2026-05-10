@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { ClientProviders } from "@/app/client-providers";
 import { TopNav } from "@/components/TopNav";
 import { BottomNav } from "@/components/BottomNav";
+import { AlertBanner } from "@/components/AlertBanner";
 
 const lexend = Lexend({
   variable: "--font-lexend",
@@ -66,6 +67,7 @@ export default async function RootLayout({
           <AuthProvider>
             <ClientProviders>
               <TopNav lang={lang} />
+              <AlertBanner />
               <AnimatePresence mode="wait">
                 {children}
               </AnimatePresence>

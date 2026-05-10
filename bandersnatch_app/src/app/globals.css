@@ -69,6 +69,24 @@ body {
   animation: pulse-ring 2.5s ease-in-out infinite;
 }
 
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+@keyframes bus-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes bus-glow {
+  0%, 100% { box-shadow: 0 0 4px rgba(37, 99, 235, 0.3); }
+  50% { box-shadow: 0 0 12px rgba(37, 99, 235, 0.6); }
+}
+
+.animated-bus-marker {
+  animation: bus-bounce 2s ease-in-out infinite, bus-glow 2s ease-in-out infinite;
+}
+
 @keyframes dash-draw {
   to { stroke-dashoffset: -200; }
 }

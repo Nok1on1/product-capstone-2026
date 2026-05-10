@@ -14,42 +14,17 @@ import { LocationData } from "@/hooks/useUserLocation";
 import { BusStop, toStationStops, toCityCentreStops } from "@/data/route3";
 import { findNearestStopOnRoute } from "@/lib/location-utils";
 
-// TODO: FIREBASE SETUP - Bus state reporting
-// ============================================================
-// What needs to be done:
-// 1. Uncomment Firebase imports below
-// 2. Create Firestore collections with security rules:
-//
-//    Collection: "bus_tracking"
-//    Documents: { userId, action, data, timestamp }
-//    Actions: "boarded", "disembarked", "location_update", "not_here", "bus_is_here", "crowding_report"
-//    Rules: allow read, write: if request.auth != null;
-//
-//    Collection: "bus_live_status"
-//    Documents: auto-generated (real-time tracking data)
-//    Schema: { userId, lat, lng, speed, direction, currentStop, nextStop, timestamp }
-//    Rules: allow read: if true; allow write: if request.auth != null;
-//
-//    Collection: "bus_reports"
-//    Documents: auto-generated (user reports)
-//    Schema: { userId, type, stop, crowding, timestamp }
-//    Rules: allow read: if true; allow write: if request.auth != null;
-//
-// 3. Add realtime Firestore listeners for:
-//    - Active trackers (to show "Live Student Tracking" badge)
-//    - Live bus status (for confirmed ETA, crowding data)
-//    - User reports (Not Here / Bus Is Here)
-// ============================================================
-// import {
-//   doc,
-//   setDoc,
-//   serverTimestamp,
-//   collection,
-//   query,
-//   where,
-//   onSnapshot,
-// } from "firebase/firestore";
-// import { auth, db } from "@/lib/firebase";
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import {
+  incrementTrustScore,
+  decrementTrustScore,
+  incrementReportCount,
+} from "@/lib/trust-utils";
 
 type Direction = "station" | "city";
 
@@ -81,11 +56,11 @@ interface BusStateContextValue {
   setLiveCrowding: (c: CrowdingData | null) => void;
   liveTrackingUserCount: number;
   setLiveTrackingUserCount: (n: number) => void;
-  boardBus: () => void;
-  disembark: () => void;
-  reportNotHere: () => void;
-  reportBusIsHere: () => void;
-  reportCrowding: (level: "Low" | "Medium" | "High") => void;
+  boardBus: () => Promise<void>;
+  disembark: () => Promise<void>;
+  reportNotHere: () => Promise<void>;
+  reportBusIsHere: () => Promise<void>;
+  reportCrowding: (level: "Low" | "Medium" | "High") => Promise<void>;
 }
 
 const BusStateContext = createContext<BusStateContextValue | undefined>(
@@ -134,28 +109,18 @@ export function BusStateProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // TODO: FIREBASE SETUP - Report boarding event
-  // Collection: "bus_reports"
-  // Schema: { userId, action: "boarded", direction, currentStopId, timestamp: serverTimestamp() }
-  //
-  // if (auth.currentUser) {
-  //   await setDoc(doc(db, "bus_reports", `board_${auth.currentUser.uid}_${Date.now()}`), {
-  //     userId: auth.currentUser.uid,
-  //     action: "boarded",
-  //     direction,
-  //     currentStopId: currentStop?.id,
-  //     timestamp: serverTimestamp(),
-  //   });
-  // }
-  //
-  // Also start location update interval that writes to "bus_tracking" collection
-  const boardBus = useCallback(() => {
+  const boardBus = useCallback(async () => {
     const loc = currentUserLocationRef.current;
+    let boardDirection: Direction | null = null;
+    let boardStopId: number | undefined;
+
     if (loc) {
       const nearest = findNearestStopOnRoute(loc.lat, loc.lng);
       if (nearest) {
         setCurrentStop(nearest.stop);
         setDirection(nearest.direction);
+        boardDirection = nearest.direction;
+        boardStopId = nearest.stop.id;
         const stops = nearest.direction === "station" ? toStationStops : toCityCentreStops;
         const idx = stops.findIndex((s) => s.id === nearest.stop.id);
         if (idx < stops.length - 1) {
@@ -166,69 +131,96 @@ export function BusStateProvider({ children }: { children: React.ReactNode }) {
       }
     }
     setIsOnBus(true);
+
+    try {
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        await setDoc(doc(db, "bus_reports", `board_${uid}_${Date.now()}`), {
+          userId: uid,
+          action: "boarded",
+          direction: boardDirection,
+          currentStopId: boardStopId,
+          timestamp: serverTimestamp(),
+        });
+        await incrementTrustScore(uid, 1);
+        await incrementReportCount(uid);
+      }
+    } catch (err) {
+      console.error("Failed to report boarding:", err);
+    }
   }, [setIsOnBus]);
 
-  // TODO: FIREBASE SETUP - Report disembarking event
-  // Collection: "bus_reports"
-  // Schema: { userId, action: "disembarked", lastStopId, timestamp: serverTimestamp() }
-  //
-  // if (auth.currentUser) {
-  //   await setDoc(doc(db, "bus_reports", `disembark_${auth.currentUser.uid}_${Date.now()}`), {
-  //     userId: auth.currentUser.uid,
-  //     action: "disembarked",
-  //     lastStopId: currentStop?.id,
-  //     timestamp: serverTimestamp(),
-  //   });
-  // }
-  //
-  // Also stop the location update interval
-  const disembark = useCallback(() => {
+  const disembark = useCallback(async () => {
     setIsOnBus(false);
-  }, [setIsOnBus]);
 
-  // TODO: FIREBASE SETUP - Report "Not Here"
-  // Collection: "bus_reports"
-  // Schema: { userId, type: "not_here", timestamp: serverTimestamp() }
-  const reportNotHere = useCallback(() => {
-    // if (auth.currentUser) {
-    //   await setDoc(doc(db, "bus_reports", `not_here_${auth.currentUser.uid}_${Date.now()}`), {
-    //     userId: auth.currentUser.uid,
-    //     type: "not_here",
-    //     timestamp: serverTimestamp(),
-    //   });
-    // }
-    console.log("[FIREBASE] Report: Bus is not here");
+    try {
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        await setDoc(doc(db, "bus_reports", `disembark_${uid}_${Date.now()}`), {
+          userId: uid,
+          action: "disembarked",
+          lastStopId: currentStop?.id,
+          timestamp: serverTimestamp(),
+        });
+        await incrementTrustScore(uid, 1);
+      }
+    } catch (err) {
+      console.error("Failed to report disembark:", err);
+    }
+  }, [setIsOnBus, currentStop]);
+
+  const reportNotHere = useCallback(async () => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        await setDoc(doc(db, "bus_reports", `not_here_${uid}_${Date.now()}`), {
+          userId: uid,
+          type: "not_here",
+          timestamp: serverTimestamp(),
+        });
+        await decrementTrustScore(uid, 1);
+        await incrementReportCount(uid);
+      }
+    } catch (err) {
+      console.error("Failed to report not here:", err);
+    }
   }, []);
 
-  // TODO: FIREBASE SETUP - Report "Bus is Here"
-  // Collection: "bus_reports"
-  // Schema: { userId, type: "bus_is_here", timestamp: serverTimestamp() }
-  const reportBusIsHere = useCallback(() => {
-    // if (auth.currentUser) {
-    //   await setDoc(doc(db, "bus_reports", `bus_is_here_${auth.currentUser.uid}_${Date.now()}`), {
-    //     userId: auth.currentUser.uid,
-    //     type: "bus_is_here",
-    //     timestamp: serverTimestamp(),
-    //   });
-    // }
-    console.log("[FIREBASE] Report: Bus is here");
+  const reportBusIsHere = useCallback(async () => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        await setDoc(doc(db, "bus_reports", `bus_is_here_${uid}_${Date.now()}`), {
+          userId: uid,
+          type: "bus_is_here",
+          timestamp: serverTimestamp(),
+        });
+        await incrementTrustScore(uid, 2);
+        await incrementReportCount(uid);
+      }
+    } catch (err) {
+      console.error("Failed to report bus is here:", err);
+    }
   }, []);
 
-  // TODO: FIREBASE SETUP - Report crowding
-  // Collection: "bus_reports"
-  // Schema: { userId, type: "crowding_report", level, stopId, timestamp: serverTimestamp() }
-  const reportCrowding = useCallback((_level: "Low" | "Medium" | "High") => {
-    // if (auth.currentUser) {
-    //   await setDoc(doc(db, "bus_reports", `crowding_${auth.currentUser.uid}_${Date.now()}`), {
-    //     userId: auth.currentUser.uid,
-    //     type: "crowding_report",
-    //     level,
-    //     stopId: currentStop?.id,
-    //     timestamp: serverTimestamp(),
-    //   });
-    // }
-    console.log("[FIREBASE] Report crowding:", _level);
-  }, []);
+  const reportCrowding = useCallback(async (level: "Low" | "Medium" | "High") => {
+    try {
+      const uid = auth.currentUser?.uid;
+      if (uid) {
+        await setDoc(doc(db, "bus_reports", `crowding_${uid}_${Date.now()}`), {
+          userId: uid,
+          type: "crowding_report",
+          level,
+          stopId: currentStop?.id,
+          timestamp: serverTimestamp(),
+        });
+        await incrementTrustScore(uid, 1);
+        await incrementReportCount(uid);
+      }
+    } catch (err) {
+      console.error("Failed to report crowding:", err);
+    }
+  }, [currentStop]);
 
   const value = useMemo(
     () => ({
