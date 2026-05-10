@@ -17,6 +17,7 @@ import { findNearestStopOnRoute } from "@/lib/location-utils";
 import {
   doc,
   setDoc,
+  deleteDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
@@ -98,6 +99,46 @@ export function BusStateProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     currentUserLocationRef.current = currentUserLocation;
   }, [currentUserLocation]);
+
+  useEffect(() => {
+    const uid = auth.currentUser?.uid;
+    if (!uid || !isLocationSharing || !currentUserLocation) {
+      if (uid) {
+        deleteDoc(doc(db, "peer_locations", uid)).catch(() => {});
+      }
+      return;
+    }
+
+    const peerRef = doc(db, "peer_locations", uid);
+    const interval = setInterval(() => {
+      setDoc(peerRef, {
+        lat: currentUserLocation.lat,
+        lng: currentUserLocation.lng,
+        heading: currentUserLocation.heading,
+        accuracy: currentUserLocation.accuracy,
+        direction,
+        isOnBus: true,
+        displayName: auth.currentUser?.displayName || "Student",
+        timestamp: serverTimestamp(),
+      }).catch(() => {});
+    }, 5000);
+
+    setDoc(peerRef, {
+      lat: currentUserLocation.lat,
+      lng: currentUserLocation.lng,
+      heading: currentUserLocation.heading,
+      accuracy: currentUserLocation.accuracy,
+      direction,
+      isOnBus: true,
+      displayName: auth.currentUser?.displayName || "Student",
+      timestamp: serverTimestamp(),
+    }).catch(() => {});
+
+    return () => {
+      clearInterval(interval);
+      deleteDoc(peerRef).catch(() => {});
+    };
+  }, [isLocationSharing, currentUserLocation, direction]);
 
   const setIsOnBus = useCallback((on: boolean) => {
     setIsOnBusRaw(on);

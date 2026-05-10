@@ -168,14 +168,24 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
           </div>
         </div>
 
-        <motion.button 
-          whileTap={{ scale: 0.96 }}
-          onClick={() => signOut(auth)}
-          className="w-full border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 font-semibold py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center justify-center gap-2"
-        >
-          <span className="material-symbols-outlined">logout</span>
-          {dict.logout}
-        </motion.button>
+        <div className="space-y-3">
+          <Link
+            href={`/${lang}/ride-history`}
+            className="w-full flex items-center justify-center gap-2 bg-surface-container dark:bg-slate-800 border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            <span className="material-symbols-outlined">history</span>
+            View Ride History
+          </Link>
+
+          <motion.button
+            whileTap={{ scale: 0.96 }}
+            onClick={() => signOut(auth)}
+            className="w-full border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 font-semibold py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center justify-center gap-2"
+          >
+            <span className="material-symbols-outlined">logout</span>
+            {dict.logout}
+          </motion.button>
+        </div>
       </div>
     </main>
   );

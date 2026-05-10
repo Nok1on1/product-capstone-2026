@@ -10,6 +10,7 @@ export interface UserProfile {
   totalReportsMade: number;
   defaultStop: string;
   createdAt: Timestamp | string;
+  onboardingCompleted?: boolean;
 }
 
 // Type for when we're updating trust score or report count

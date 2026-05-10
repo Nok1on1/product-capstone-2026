@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
 import { useState, useEffect, use, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -68,7 +69,31 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const tripDict = getDictionary(lang as Locale).tripDetails;
   const router = useRouter();
 
-  const { profile, updateProfile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
+
+  const [onboardingCheckDone, setOnboardingCheckDone] = useState(false);
+
+  useEffect(() => {
+    if (onboardingCheckDone) return;
+    if (user === undefined) return;
+
+    const checkOnboarding = async () => {
+      if (user && profile) {
+        if (!profile.onboardingCompleted) {
+          router.replace(`/${lang}/onboarding`);
+          return;
+        }
+      } else if (!user) {
+        const done = localStorage.getItem("bandersnatch_onboarding_done");
+        if (!done) {
+          router.replace(`/${lang}/onboarding`);
+          return;
+        }
+      }
+      setOnboardingCheckDone(true);
+    };
+    checkOnboarding();
+  }, [user, profile, lang, router, onboardingCheckDone]);
   const {
     hydrated,
     isOnBus,

@@ -7,6 +7,13 @@ import "leaflet/dist/leaflet.css";
 import { toStationStops, toCityCentreStops, BusStop } from "@/data/route3";
 import { useTheme } from "@/components/ThemeProvider";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import {
+  collection,
+  query,
+  onSnapshot,
+  Timestamp,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 import { LocationData } from "@/hooks/useUserLocation";
 
@@ -319,6 +326,105 @@ function SimulatedBusCity() {
   );
 }
 
+interface PeerData {
+  id: string;
+  lat: number;
+  lng: number;
+  heading: number | null;
+  accuracy: number;
+  direction: string | null;
+  displayName: string;
+  timestamp: Timestamp | null;
+}
+
+const peerIconWithHeading = (heading: number | null) => {
+  const arrow = heading !== null
+    ? `<div style="position:absolute;top:-22px;left:-5px;width:10px;height:10px;transform:rotate(${heading}deg);">
+        <svg width="10" height="10" viewBox="0 0 10 10"><polygon points="5,0 10,10 5,7.5 0,10" fill="#22c55e"/></svg>
+       </div>`
+    : "";
+  return L.divIcon({
+    html: `<div style="position:relative;width:0;height:0;">
+      ${arrow}
+      <div style="position:absolute;top:-8px;left:-8px;width:16px;height:16px;background:#22c55e;border:2px solid white;border-radius:50%;box-shadow:0 0 6px rgba(34,197,94,0.5);z-index:1000;"></div>
+    </div>`,
+    className: "custom-peer-icon",
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+};
+
+function PeersLayer({ onPeerCountChange }: { onPeerCountChange: (count: number) => void }) {
+  const map = useMap();
+  const markersRef = useRef<Map<string, L.Marker>>(new Map());
+  const peerDataRef = useRef<PeerData[]>([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "peer_locations"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const now = Date.now();
+      const staleThreshold = 60000;
+      const activePeers: PeerData[] = [];
+      const currentIds = new Set<string>();
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const peerTimestamp = data.timestamp?.toMillis?.() || now;
+        if (now - peerTimestamp > staleThreshold) return;
+        if (data.uid === doc.id) return;
+        currentIds.add(doc.id);
+        activePeers.push({
+          id: doc.id,
+          lat: data.lat,
+          lng: data.lng,
+          heading: data.heading || null,
+          accuracy: data.accuracy || 0,
+          direction: data.direction || null,
+          displayName: data.displayName || "Student",
+          timestamp: data.timestamp || null,
+        });
+      });
+
+      for (const [id, marker] of markersRef.current) {
+        if (!currentIds.has(id)) {
+          marker.remove();
+          markersRef.current.delete(id);
+        }
+      }
+
+      for (const peer of activePeers) {
+        const existing = markersRef.current.get(peer.id);
+        const pos = L.latLng(peer.lat, peer.lng);
+        if (existing) {
+          existing.setLatLng(pos);
+          existing.setIcon(peerIconWithHeading(peer.heading));
+        } else {
+          const marker = L.marker(pos, {
+            icon: peerIconWithHeading(peer.heading),
+            zIndexOffset: 1500,
+          })
+            .addTo(map)
+            .bindPopup(
+              `<div class="font-sans"><div class="font-bold">${peer.displayName}</div><div class="text-xs text-slate-500">Sharing location</div></div>`
+            );
+          markersRef.current.set(peer.id, marker);
+        }
+      }
+
+      peerDataRef.current = activePeers;
+      onPeerCountChange(activePeers.length);
+    });
+
+    return () => {
+      unsubscribe();
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current.clear();
+    };
+  }, [map, onPeerCountChange]);
+
+  return null;
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function LiveMap() {
   const { resolvedTheme } = useTheme();
@@ -333,6 +439,7 @@ export default function LiveMap() {
     "none" | "station" | "city" | "both"
   >("none");
   const [legendCollapsed, setLegendCollapsed] = useState(false);
+  const [peerCount, setPeerCount] = useState(0);
 
   useEffect(() => {
     startTracking();
@@ -448,6 +555,7 @@ export default function LiveMap() {
         ))}
 
         <UserMarker location={location} />
+        <PeersLayer onPeerCountChange={setPeerCount} />
         <SimulatedBusStation />
         <SimulatedBusCity />
       </MapContainer>
@@ -548,6 +656,14 @@ export default function LiveMap() {
                 <div className="w-2.5 h-2.5 rounded-full bg-blue-500 border-2 border-white shadow-sm shrink-0" />
                 <p className="text-[10px] text-on-surface-variant dark:text-slate-400">Your Location</p>
               </div>
+              {peerCount > 0 && (
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-white shadow-sm shrink-0" />
+                  <p className="text-[10px] text-on-surface-variant dark:text-slate-400">
+                    {peerCount} {peerCount === 1 ? "peer" : "peers"} sharing
+                  </p>
+                </div>
+              )}
             </div>
 
             {routeError && (
