@@ -6,10 +6,13 @@ service cloud.firestore {
     match /users/{userId} {
       allow create: if request.auth.uid == userId;
       allow read: if request.auth != null && request.auth.uid == userId;
-      allow update: if request.auth.uid == userId && 
-                       !('role' in request.resource.data.diff(resource.data)) &&
-                       !('trustScore' in request.resource.data.diff(resource.data)) &&
-                       !('totalReportsMade' in request.resource.data.diff(resource.data));
+      allow update: if request.auth != null && (
+                       (request.auth.uid == userId && 
+                        !('role' in request.resource.data.diff(resource.data)) &&
+                        !('trustScore' in request.resource.data.diff(resource.data)) &&
+                        !('totalReportsMade' in request.resource.data.diff(resource.data))) ||
+                       (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+                     );
       allow delete: if false;
 
       // FCM tokens subcollection
@@ -45,6 +48,18 @@ service cloud.firestore {
     match /bus_data/{document=**} {
       allow read: if true;
       allow write: if false;
+    }
+
+    // Buses collection - read for everyone, write for authenticated users
+    match /buses/{busId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
+    }
+
+    // Alerts collection - read for everyone, write for authenticated users
+    match /alerts/{alertId} {
+      allow read: if true;
+      allow create, update, delete: if request.auth != null;
     }
 
     match /{document=**} {

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { AnimatedIcon } from "@/components/AnimatedIcon";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useTheme } from "@/components/ThemeProvider";
+import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 
 export function TopNav({ lang }: { lang: string }) {
@@ -13,6 +14,7 @@ export function TopNav({ lang }: { lang: string }) {
   const router = useRouter();
   const dict = getDictionary(lang as Locale);
   const { setTheme, resolvedTheme } = useTheme();
+  const { profile } = useAuth();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch by only rendering after mounting
@@ -23,6 +25,11 @@ export function TopNav({ lang }: { lang: string }) {
     { name: dict.nav.map, href: `/${lang}/live-map` },
     { name: dict.nav.schedule, href: `/${lang}/routes` },
   ];
+
+  // Add admin link if user is admin
+  if (profile?.role === "admin") {
+    navItems.push({ name: "Admin", href: `/${lang}/admin` });
+  }
 
   const toggleLanguage = () => {
     const nextLang = lang === "en" ? "ka" : "en";

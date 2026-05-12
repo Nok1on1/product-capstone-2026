@@ -4,6 +4,9 @@ import type { NextRequest } from "next/server";
 const locales = ["en", "ka"];
 const defaultLocale = "en";
 
+// Routes that don't require email verification
+const publicRoutes = ["/login", "/signup", "/verify-email"];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
@@ -20,10 +23,12 @@ export function middleware(request: NextRequest) {
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  if (pathnameHasLocale) return NextResponse.next();
+  if (!pathnameHasLocale) {
+    request.nextUrl.pathname = `/${defaultLocale}${pathname}`;
+    return NextResponse.redirect(request.nextUrl);
+  }
 
-  request.nextUrl.pathname = `/${defaultLocale}${pathname}`;
-  return NextResponse.redirect(request.nextUrl);
+  return NextResponse.next();
 }
 
 export const config = {

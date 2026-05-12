@@ -24,7 +24,16 @@ export default function Login({ params }: { params: Promise<{ lang: string }> })
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Check if email is verified
+      if (!userCredential.user.emailVerified) {
+        setError("Please verify your email before logging in.");
+        setLoading(false);
+        router.push(`/${lang}/verify-email?email=${encodeURIComponent(email)}`);
+        return;
+      }
+      
       router.push(`/${lang}`);
     } catch (err: any) {
       setError("Invalid email or password.");
