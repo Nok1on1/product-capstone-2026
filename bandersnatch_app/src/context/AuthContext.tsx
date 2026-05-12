@@ -43,6 +43,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               trustScore: 50,
               totalReportsMade: 0,
               defaultStop: "10",
+              profilePicture: null,
+              emailVerified: false,
               createdAt: new Date().toISOString(),
             });
           }
@@ -55,6 +57,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             trustScore: 50,
             totalReportsMade: 0,
             defaultStop: "10",
+            profilePicture: null,
+            emailVerified: false,
             createdAt: new Date().toISOString(),
           });
         }

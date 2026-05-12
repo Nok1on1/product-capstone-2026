@@ -9,6 +9,8 @@ export interface UserProfile {
   trustScore: number;
   totalReportsMade: number;
   defaultStop: string;
+  profilePicture?: string | null;
+  emailVerified?: boolean;
   createdAt: Timestamp | string;
 }
 

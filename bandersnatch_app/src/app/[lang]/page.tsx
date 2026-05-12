@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
 import { motion, AnimatePresence } from "framer-motion";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
@@ -13,6 +13,7 @@ import { useUserLocation } from "@/hooks/useUserLocation";
 import { findNearestStopOnRoute } from "@/lib/location-utils";
 import { OnBusBanner } from "@/components/OnBusBanner";
 import { OnBusButton } from "@/components/OnBusButton";
+import { ReportButton } from "@/components/ReportButton";
 import { getNextScheduledBus } from "@/lib/timetable";
 
 export default function Home({ params }: { params: Promise<{ lang: string }> }) {
@@ -40,6 +41,9 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const [crowding, setCrowding] = useState<"Low" | "Medium" | "High" | null>(null);
   const [showDetectedIndicator, setShowDetectedIndicator] = useState(false);
   const [timetableETA, setTimetableETA] = useState<number | null>(null);
+  const [activeBusCount, setActiveBusCount] = useState(0);
+  const [alertCount, setAlertCount] = useState(0);
+  const [alertedBuses, setAlertedBuses] = useState<{ [busId: string]: string[] }>({});
 
   const { location, startTracking } = useUserLocation();
 
@@ -86,6 +90,51 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
       const { minutes: m } = getNextScheduledBus("station");
       setTimetableETA(m);
     }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch active buses and alerts
+  useEffect(() => {
+    const fetchBusesAndAlerts = async () => {
+      try {
+        // Fetch all buses
+        const busesSnapshot = await getDocs(collection(db, "buses"));
+        
+        // Fetch all alerts with status open
+        const alertsSnapshot = await getDocs(collection(db, "alerts"));
+        const openAlerts = alertsSnapshot.docs.filter(
+          (doc) => doc.data().status === "open"
+        );
+        
+        // Build a set of bus IDs that have alerts
+        const busIdsWithAlerts = new Set<string>();
+        const busAlerts: { [busId: string]: string[] } = {};
+        
+        openAlerts.forEach((doc) => {
+          const data = doc.data();
+          busIdsWithAlerts.add(data.busId);
+          if (!busAlerts[data.busId]) {
+            busAlerts[data.busId] = [];
+          }
+          busAlerts[data.busId].push(data.reason);
+        });
+
+        setAlertedBuses(busAlerts);
+
+        // Count buses: total active buses minus those with alerts
+        const totalBuses = busesSnapshot.docs.length;
+        const activeBusesWithoutAlerts = totalBuses - busIdsWithAlerts.size;
+        
+        setActiveBusCount(activeBusesWithoutAlerts);
+        setAlertCount(openAlerts.length);
+      } catch (error) {
+        console.error("Error fetching buses and alerts:", error);
+      }
+    };
+
+    fetchBusesAndAlerts();
+    // Refresh every 30 seconds
+    const interval = setInterval(fetchBusesAndAlerts, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -341,7 +390,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
             <span className="material-symbols-outlined text-lg">directions_bus</span>
             <span className="font-bold text-sm">{dict.activeBuses}</span>
           </div>
-          <div className="text-3xl font-black text-primary-container dark:text-blue-400">2</div>
+          <div className="text-3xl font-black text-primary-container dark:text-blue-400">{activeBusCount}</div>
         </motion.div>
         <motion.div
           whileTap={{ scale: 0.95 }}
@@ -352,14 +401,65 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
             <span className="font-bold text-sm">{dict.alerts}</span>
           </div>
           <div className="text-2xl font-black text-on-surface dark:text-slate-200">
-            {dict.none}
+            {alertCount > 0 ? alertCount : dict.none}
           </div>
         </motion.div>
       </motion.div>
 
+      {/* Alert Details Section */}
+      <AnimatePresence>
+        {alertCount > 0 && Object.keys(alertedBuses).length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="w-full max-w-md mt-4 bg-error-container dark:bg-red-900 border border-error dark:border-red-700 rounded-lg p-4 space-y-3"
+          >
+            <div className="flex items-start gap-2">
+              <span className="material-symbols-outlined text-error dark:text-red-300 mt-0.5">
+                error_outline
+              </span>
+              <div className="flex-1">
+                <h3 className="font-bold text-on-error-container dark:text-red-100">
+                  Active Issues Reported
+                </h3>
+                <p className="text-sm text-on-error-container dark:text-red-200 mt-1">
+                  The following buses have reported issues:
+                </p>
+              </div>
+            </div>
+            <div className="space-y-2 mt-2">
+              {Object.entries(alertedBuses).map(([busId, reasons]) => (
+                <div
+                  key={busId}
+                  className="bg-white dark:bg-slate-800 rounded p-2 text-sm"
+                >
+                  <p className="font-semibold text-on-surface dark:text-slate-100">
+                    Bus {busId}
+                  </p>
+                  <ul className="text-on-surface-variant dark:text-slate-300 mt-1 space-y-1">
+                    {reasons.map((reason, idx) => (
+                      <li key={idx} className="text-xs flex items-start gap-2">
+                        <span className="text-error dark:text-red-400 mt-1">•</span>
+                        <span>{reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {hydrated && (
         <AnimatePresence>
-          <OnBusButton />
+          <div key="report-button">
+            <ReportButton />
+          </div>
+          <div key="onbus-button">
+            <OnBusButton />
+          </div>
         </AnimatePresence>
       )}
     </main>

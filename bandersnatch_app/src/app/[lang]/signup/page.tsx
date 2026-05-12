@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, use } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -22,10 +22,20 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // Email validation
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (displayName.trim().length < 2) {
       setError("Display name must be at least 2 characters.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
     if (password.length < 8) {
@@ -37,6 +47,7 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
       // Create comprehensive user profile with trust score system
       await setDoc(doc(db, "users", userCredential.user.uid), {
         displayName,
@@ -45,9 +56,16 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
         role: null, // Manual admin assignment later
         trustScore: 50, // Neutral starting point
         totalReportsMade: 0,
+        emailVerified: false,
+        profilePicture: null,
         createdAt: new Date().toISOString(),
       });
-      router.push(`/${lang}`);
+
+      // Send verification email
+      await sendEmailVerification(userCredential.user);
+      
+      // Redirect to verification page
+      router.push(`/${lang}/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err: any) {
       setError(err.message || "Failed to create an account.");
     } finally {
@@ -86,6 +104,9 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
               className="block w-full px-3 py-3 border border-outline-variant dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-on-surface dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary-container"
               placeholder="student@kiu.edu.ge"
             />
+            {email && !isValidEmail(email) && (
+              <p className="text-red-600 text-xs mt-1">Please enter a valid email address.</p>
+            )}
           </div>
           <div>
             <label className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide">Password</label>

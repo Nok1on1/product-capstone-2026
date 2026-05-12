@@ -1,12 +1,13 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import { StopSelect } from "@/components/StopSelect";
 import { motion } from "framer-motion";
-import { use } from "react";
+import { use, useRef, useState } from "react";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 
 export default function Account({ params }: { params: Promise<{ lang: string }> }) {
@@ -15,6 +16,76 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
   const navDict = getDictionary(lang as Locale).nav;
   
   const { user, profile, loading, updateProfile } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingPicture, setUploadingPicture] = useState(false);
+  const [picError, setPicError] = useState("");
+
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfilePictureUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      setPicError("Please upload an image file.");
+      return;
+    }
+
+    // Validate file size (max 500KB to be safe with Firestore)
+    if (file.size > 500 * 1024) {
+      setPicError("Image must be less than 500KB.");
+      return;
+    }
+
+    setUploadingPicture(true);
+    setPicError("");
+
+    try {
+      // Convert image to Base64
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const base64String = event.target?.result as string;
+          console.log("Image converted to Base64");
+
+          // Update Firestore user document with Base64 image
+          await updateDoc(doc(db, "users", user.uid), {
+            profilePicture: base64String,
+          });
+          console.log("Firestore updated with profile picture");
+
+          // Update local profile context
+          await updateProfile({ profilePicture: base64String });
+          console.log("Profile context updated");
+          
+          setUploadingPicture(false);
+        } catch (err: any) {
+          console.error("Profile picture update error:", err);
+          setPicError(err.message || "Failed to save profile picture.");
+          setUploadingPicture(false);
+        }
+      };
+
+      reader.onerror = () => {
+        setPicError("Failed to read file.");
+        setUploadingPicture(false);
+      };
+
+      reader.readAsDataURL(file);
+    } catch (err: any) {
+      console.error("Profile picture upload error:", err);
+      setPicError(err.message || "Failed to upload profile picture.");
+      setUploadingPicture(false);
+    } finally {
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -49,14 +120,55 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
       <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-xl p-6 relative overflow-visible shadow-sm transition-colors duration-200">
         <div className="absolute top-0 left-0 w-full h-1 bg-primary-container dark:bg-blue-500 rounded-t-xl"></div>
         <div className="flex items-center gap-4 mb-8">
-          <div className="bg-surface-container dark:bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center text-primary-container dark:text-blue-400 text-2xl font-bold">
-            {user.email?.charAt(0).toUpperCase()}
+          <div 
+            className="relative cursor-pointer group"
+            onClick={handleProfilePictureClick}
+            role="button"
+            tabIndex={0}
+          >
+            {profile?.profilePicture ? (
+              <img 
+                src={profile.profilePicture} 
+                alt={user.displayName || "Profile"}
+                className="w-16 h-16 rounded-full object-cover bg-surface-container dark:bg-slate-800"
+              />
+            ) : (
+              <div className="bg-surface-container dark:bg-slate-800 w-16 h-16 rounded-full flex items-center justify-center text-primary-container dark:text-blue-400 text-2xl font-bold">
+                {profile?.displayName?.charAt(0).toUpperCase()}
+              </div>
+            )}
+            
+            {/* Upload overlay */}
+            <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              {uploadingPicture ? (
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+              ) : (
+                <span className="material-symbols-outlined text-white text-xl">camera_alt</span>
+              )}
+            </div>
+
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureUpload}
+              className="hidden"
+              disabled={uploadingPicture}
+            />
           </div>
+
           <div>
             <h1 className="text-xl font-bold text-on-surface dark:text-slate-100 tracking-tight">{navDict.account}</h1>
             <p className="text-sm text-on-surface-variant dark:text-slate-400">{profile?.displayName || user.email}</p>
           </div>
         </div>
+
+        {picError && (
+          <div className="mb-4 text-red-600 bg-red-50 dark:bg-red-950/30 p-3 rounded-lg text-sm">
+            {picError}
+          </div>
+        )}
 
         <div className="mb-6 grid grid-cols-2 gap-4">
           <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/30 rounded-lg p-4 text-center">
