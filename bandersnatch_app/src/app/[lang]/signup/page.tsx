@@ -7,7 +7,7 @@ import { auth, db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { StopSelect } from "@/components/StopSelect";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 
 export default function Signup({ params }: { params: Promise<{ lang: string }> }) {
@@ -80,7 +80,19 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
         <h1 className="text-3xl font-black text-on-surface dark:text-slate-100 mb-2 tracking-tighter">{dict.signup}</h1>
         <p className="text-on-surface-variant dark:text-slate-400 mb-6">Create an account to save your bus stop.</p>
 
-        {error && <div className="mb-4 text-red-600 bg-red-50 dark:bg-red-950/30 p-3 rounded-lg text-sm">{error}</div>}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -12, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: "auto" }}
+              exit={{ opacity: 0, y: -12, height: 0 }}
+              transition={{ type: "spring", bounce: 0, duration: 0.35 }}
+              className="mb-4 text-red-600 bg-red-50 dark:bg-red-950/30 p-3 rounded-lg text-sm overflow-hidden"
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div>

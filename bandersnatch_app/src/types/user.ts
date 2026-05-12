@@ -12,6 +12,7 @@ export interface UserProfile {
   profilePicture?: string | null;
   emailVerified?: boolean;
   createdAt: Timestamp | string;
+  onboardingCompleted?: boolean;
 }
 
 // Type for when we're updating trust score or report count

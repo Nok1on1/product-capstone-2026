@@ -1,6 +1,7 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect */
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
@@ -15,6 +16,52 @@ import { OnBusBanner } from "@/components/OnBusBanner";
 import { OnBusButton } from "@/components/OnBusButton";
 import { ReportButton } from "@/components/ReportButton";
 import { getNextScheduledBus } from "@/lib/timetable";
+import Skeleton from "@/components/Skeleton";
+
+function BackgroundAnimation() {
+  const buses = useMemo(() =>
+    Array.from({ length: 5 }, (_, i) => ({
+      startX: `${15 + (i * 17) % 70}%`,
+      startY: `${10 + (i * 23) % 75}%`,
+      endX: `${80 - (i * 13) % 60}%`,
+      endY: `${15 + (i * 29 + 10) % 70}%`,
+      scale: 0.5 + i * 0.1,
+      duration: 20 + i * 8,
+      delay: i * 4,
+    })),
+  []);
+
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+      {buses.map((bus, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          initial={{ x: bus.startX, y: bus.startY, rotate: 0, opacity: 0 }}
+          animate={{
+            x: bus.endX,
+            y: bus.endY,
+            rotate: [0, 10, -10, 0],
+            opacity: [0, 0.12, 0.12, 0],
+          }}
+          transition={{
+            duration: bus.duration,
+            repeat: Infinity,
+            ease: "linear",
+            delay: bus.delay,
+          }}
+        >
+          <span
+            className="material-symbols-outlined text-blue-300/30 dark:text-blue-500/20"
+            style={{ fontSize: `${24 * bus.scale}px` }}
+          >
+            directions_bus
+          </span>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 export default function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
@@ -23,7 +70,31 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const tripDict = getDictionary(lang as Locale).tripDetails;
   const router = useRouter();
 
-  const { profile, updateProfile } = useAuth();
+  const { user, profile, updateProfile } = useAuth();
+
+  const [onboardingCheckDone, setOnboardingCheckDone] = useState(false);
+
+  useEffect(() => {
+    if (onboardingCheckDone) return;
+    if (user === undefined) return;
+
+    const checkOnboarding = async () => {
+      if (user && profile) {
+        if (!profile.onboardingCompleted) {
+          router.replace(`/${lang}/onboarding`);
+          return;
+        }
+      } else if (!user) {
+        const done = localStorage.getItem("bandersnatch_onboarding_done");
+        if (!done) {
+          router.replace(`/${lang}/onboarding`);
+          return;
+        }
+      }
+      setOnboardingCheckDone(true);
+    };
+    checkOnboarding();
+  }, [user, profile, lang, router, onboardingCheckDone]);
   const {
     hydrated,
     isOnBus,
@@ -37,7 +108,6 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const [stop, setStop] = useState("10");
   const [destinationStop, setDestinationStop] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
-  const [loadingMessage, setLoadingMessage] = useState(dict.checking);
   const [crowding, setCrowding] = useState<"Low" | "Medium" | "High" | null>(null);
   const [showDetectedIndicator, setShowDetectedIndicator] = useState(false);
   const [timetableETA, setTimetableETA] = useState<number | null>(null);
@@ -145,9 +215,6 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
   const handleCheckStatus = async () => {
     setStatus("loading");
-    setLoadingMessage(dict.checking);
-
-    const timeoutId = setTimeout(() => setLoadingMessage(dict.stillChecking), 3000);
 
     try {
       const docRef = doc(db, "bus_data", "current_status");
@@ -172,7 +239,6 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
     }
 
     setTimeout(() => {
-      clearTimeout(timeoutId);
       setStatus("success");
     }, 1500);
   };
@@ -190,6 +256,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-5 pb-32">
+      <BackgroundAnimation />
       <AnimatePresence>
         {hydrated && isOnBus && (
           <OnBusBanner
@@ -214,7 +281,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           <p className="text-on-surface-variant dark:text-slate-400">{dict.subtitle}</p>
         </motion.div>
 
-        <motion.div layout="position" className="mb-4 z-20 relative">
+        <motion.div layout="position" className="mb-4 z-30 relative">
           <label
             className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide"
             htmlFor="stop-selector"
@@ -237,7 +304,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           </AnimatePresence>
         </motion.div>
 
-        <motion.div layout="position" className="mb-6 z-20 relative">
+        <motion.div layout="position" className="mb-6 relative">
           <label
             className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide"
             htmlFor="destination-selector"
@@ -284,12 +351,8 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="w-full py-6 flex flex-col items-center justify-center space-y-4 bg-surface-container dark:bg-slate-800 rounded-lg border border-outline-variant dark:border-slate-700 transition-colors"
             >
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-container dark:border-blue-400"></div>
-              <p className="text-on-surface dark:text-slate-200 font-medium animate-pulse">
-                {loadingMessage}
-              </p>
+              <Skeleton.Card />
             </motion.div>
           )}
 
