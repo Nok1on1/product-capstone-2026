@@ -70,31 +70,27 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const tripDict = getDictionary(lang as Locale).tripDetails;
   const router = useRouter();
 
-  const { user, profile, updateProfile } = useAuth();
+  const { user, profile, updateProfile, loading } = useAuth();
 
   const [onboardingCheckDone, setOnboardingCheckDone] = useState(false);
 
   useEffect(() => {
-    if (onboardingCheckDone) return;
-    if (user === undefined) return;
+    if (loading || onboardingCheckDone) return;
 
-    const checkOnboarding = async () => {
-      if (user && profile) {
-        if (!profile.onboardingCompleted) {
-          router.replace(`/${lang}/onboarding`);
-          return;
-        }
-      } else if (!user) {
-        const done = localStorage.getItem("bandersnatch_onboarding_done");
-        if (!done) {
-          router.replace(`/${lang}/onboarding`);
-          return;
-        }
+    if (user && profile) {
+      if (!profile.onboardingCompleted) {
+        router.replace(`/${lang}/onboarding`);
+        return;
       }
-      setOnboardingCheckDone(true);
-    };
-    checkOnboarding();
-  }, [user, profile, lang, router, onboardingCheckDone]);
+    } else if (!user) {
+      const done = localStorage.getItem("bandersnatch_onboarding_done");
+      if (!done) {
+        router.replace(`/${lang}/onboarding`);
+        return;
+      }
+    }
+    setOnboardingCheckDone(true);
+  }, [loading, user, profile, lang, router, onboardingCheckDone]);
   const {
     hydrated,
     isOnBus,

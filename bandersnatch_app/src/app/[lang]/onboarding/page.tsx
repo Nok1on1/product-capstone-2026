@@ -287,12 +287,20 @@ export default function OnboardingPage({
 
         case "location":
           return (
-            <button
-              onClick={requestLocation}
-              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
-            >
-              {dict.allowLocation}
-            </button>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={requestLocation}
+                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+              >
+                {dict.allowLocation}
+              </button>
+              <button
+                onClick={handleNext}
+                className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-3 rounded-lg"
+              >
+                {dict.next}
+              </button>
+            </div>
           );
 
         case "stop":
