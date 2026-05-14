@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { toStationStops, toCityCentreStops, BusStop } from "@/data/route3";
+import { useParams } from "next/navigation";
+import { toStationStops, toCityCentreStops, BusStop, getBusStopName } from "@/data/route3";
+import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useTheme } from "@/components/ThemeProvider";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import {
@@ -33,12 +35,12 @@ function busSvg(color: string, label: string): string {
   return `<div class="animated-bus-marker" style="position:relative;width:0;height:0;">
     <svg width="40" height="40" viewBox="0 0 40 40" style="position:absolute;top:-20px;left:-20px;">
       <defs>
-        <filter id="shadow_${color.replace('#','')}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="shadow_${color.replace('#', '')}" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/>
         </filter>
       </defs>
       <rect x="6" y="8" width="28" height="20" rx="4" ry="4" fill="${color}"
-        filter="url(#shadow_${color.replace('#','')})" stroke="white" stroke-width="1.5"/>
+        filter="url(#shadow_${color.replace('#', '')})" stroke="white" stroke-width="1.5"/>
       <rect x="10" y="11" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
       <rect x="17" y="11" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
       <rect x="24" y="11" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
@@ -78,7 +80,7 @@ const userLocationIcon = (heading: number | null, accuracy: number) => {
   const accuracySize = Math.max(accuracy, 10);
   return L.divIcon({
     html: `<div style="position:relative;width:0;height:0;">
-      <div class="pulse-ring" style="position:absolute;top:-${accuracySize}px;left:-${accuracySize}px;width:${accuracySize*2}px;height:${accuracySize*2}px;background:rgba(66,133,244,0.1);border-radius:50%;z-index:999;"></div>
+      <div class="pulse-ring" style="position:absolute;top:-${accuracySize}px;left:-${accuracySize}px;width:${accuracySize * 2}px;height:${accuracySize * 2}px;background:rgba(66,133,244,0.1);border-radius:50%;z-index:999;"></div>
       ${headingArrow}
       <div style="position:absolute;top:-10px;left:-10px;width:20px;height:20px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 8px rgba(66,133,244,0.5);z-index:1000;"></div>
     </div>`,
@@ -173,7 +175,7 @@ function OffsetPolyline({
 }
 
 // ─── Simulated bus – To Station (Blue) ───────────────────────────────────────
-function SimulatedBusStation() {
+function SimulatedBusStation({ dictMap }: { dictMap: any }) {
   const [position, setPosition] = useState<[number, number]>([
     toStationStops[0].lat,
     toStationStops[0].lng,
@@ -231,14 +233,14 @@ function SimulatedBusStation() {
   return (
     <Marker position={position} icon={busIconBlue} zIndexOffset={1000}>
       <Popup className="font-sans">
-        <div className="font-bold text-primary-container">Bus #3</div>
-        <div className="text-sm">Heading to Rioni Station</div>
+        <div className="font-bold text-primary-container">{dictMap.bus3}</div>
+        <div className="text-sm">{dictMap.headingToStation}</div>
       </Popup>
     </Marker>
   );
 }
 
-function UserMarker({ location }: { location: LocationData | null }) {
+function UserMarker({ location, dictMap }: { location: LocationData | null, dictMap: any }) {
   if (!location) return null;
 
   return (
@@ -248,11 +250,11 @@ function UserMarker({ location }: { location: LocationData | null }) {
       zIndexOffset={2000}
     >
       <Popup className="font-sans">
-        <div className="font-bold">Your Location</div>
+        <div className="font-bold">{dictMap.yourLocation}</div>
         <div className="text-xs text-slate-500 flex items-center gap-2">
-          <span>Accuracy: ~{Math.round(location.accuracy)}m</span>
+          <span>{dictMap.accuracy}: ~{Math.round(location.accuracy)}m</span>
           {location.heading !== null && (
-            <span>Heading: {Math.round(location.heading)}°</span>
+            <span>{dictMap.heading}: {Math.round(location.heading)}°</span>
           )}
         </div>
       </Popup>
@@ -261,7 +263,7 @@ function UserMarker({ location }: { location: LocationData | null }) {
 }
 
 // ─── Simulated bus – To City Centre (Amber) ──────────────────────────────────
-function SimulatedBusCity() {
+function SimulatedBusCity({ dictMap }: { dictMap: any }) {
   const [position, setPosition] = useState<[number, number]>([
     toCityCentreStops[0].lat,
     toCityCentreStops[0].lng,
@@ -319,8 +321,8 @@ function SimulatedBusCity() {
   return (
     <Marker position={position} icon={busIconAmber} zIndexOffset={1000}>
       <Popup className="font-sans">
-        <div className="font-bold text-amber-600">Bus #3</div>
-        <div className="text-sm">Heading to City Centre</div>
+        <div className="font-bold text-amber-600">{dictMap.bus3}</div>
+        <div className="text-sm">{dictMap.headingToCity}</div>
       </Popup>
     </Marker>
   );
@@ -354,7 +356,7 @@ const peerIconWithHeading = (heading: number | null) => {
   });
 };
 
-function PeersLayer({ onPeerCountChange }: { onPeerCountChange: (count: number) => void }) {
+function PeersLayer({ onPeerCountChange, dictMap }: { onPeerCountChange: (count: number) => void, dictMap: any }) {
   const map = useMap();
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
   const peerDataRef = useRef<PeerData[]>([]);
@@ -405,7 +407,7 @@ function PeersLayer({ onPeerCountChange }: { onPeerCountChange: (count: number) 
           })
             .addTo(map)
             .bindPopup(
-              `<div class="font-sans"><div class="font-bold">${peer.displayName}</div><div class="text-xs text-slate-500">Sharing location</div></div>`
+              `<div class="font-sans"><div class="font-bold">${peer.displayName}</div><div class="text-xs text-slate-500">${dictMap.sharingLocation}</div></div>`
             );
           markersRef.current.set(peer.id, marker);
         }
@@ -420,7 +422,7 @@ function PeersLayer({ onPeerCountChange }: { onPeerCountChange: (count: number) 
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current.clear();
     };
-  }, [map, onPeerCountChange]);
+  }, [map, onPeerCountChange, dictMap]);
 
   return null;
 }
@@ -429,8 +431,17 @@ function PeersLayer({ onPeerCountChange }: { onPeerCountChange: (count: number) 
 export default function LiveMap() {
   const { resolvedTheme } = useTheme();
   const { location, startTracking } = useUserLocation();
+  const params = useParams();
+  const lang = (params?.lang as string) || "en";
   const mapRef = useRef<L.Map | null>(null);
   const hasCenteredRef = useRef(false);
+
+  const dict = getDictionary(lang as Locale);
+  const toStationStr = dict.onBus.tripDirectionStation;
+  const toCityStr = dict.onBus.tripDirectionCity;
+  const stopStr = dict.tripDetails.stop;
+  const depStr = dict.routes.departure;
+  const termStr = dict.routes.terminus;
 
   const [toStationRoute, setToStationRoute] = useState<[number, number][]>([]);
   const [toCityRoute, setToCityRoute] = useState<[number, number][]>([]);
@@ -443,7 +454,7 @@ export default function LiveMap() {
 
   useEffect(() => {
     startTracking();
-    return () => {};
+    return () => { };
   }, [startTracking]);
 
   useEffect(() => {
@@ -527,11 +538,11 @@ export default function LiveMap() {
             icon={stopIcon("#2563eb", index === 0 || index === toStationStops.length - 1)}
           >
             <Popup className="font-sans">
-              <div className="font-bold">{stop.name}</div>
+              <div className="font-bold">{getBusStopName(stop, lang)}</div>
               <div className="text-xs text-slate-500">
-                To Station · Stop #{stop.id}
-                {index === 0 && " (Departure)"}
-                {index === toStationStops.length - 1 && " (Terminus)"}
+                {toStationStr} · {stopStr} #{stop.id}
+                {index === 0 && ` (${depStr})`}
+                {index === toStationStops.length - 1 && ` (${termStr})`}
               </div>
             </Popup>
           </Marker>
@@ -544,20 +555,20 @@ export default function LiveMap() {
             icon={stopIcon("#d97706", index === 0 || index === toCityCentreStops.length - 1)}
           >
             <Popup className="font-sans">
-              <div className="font-bold">{stop.name}</div>
+              <div className="font-bold">{getBusStopName(stop, lang)}</div>
               <div className="text-xs text-slate-500">
-                To City Centre · Stop #{stop.id}
-                {index === 0 && " (Departure)"}
-                {index === toCityCentreStops.length - 1 && " (Terminus)"}
+                {toCityStr} · {stopStr} #{stop.id}
+                {index === 0 && ` (${depStr})`}
+                {index === toCityCentreStops.length - 1 && ` (${termStr})`}
               </div>
             </Popup>
           </Marker>
         ))}
 
-        <UserMarker location={location} />
-        <PeersLayer onPeerCountChange={setPeerCount} />
-        <SimulatedBusStation />
-        <SimulatedBusCity />
+        <UserMarker location={location} dictMap={dict.liveMap} />
+        <PeersLayer onPeerCountChange={setPeerCount} dictMap={dict.liveMap} />
+        <SimulatedBusStation dictMap={dict.liveMap} />
+        <SimulatedBusCity dictMap={dict.liveMap} />
       </MapContainer>
 
       <div className="absolute top-4 left-4 z-[400] bg-white dark:bg-slate-900 rounded-lg shadow-md border border-outline-variant dark:border-slate-800 max-w-[220px] transition-colors duration-200">
@@ -570,7 +581,7 @@ export default function LiveMap() {
               route
             </span>
             <h2 className="font-bold text-sm text-on-surface dark:text-slate-100">
-              Route #3
+              {dict.liveMap.route3}
             </h2>
           </div>
           <span className="material-symbols-outlined text-slate-400 text-lg transition-transform duration-200"
@@ -583,7 +594,7 @@ export default function LiveMap() {
           <div className="px-2.5 pb-2.5 space-y-2.5">
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400">
-                Show Route
+                {dict.liveMap.showRoute}
               </label>
               <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-md">
                 <button
@@ -595,13 +606,12 @@ export default function LiveMap() {
                       return "station";
                     })
                   }
-                  className={`text-[10px] py-1 rounded transition-all ${
-                    visibleRoute === "station" || visibleRoute === "both"
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-                  }`}
+                  className={`text-[10px] py-1 rounded transition-all ${visibleRoute === "station" || visibleRoute === "both"
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+                    }`}
                 >
-                  To Station
+                  {dict.liveMap.toStation}
                 </button>
                 <button
                   onClick={() =>
@@ -612,13 +622,12 @@ export default function LiveMap() {
                       return "city";
                     })
                   }
-                  className={`text-[10px] py-1 rounded transition-all ${
-                    visibleRoute === "city" || visibleRoute === "both"
-                      ? "bg-amber-600 text-white shadow-sm"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-                  }`}
+                  className={`text-[10px] py-1 rounded transition-all ${visibleRoute === "city" || visibleRoute === "both"
+                    ? "bg-amber-600 text-white shadow-sm"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
+                    }`}
                 >
-                  To City
+                  {dict.liveMap.toCity}
                 </button>
               </div>
             </div>
@@ -626,41 +635,41 @@ export default function LiveMap() {
             <div className="pt-1.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
               <div className="flex items-center gap-1.5">
                 <span className="inline-block w-2 h-2 rounded-full bg-blue-600 shrink-0" />
-                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">To Station route</p>
+                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">{dict.liveMap.toStationRoute}</p>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="inline-block w-2 h-2 rounded-full bg-amber-600 shrink-0" />
-                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">To City route</p>
+                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">{dict.liveMap.toCityRoute}</p>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex items-center justify-center w-3 h-3 shrink-0">
                   <svg width="10" height="10" viewBox="0 0 10 10">
-                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#2563eb"/>
-                    <circle cx="3" cy="8.5" r="1.5" fill="#2563eb"/>
-                    <circle cx="7" cy="8.5" r="1.5" fill="#2563eb"/>
+                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#2563eb" />
+                    <circle cx="3" cy="8.5" r="1.5" fill="#2563eb" />
+                    <circle cx="7" cy="8.5" r="1.5" fill="#2563eb" />
                   </svg>
                 </div>
-                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">Blue bus: To Station</p>
+                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">{dict.liveMap.blueBusToStation}</p>
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="flex items-center justify-center w-3 h-3 shrink-0">
                   <svg width="10" height="10" viewBox="0 0 10 10">
-                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#d97706"/>
-                    <circle cx="3" cy="8.5" r="1.5" fill="#d97706"/>
-                    <circle cx="7" cy="8.5" r="1.5" fill="#d97706"/>
+                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#d97706" />
+                    <circle cx="3" cy="8.5" r="1.5" fill="#d97706" />
+                    <circle cx="7" cy="8.5" r="1.5" fill="#d97706" />
                   </svg>
                 </div>
-                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">Amber bus: To City</p>
+                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">{dict.liveMap.amberBusToCity}</p>
               </div>
               <div className="flex items-center gap-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800">
                 <div className="w-2.5 h-2.5 rounded-full bg-blue-500 border-2 border-white shadow-sm shrink-0" />
-                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">Your Location</p>
+                <p className="text-[10px] text-on-surface-variant dark:text-slate-400">{dict.liveMap.yourLocation}</p>
               </div>
               {peerCount > 0 && (
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-white shadow-sm shrink-0" />
                   <p className="text-[10px] text-on-surface-variant dark:text-slate-400">
-                    {peerCount} {peerCount === 1 ? "peer" : "peers"} sharing
+                    {peerCount} {peerCount === 1 ? dict.liveMap.peerSharing : dict.liveMap.peersSharing}
                   </p>
                 </div>
               )}
@@ -668,7 +677,7 @@ export default function LiveMap() {
 
             {routeError && (
               <p className="text-[10px] text-red-400 leading-tight">
-                Road routing unavailable — showing straight lines
+                {dict.liveMap.routingUnavailable}
               </p>
             )}
           </div>
