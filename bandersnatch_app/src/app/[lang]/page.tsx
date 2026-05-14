@@ -126,8 +126,11 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   useEffect(() => {
     if (profile?.defaultStop) {
       setStop(profile.defaultStop);
+    } else if (!user) {
+      const stored = localStorage.getItem("bandersnatch_default_stop");
+      if (stored) setStop(stored);
     }
-  }, [profile]);
+  }, [profile, user]);
 
   useEffect(() => {
     startTracking();

@@ -118,6 +118,13 @@ const dictionaries = {
       allowLocation: "Allow Location",
       allowNotifications: "Allow Notifications",
       completeSetup: "Complete Setup",
+      locationGranted: "Location access granted",
+      locationRequesting: "Requesting location access...",
+      locationDenied:
+        "Location access denied. Please allow location in your browser settings.",
+      notificationsGranted: "Notifications enabled",
+      notificationsDenied:
+        "Notifications are blocked. Please enable them in your browser settings.",
     },
     rideHistory: {
       title: "Ride History",
@@ -300,6 +307,13 @@ const dictionaries = {
       allowLocation: "ლოკაციის ნებართვა",
       allowNotifications: "შეტყობინებები",
       completeSetup: "დასრულება",
+      locationGranted: "ლოკაციაზე წვდომა მინიჭებულია",
+      locationRequesting: "ლოკაციაზე წვდომის მოთხოვნა...",
+      locationDenied:
+        "ლოკაციაზე წვდომა აკრძალულია. გთხოვთ დაუშვათ ლოკაცია ბრაუზერის პარამეტრებში.",
+      notificationsGranted: "შეტყობინებები ჩართულია",
+      notificationsDenied:
+        "შეტყობინებები დაბლოკილია. გთხოვთ ჩართოთ ბრაუზერის პარამეტრებში.",
     },
     rideHistory: {
       title: "მგზავრობის ისტორია",

@@ -27,7 +27,7 @@ export default function OnboardingPage({
   const dict = getDictionary(lang as Locale).onboarding;
   const router = useRouter();
   const { profile, updateProfile, user, loading: authLoading } = useAuth();
-  const { startTracking } = useUserLocation();
+  const { location, error: locationError, isTracking, startTracking } = useUserLocation();
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedStop, setSelectedStop] = useState("10");
@@ -58,10 +58,12 @@ export default function OnboardingPage({
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
 
   const handleNext = useCallback(() => {
-    if (currentStepIndex < steps.length - 1) {
-      setCurrentStepIndex((i) => i + 1);
-    }
-  }, [currentStepIndex]);
+    setCurrentStepIndex((i) => Math.min(i + 1, steps.length - 1));
+  }, []);
+
+  const handleBack = useCallback(() => {
+    setCurrentStepIndex((i) => Math.max(i - 1, 0));
+  }, []);
 
   const handleComplete = useCallback(async () => {
     if (user) {
@@ -78,8 +80,7 @@ export default function OnboardingPage({
 
   const requestLocation = useCallback(() => {
     startTracking();
-    handleNext();
-  }, [startTracking, handleNext]);
+  }, [startTracking]);
 
   const requestNotifications = useCallback(async () => {
     if ("Notification" in window && Notification.permission === "default") {
@@ -137,6 +138,21 @@ export default function OnboardingPage({
                 {dict.locationPermissionDesc}
               </p>
             </div>
+            {isTracking && !location && !locationError && (
+              <div className="bg-surface-container dark:bg-slate-800 text-on-surface-variant dark:text-slate-400 text-sm font-medium py-2 px-4 rounded-lg animate-pulse">
+                {dict.locationRequesting}
+              </div>
+            )}
+            {location && (
+              <div className="bg-success-container dark:bg-green-900/30 text-success dark:text-green-400 text-sm font-medium py-2 px-4 rounded-lg">
+                {dict.locationGranted}
+              </div>
+            )}
+            {locationError && (
+              <div className="bg-error-container dark:bg-red-900/30 text-error dark:text-red-400 text-sm font-medium py-2 px-4 rounded-lg">
+                {dict.locationDenied}
+              </div>
+            )}
           </div>
         );
 
@@ -222,7 +238,12 @@ export default function OnboardingPage({
             </div>
             {notificationGranted && (
               <div className="bg-success-container dark:bg-green-900/30 text-success dark:text-green-400 text-sm font-medium py-2 px-4 rounded-lg">
-                Notifications enabled
+                {dict.notificationsGranted}
+              </div>
+            )}
+            {"Notification" in window && Notification.permission === "denied" && (
+              <div className="bg-error-container dark:bg-red-900/30 text-error dark:text-red-400 text-sm font-medium py-2 px-4 rounded-lg">
+                {dict.notificationsDenied}
               </div>
             )}
           </div>
@@ -250,75 +271,93 @@ export default function OnboardingPage({
   };
 
   const renderAction = () => {
-    switch (currentStep) {
-      case "welcome":
-        return (
-          <button
-            onClick={handleNext}
-            className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
-          >
-            {dict.getStarted}
-          </button>
-        );
+    const showBack = currentStepIndex > 0;
 
-      case "location":
-        return (
-          <button
-            onClick={requestLocation}
-            className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
-          >
-            {dict.allowLocation}
-          </button>
-        );
-
-      case "stop":
-        return (
-          <button
-            onClick={handleNext}
-            className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
-          >
-            {dict.next}
-          </button>
-        );
-
-      case "features":
-        return (
-          <button
-            onClick={handleNext}
-            className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
-          >
-            {dict.next}
-          </button>
-        );
-
-      case "notifications":
-        return (
-          <div className="flex flex-col gap-3">
-            <button
-              onClick={requestNotifications}
-              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
-            >
-              {dict.allowNotifications}
-            </button>
+    const actions = () => {
+      switch (currentStep) {
+        case "welcome":
+          return (
             <button
               onClick={handleNext}
-              className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-3 rounded-lg"
+              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
             >
-              {dict.skip}
+              {dict.getStarted}
             </button>
-          </div>
-        );
+          );
 
-      case "complete":
-        return (
+        case "location":
+          return (
+            <button
+              onClick={requestLocation}
+              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+            >
+              {dict.allowLocation}
+            </button>
+          );
+
+        case "stop":
+          return (
+            <button
+              onClick={handleNext}
+              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+            >
+              {dict.next}
+            </button>
+          );
+
+        case "features":
+          return (
+            <button
+              onClick={handleNext}
+              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+            >
+              {dict.next}
+            </button>
+          );
+
+        case "notifications":
+          return (
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={requestNotifications}
+                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+              >
+                {dict.allowNotifications}
+              </button>
+              <button
+                onClick={handleNext}
+                className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-3 rounded-lg"
+              >
+                {dict.skip}
+              </button>
+            </div>
+          );
+
+        case "complete":
+          return (
+            <button
+              onClick={handleComplete}
+              className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+            >
+              {dict.completeSetup}
+            </button>
+          );
+      }
+    };
+
+    return (
+      <div className="space-y-2">
+        {actions()}
+        {showBack && (
           <button
-            onClick={handleComplete}
-            className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-lg py-3 rounded-lg shadow-sm"
+            onClick={handleBack}
+            className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-3 rounded-lg"
           >
-            {dict.completeSetup}
+            {dict.back}
           </button>
-        );
-    }
+        )}
+      </div>
+    );
   };
 
   return (
