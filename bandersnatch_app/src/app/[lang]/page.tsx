@@ -77,12 +77,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   useEffect(() => {
     if (loading || onboardingCheckDone) return;
 
-    if (user && profile) {
-      if (!profile.onboardingCompleted) {
-        router.replace(`/${lang}/onboarding`);
-        return;
-      }
-    } else if (!user) {
+    if (user) {
+      setOnboardingCheckDone(true);
+      return;
+    } else {
       const done = localStorage.getItem("bandersnatch_onboarding_done");
       if (!done) {
         router.replace(`/${lang}/onboarding`);
@@ -366,8 +364,8 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                 <div>
                   <div
                     className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2 ${hasLiveData
-                        ? "bg-success-container dark:bg-green-900 text-success dark:text-green-300"
-                        : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                      ? "bg-success-container dark:bg-green-900 text-success dark:text-green-300"
+                      : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
                       }`}
                   >
                     <span className="material-symbols-outlined text-[14px]">
@@ -394,10 +392,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                   {hasLiveData && crowding ? (
                     <div
                       className={`flex items-center gap-1 ${crowding === "Low"
-                          ? "text-success dark:text-green-400"
-                          : crowding === "Medium"
-                            ? "text-warning dark:text-yellow-400"
-                            : "text-red-600 dark:text-red-400"
+                        ? "text-success dark:text-green-400"
+                        : crowding === "Medium"
+                          ? "text-warning dark:text-yellow-400"
+                          : "text-red-600 dark:text-red-400"
                         }`}
                     >
                       <span
