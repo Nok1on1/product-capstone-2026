@@ -8,6 +8,18 @@
 
 ---
 
+## Activation Metric
+
+**Aha moment:** A student opens the app, sees the honest bus ETA, and decides to leave for the stop later than they would have without the app — arriving just in time instead of 30+ minutes early.
+
+**Activation metric:** 70% of new signups check bus status (`bus_status_viewed` event in GA4) within 24 hours of signup.
+
+**Why this is the aha moment:** From our 12 user interviews, every participant described the same pain: guessing when to leave and leaving excessively early to compensate. The moment the app replaces that guess with a reliable number — "Bus #3 arriving in 8 minutes" — is when the user experiences the product's core value. If a user does not check bus status within 24 hours, they likely signed up out of curiosity and have not yet integrated the app into their commute routine.
+
+**Measurement:** GA4 event `bus_status_viewed` fired on each status check. Cohort analysis at D1 post-signup measures the activation rate. Target: 70% activated within 24 hours.
+
+---
+
 ## Channel Overview
 
 | Rank | Channel | Type | Fit | Speed | Cost | Target Users |
@@ -135,6 +147,16 @@ Free — the share feature is already in the roadmap as story S3-01. No addition
 
 ---
 
+## Channel Ranking Rationale
+
+| Rank | Channel | Why This Rank |
+|------|---------|---------------|
+| 1 | Bus Stop QR Code Flyers | Highest fit — captures users at the exact moment of pain (waiting at the bus stop). Medium speed (2 days to deploy). $6 total cost. Highest conversion potential because the call-to-action is contextually perfect. |
+| 2 | Student Telegram & WhatsApp Groups | Zero cost and fastest time-to-first-user (1 hour). However, it is a one-shot channel per group per semester — once the post is made, it cannot be repeated without being flagged as spam. Reach is limited to existing group sizes (~800 students). |
+| 3 | Referral — Share Status with Friends | Lowest cost and compounds with user base, but slowest to start (requires existing users) and weakest magnitude (K = 0.20 means 100 users generate only 20 new users). It supplements the other two channels but cannot replace them. |
+
+---
+
 ## Rejected Channel: Paid Social Media Ads (Instagram / Facebook)
 
 **Type:** Paid / Digital Advertising
@@ -164,11 +186,26 @@ Free — the share feature is already in the roadmap as story S3-01. No addition
 
 ---
 
+## Open Questions
+
+What we do not yet know that we need to answer in the first 4 weeks of live operation:
+
+1. **What is the actual QR scan-to-signup rate at KIU bus stops?** Our 1–3% estimate is from HubSpot benchmarks for campus QR campaigns. KIU students may scan at a different rate — especially at outdoor stops in varying weather.
+
+2. **Will group admins allow our post, and how many signups does one post actually drive?** We assume admins will allow it and 5% of members will sign up. If admins block the post or the conversion rate is below 2%, this channel is exhausted before it delivers meaningful numbers.
+
+3. **Do users share bus status without an incentive?** Our referral channel assumes 20% of active users share per week with 20% recipient conversion. If either number is materially lower (e.g., 5% share rate), the referral channel contributes negligibly.
+
+4. **How does demand shift during exam periods and semester breaks?** Our growth projection assumes steady weekly acquisition. If acquisition drops 60% during exam weeks (when students commute less) or collapses during breaks, the six-month trajectory changes significantly.
+
+---
+
 ## Change Log
 
 | Date | Version | Changes | Author |
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial growth strategy | Team Bandersnatch |
+| May 14, 2026 | 1.1 | Added activation metric, channel ranking rationale, open questions | Team Bandersnatch |
 
 ---
 

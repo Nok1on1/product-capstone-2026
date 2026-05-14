@@ -176,11 +176,18 @@ If the product works and achieves traction (>200 active users), the defensibilit
 
 ---
 
+## Summary Statement
+
+Bandersnatch acquires users through Bus Stop QR flyers, student Telegram and WhatsApp groups, and in-app referral sharing. CAC is under $0.11 per user across all channels because we use organic and low-cost outbound methods rather than paid advertising. Our K-factor of 0.20 means referral shares reduce effective CAC by roughly 17% but cannot drive growth alone — the product's value is individual (finding a bus ETA), not inherently social. We have a weak data network effect: crowding data becomes useful above ~50 daily active users in one commute corridor, but the core ETA feature works for a single user. Our defensibility is currently 2/10 — no meaningful moat exists. The path to defensibility runs through commute data accumulation over 1–2 semesters and institutional integration with KIU transit. Everything hinges on Experiment 1: if students do not trust and act on honest bus status information after the previous tracker's failures, no growth channel or feature can save the product.
+
+---
+
 ## Change Log
 
 | Date | Version | Changes | Author |
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial loops and moats narrative | Team Bandersnatch |
+| May 14, 2026 | 1.1 | Added summary statement paragraph | Team Bandersnatch |
 
 ---
 

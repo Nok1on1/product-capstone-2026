@@ -234,11 +234,24 @@ We commit to updating this document with real data once available. Until then, a
 
 ---
 
+## Refinement Schedule
+
+| # | Currently | Replace by | How |
+|---|-----------|------------|-----|
+| QR scan-to-signup rate | 1–3% (HubSpot campus benchmark) | Jun 2 | UTM-tagged QR codes on flyers; measure actual scans vs. signups from 2 weeks of flyer deployment |
+| Group post conversion rate | 5% (team estimate) | May 26 | First group post within 1 week; track UTM-sourced signups from each group |
+| Monthly retention (D30) | 50–70% (commute-frequency estimate) | Jun 19 | GA4 cohort analysis after 1 month of live data; plot D7, D14, D30 retention curves |
+| Referral K-factor | 0.2 (Lenny's Newsletter benchmark) | After Sprint 3 | In-app `invite_sent` and `invite_signed_up` events; recalculate K from real data once referral feature ships |
+| Willingness to pay at $1/month | P03, P11 only (2 unprompted signals) | Post-MVP | Premium tier experiment with 2-week free trial; measure opt-in rate at $1/month |
+
+---
+
 ## Change Log
 
 | Date | Version | Changes | Author |
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial unit economics | Team Bandersnatch |
+| May 14, 2026 | 1.1 | Added refinement schedule for assumption validation timeline | Team Bandersnatch |
 
 ---
 
