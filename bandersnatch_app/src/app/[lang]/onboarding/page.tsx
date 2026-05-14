@@ -90,7 +90,8 @@ export default function OnboardingPage({
     } else if ("Notification" in window && Notification.permission === "granted") {
       setNotificationGranted(true);
     }
-  }, []);
+    handleNext();
+  }, [handleNext]);
 
   if (!ready) {
     return (
