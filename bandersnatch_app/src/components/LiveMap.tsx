@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { toStationStops, toCityCentreStops, BusStop } from "@/data/route3";
+import { useParams } from "next/navigation";
+import { toStationStops, toCityCentreStops, BusStop, getBusStopName } from "@/data/route3";
 import { useTheme } from "@/components/ThemeProvider";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import {
@@ -33,12 +34,12 @@ function busSvg(color: string, label: string): string {
   return `<div class="animated-bus-marker" style="position:relative;width:0;height:0;">
     <svg width="40" height="40" viewBox="0 0 40 40" style="position:absolute;top:-20px;left:-20px;">
       <defs>
-        <filter id="shadow_${color.replace('#','')}" x="-20%" y="-20%" width="140%" height="140%">
+        <filter id="shadow_${color.replace('#', '')}" x="-20%" y="-20%" width="140%" height="140%">
           <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/>
         </filter>
       </defs>
       <rect x="6" y="8" width="28" height="20" rx="4" ry="4" fill="${color}"
-        filter="url(#shadow_${color.replace('#','')})" stroke="white" stroke-width="1.5"/>
+        filter="url(#shadow_${color.replace('#', '')})" stroke="white" stroke-width="1.5"/>
       <rect x="10" y="11" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
       <rect x="17" y="11" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
       <rect x="24" y="11" width="5" height="5" rx="1" fill="white" opacity="0.9"/>
@@ -78,7 +79,7 @@ const userLocationIcon = (heading: number | null, accuracy: number) => {
   const accuracySize = Math.max(accuracy, 10);
   return L.divIcon({
     html: `<div style="position:relative;width:0;height:0;">
-      <div class="pulse-ring" style="position:absolute;top:-${accuracySize}px;left:-${accuracySize}px;width:${accuracySize*2}px;height:${accuracySize*2}px;background:rgba(66,133,244,0.1);border-radius:50%;z-index:999;"></div>
+      <div class="pulse-ring" style="position:absolute;top:-${accuracySize}px;left:-${accuracySize}px;width:${accuracySize * 2}px;height:${accuracySize * 2}px;background:rgba(66,133,244,0.1);border-radius:50%;z-index:999;"></div>
       ${headingArrow}
       <div style="position:absolute;top:-10px;left:-10px;width:20px;height:20px;background:#4285F4;border:3px solid white;border-radius:50%;box-shadow:0 0 8px rgba(66,133,244,0.5);z-index:1000;"></div>
     </div>`,
@@ -429,6 +430,8 @@ function PeersLayer({ onPeerCountChange }: { onPeerCountChange: (count: number) 
 export default function LiveMap() {
   const { resolvedTheme } = useTheme();
   const { location, startTracking } = useUserLocation();
+  const params = useParams();
+  const lang = (params?.lang as string) || "en";
   const mapRef = useRef<L.Map | null>(null);
   const hasCenteredRef = useRef(false);
 
@@ -443,7 +446,7 @@ export default function LiveMap() {
 
   useEffect(() => {
     startTracking();
-    return () => {};
+    return () => { };
   }, [startTracking]);
 
   useEffect(() => {
@@ -527,7 +530,7 @@ export default function LiveMap() {
             icon={stopIcon("#2563eb", index === 0 || index === toStationStops.length - 1)}
           >
             <Popup className="font-sans">
-              <div className="font-bold">{stop.name}</div>
+              <div className="font-bold">{getBusStopName(stop, lang)}</div>
               <div className="text-xs text-slate-500">
                 To Station · Stop #{stop.id}
                 {index === 0 && " (Departure)"}
@@ -544,7 +547,7 @@ export default function LiveMap() {
             icon={stopIcon("#d97706", index === 0 || index === toCityCentreStops.length - 1)}
           >
             <Popup className="font-sans">
-              <div className="font-bold">{stop.name}</div>
+              <div className="font-bold">{getBusStopName(stop, lang)}</div>
               <div className="text-xs text-slate-500">
                 To City Centre · Stop #{stop.id}
                 {index === 0 && " (Departure)"}
@@ -595,11 +598,10 @@ export default function LiveMap() {
                       return "station";
                     })
                   }
-                  className={`text-[10px] py-1 rounded transition-all ${
-                    visibleRoute === "station" || visibleRoute === "both"
+                  className={`text-[10px] py-1 rounded transition-all ${visibleRoute === "station" || visibleRoute === "both"
                       ? "bg-blue-600 text-white shadow-sm"
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   To Station
                 </button>
@@ -612,11 +614,10 @@ export default function LiveMap() {
                       return "city";
                     })
                   }
-                  className={`text-[10px] py-1 rounded transition-all ${
-                    visibleRoute === "city" || visibleRoute === "both"
+                  className={`text-[10px] py-1 rounded transition-all ${visibleRoute === "city" || visibleRoute === "both"
                       ? "bg-amber-600 text-white shadow-sm"
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700"
-                  }`}
+                    }`}
                 >
                   To City
                 </button>
@@ -635,9 +636,9 @@ export default function LiveMap() {
               <div className="flex items-center gap-1.5">
                 <div className="flex items-center justify-center w-3 h-3 shrink-0">
                   <svg width="10" height="10" viewBox="0 0 10 10">
-                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#2563eb"/>
-                    <circle cx="3" cy="8.5" r="1.5" fill="#2563eb"/>
-                    <circle cx="7" cy="8.5" r="1.5" fill="#2563eb"/>
+                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#2563eb" />
+                    <circle cx="3" cy="8.5" r="1.5" fill="#2563eb" />
+                    <circle cx="7" cy="8.5" r="1.5" fill="#2563eb" />
                   </svg>
                 </div>
                 <p className="text-[10px] text-on-surface-variant dark:text-slate-400">Blue bus: To Station</p>
@@ -645,9 +646,9 @@ export default function LiveMap() {
               <div className="flex items-center gap-1.5">
                 <div className="flex items-center justify-center w-3 h-3 shrink-0">
                   <svg width="10" height="10" viewBox="0 0 10 10">
-                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#d97706"/>
-                    <circle cx="3" cy="8.5" r="1.5" fill="#d97706"/>
-                    <circle cx="7" cy="8.5" r="1.5" fill="#d97706"/>
+                    <rect x="1" y="2" width="8" height="6" rx="1" fill="#d97706" />
+                    <circle cx="3" cy="8.5" r="1.5" fill="#d97706" />
+                    <circle cx="7" cy="8.5" r="1.5" fill="#d97706" />
                   </svg>
                 </div>
                 <p className="text-[10px] text-on-surface-variant dark:text-slate-400">Amber bus: To City</p>

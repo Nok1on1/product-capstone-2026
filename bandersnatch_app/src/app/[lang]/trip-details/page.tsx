@@ -12,7 +12,7 @@ import {
   getETAtoDestination,
   getNextStopFromCurrent,
 } from "@/lib/timetable";
-import { toStationStops, toCityCentreStops } from "@/data/route3";
+import { toStationStops, toCityCentreStops, getBusStopName } from "@/data/route3";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Locate,
@@ -100,7 +100,7 @@ export default function TripDetailsPage({
     }
   }, [destinationParam, destination, setDestination]);
 
-    useEffect(() => {
+  useEffect(() => {
     const updateETA = () => {
       if (isOnBus && isLocationSharing && destination && currentStop && direction) {
         const eta = getETAtoDestination(
@@ -164,7 +164,7 @@ export default function TripDetailsPage({
           name: "geolocation" as PermissionName,
         });
         if (permission.state === "prompt" || permission.state === "denied") {
-          await navigator.geolocation.getCurrentPosition(() => {}, () => {}, {
+          await navigator.geolocation.getCurrentPosition(() => { }, () => { }, {
             enableHighAccuracy: true,
           });
         }
@@ -213,18 +213,19 @@ export default function TripDetailsPage({
     isOnBus && currentStop && direction
       ? getNext3Stops(currentStop.id, direction)
       : direction
-      ? getNext3Stops(parseInt(currentStopParam || "1"), direction)
-      : [];
+        ? getNext3Stops(parseInt(currentStopParam || "1"), direction)
+        : [];
+
+  const _nextStopFromCurrent = direction
+    ? getNextStopFromCurrent(parseInt(currentStopParam || "1"), direction)
+    : undefined;
 
   const displayNextStop =
     isOnBus && isLocationSharing && nextStop
-      ? nextStop.name
-      : direction
-      ? getNextStopFromCurrent(
-          parseInt(currentStopParam || "1"),
-          direction
-        )?.name ?? "—"
-      : "—";
+      ? getBusStopName(nextStop, lang)
+      : _nextStopFromCurrent
+        ? getBusStopName(_nextStopFromCurrent, lang)
+        : "—";
 
   const isLiveTracking =
     liveTrackingUserCount > 0 || (isOnBus && isLocationSharing);
@@ -265,11 +266,10 @@ export default function TripDetailsPage({
       >
         <div className="flex flex-wrap gap-2 mb-4">
           <span
-            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider ${
-              hasLiveData
+            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider ${hasLiveData
                 ? "bg-green-500 text-white"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
-            }`}
+              }`}
           >
             {hasLiveData ? dict.confirmed : dict.unconfirmed}
           </span>
@@ -346,25 +346,22 @@ export default function TripDetailsPage({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         onClick={handleToggleLocationSharing}
-        className={`bg-white dark:bg-slate-900 shadow-sm rounded-xl p-4 flex items-center gap-4 transition-colors cursor-pointer ${
-          isLocationSharing
+        className={`bg-white dark:bg-slate-900 shadow-sm rounded-xl p-4 flex items-center gap-4 transition-colors cursor-pointer ${isLocationSharing
             ? "ring-2 ring-blue-500 dark:ring-blue-400"
             : ""
-        }`}
+          }`}
       >
         <div
-          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
-            isLocationSharing
+          className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${isLocationSharing
               ? "bg-blue-500 text-white"
               : "bg-blue-50 dark:bg-blue-900/30"
-          }`}
+            }`}
         >
           <Locate
-            className={`w-5 h-5 ${
-              isLocationSharing
+            className={`w-5 h-5 ${isLocationSharing
                 ? "text-white"
                 : "text-blue-600 dark:text-blue-400"
-            }`}
+              }`}
           />
         </div>
         <div className="flex-1 min-w-0">
@@ -376,11 +373,10 @@ export default function TripDetailsPage({
           </p>
         </div>
         <div
-          className={`w-12 h-7 rounded-full relative flex-shrink-0 ${
-            isLocationSharing
+          className={`w-12 h-7 rounded-full relative flex-shrink-0 ${isLocationSharing
               ? "bg-blue-500"
               : "bg-slate-200 dark:bg-slate-700"
-          }`}
+            }`}
         >
           <motion.div
             className="absolute top-0.5 w-6 h-6 bg-white rounded-full shadow-sm"
@@ -482,11 +478,10 @@ export default function TripDetailsPage({
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => handleCrowdingSelect("seats")}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${
-                selectedCrowding === "seats"
+              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${selectedCrowding === "seats"
                   ? "bg-green-50 dark:bg-green-900/20 border-green-600 text-green-700 dark:text-green-400"
                   : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
-              }`}
+                }`}
             >
               <Armchair className="w-5 h-5 text-green-600" />
               <span className="text-sm font-medium">{dict.seatsAvailable}</span>
@@ -498,11 +493,10 @@ export default function TripDetailsPage({
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => handleCrowdingSelect("standing")}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${
-                selectedCrowding === "standing"
+              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${selectedCrowding === "standing"
                   ? "bg-amber-50 dark:bg-amber-900/20 border-amber-500 text-amber-700 dark:text-amber-400"
                   : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
-              }`}
+                }`}
             >
               <User className="w-5 h-5 text-amber-500" />
               <span className="text-sm font-medium">{dict.standingRoom}</span>
@@ -514,11 +508,10 @@ export default function TripDetailsPage({
             <motion.button
               whileTap={{ scale: 0.98 }}
               onClick={() => handleCrowdingSelect("full")}
-              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${
-                selectedCrowding === "full"
+              className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left ${selectedCrowding === "full"
                   ? "bg-red-50 dark:bg-red-900/20 border-red-600 text-red-700 dark:text-red-400"
                   : "border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
-              }`}
+                }`}
             >
               <Ban className="w-5 h-5 text-red-600" />
               <span className="text-sm font-medium">{dict.fullDoNotBoard}</span>
@@ -586,33 +579,31 @@ export default function TripDetailsPage({
               <div key={stopInfo.stop.id} className="relative flex items-start">
                 <div className="relative z-10 flex-shrink-0">
                   <div
-                    className={`w-4 h-4 rounded-full border-2 ${
-                      index === 0
+                    className={`w-4 h-4 rounded-full border-2 ${index === 0
                         ? "bg-blue-600 border-blue-600"
                         : "bg-white dark:bg-slate-900 border-blue-400"
-                    }`}
+                      }`}
                   />
                 </div>
 
                 <div className="ml-4 flex-1 min-w-0">
                   <p className="text-sm font-semibold text-on-surface dark:text-slate-200">
-                    {stopInfo.stop.name}
+                    {getBusStopName(stopInfo.stop, lang)}
                   </p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
                     {dict.stop} {stopInfo.stop.id}
                     {destination &&
-                    stopInfo.stop.id === parseInt(destination)
+                      stopInfo.stop.id === parseInt(destination)
                       ? ` • ${dict.currentDestination}`
                       : ""}
                   </p>
                 </div>
 
                 <p
-                  className={`text-sm font-bold flex-shrink-0 ${
-                    index === 0
+                  className={`text-sm font-bold flex-shrink-0 ${index === 0
                       ? "text-blue-600 dark:text-blue-400"
                       : "text-on-surface dark:text-slate-200"
-                  }`}
+                    }`}
                 >
                   {stopInfo.etaMinutes} {dict.min}
                 </p>
