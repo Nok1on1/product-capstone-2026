@@ -29,7 +29,7 @@ function BackgroundAnimation() {
       duration: 20 + i * 8,
       delay: i * 4,
     })),
-  []);
+    []);
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
@@ -168,17 +168,17 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
       try {
         // Fetch all buses
         const busesSnapshot = await getDocs(collection(db, "buses"));
-        
+
         // Fetch all alerts with status open
         const alertsSnapshot = await getDocs(collection(db, "alerts"));
         const openAlerts = alertsSnapshot.docs.filter(
           (doc) => doc.data().status === "open"
         );
-        
+
         // Build a set of bus IDs that have alerts
         const busIdsWithAlerts = new Set<string>();
         const busAlerts: { [busId: string]: string[] } = {};
-        
+
         openAlerts.forEach((doc) => {
           const data = doc.data();
           busIdsWithAlerts.add(data.busId);
@@ -193,7 +193,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
         // Count buses: total active buses minus those with alerts
         const totalBuses = busesSnapshot.docs.length;
         const activeBusesWithoutAlerts = totalBuses - busIdsWithAlerts.size;
-        
+
         setActiveBusCount(activeBusesWithoutAlerts);
         setAlertCount(openAlerts.length);
       } catch (error) {
@@ -365,11 +365,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               <div className="flex justify-between items-start">
                 <div>
                   <div
-                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2 ${
-                      hasLiveData
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2 ${hasLiveData
                         ? "bg-success-container dark:bg-green-900 text-success dark:text-green-300"
                         : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
-                    }`}
+                      }`}
                   >
                     <span className="material-symbols-outlined text-[14px]">
                       {hasLiveData ? "check_circle" : "help_outline"}
@@ -394,13 +393,12 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                   </div>
                   {hasLiveData && crowding ? (
                     <div
-                      className={`flex items-center gap-1 ${
-                        crowding === "Low"
+                      className={`flex items-center gap-1 ${crowding === "Low"
                           ? "text-success dark:text-green-400"
                           : crowding === "Medium"
-                          ? "text-warning dark:text-yellow-400"
-                          : "text-red-600 dark:text-red-400"
-                      }`}
+                            ? "text-warning dark:text-yellow-400"
+                            : "text-red-600 dark:text-red-400"
+                        }`}
                     >
                       <span
                         className="material-symbols-outlined"
@@ -483,10 +481,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               </span>
               <div className="flex-1">
                 <h3 className="font-bold text-on-error-container dark:text-red-100">
-                  Active Issues Reported
+                  {dict.activeIssuesReported}
                 </h3>
                 <p className="text-sm text-on-error-container dark:text-red-200 mt-1">
-                  The following buses have reported issues:
+                  {dict.followingBusesIssues}
                 </p>
               </div>
             </div>
@@ -497,7 +495,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                   className="bg-white dark:bg-slate-800 rounded p-2 text-sm"
                 >
                   <p className="font-semibold text-on-surface dark:text-slate-100">
-                    Bus {busId}
+                    {dict.busId} {busId}
                   </p>
                   <ul className="text-on-surface-variant dark:text-slate-300 mt-1 space-y-1">
                     {reasons.map((reason, idx) => (
