@@ -20,6 +20,19 @@
 
 ---
 
+## Audience Analysis
+
+1. **Where does your target user already spend time online?**
+KIU students spend time in student-run Messenger groups, particularly those organized by dorm, year, or specific commute routes (like the Bus #3 Commuter Chat). They also scroll TikTok and Instagram while waiting at the bus stop.
+
+2. **Who do they trust for product recommendations in your category?**
+They trust their peers and classmates experiencing the same daily commute struggles. Recommendations sent directly in group chats or via personal messages hold the highest weight. 
+
+3. **What is the cheapest way to put your product in front of them?**
+The cheapest way is leveraging existing student group chats (free) and placing QR code flyers exactly where they wait for the bus (very low cost of printing).
+
+---
+
 ## Channel Overview
 
 | Rank | Channel | Type | Fit | Speed | Cost | Target Users |

@@ -39,12 +39,10 @@ The app is currently free with no paid tier. Future monetisation options under c
 **CAC:** $5.60 / 50 = **$0.11/user** (conservative)
 **CAC:** $5.60 / 300 = **$0.02/user** (optimistic)
 
-**Calculation shown:**
-```
-CAC = Total campaign cost / Number of new users acquired
-CAC_conservative = $5.60 / 50 = $0.11
-CAC_optimistic   = $5.60 / 300 = $0.02
-```
+**Channel:** Bus Stop QR Code Flyers
+**Total spend:** $5.60
+**Customers acquired:** 50
+**CAC:** total spend / customers = $5.60 / 50 = $0.11
 
 ### Channel 2 — Student Telegram & WhatsApp Groups
 
@@ -56,7 +54,10 @@ CAC_optimistic   = $5.60 / 300 = $0.02
 
 **Expected signups:** 40+ (5% conversion from 800 group members across 6 groups)
 
-**CAC:** $0 / 40 = **$0.00/user**
+**Channel:** Student Messenger Groups
+**Total spend:** $0.00
+**Customers acquired:** 40
+**CAC:** total spend / customers = $0.00 / 40 = $0.00
 
 ### Channel 3 — Referral (Share Status)
 
@@ -68,7 +69,10 @@ CAC_optimistic   = $5.60 / 300 = $0.02
 
 **Expected signups:** ~4/week (20% share rate × 20% conversion × 100 WAUs)
 
-**CAC:** $0 / 4 = **$0.00/user**
+**Channel:** Referral (Share Status)
+**Total spend:** $0.00
+**Customers acquired:** 4
+**CAC:** total spend / customers = $0.00 / 4 = $0.00
 
 ### Blended CAC
 
@@ -98,8 +102,8 @@ Blended CAC = Total spend across all channels / Total new users
 | ARPU (current) | $0/month | MVP — no paid tier |
 | ARPU (projected, post-MVP) | $1/month | P03: "I would pay good money for a bus app that just told the truth" (unprompted). P11: "If it saved me one taxi fare, it would pay for itself." Benchmark: comparable transit apps charge $1–3/month. |
 | Gross margin | 100% | Digital product. Firebase Spark plan is free. Vercel free tier covers MVP. No COGS per user. |
-| Monthly retention (conservative) | 50% | Students commute ~5 days/week during semester. After initial curiosity, we estimate half of signups open the app in any given month. |
-| Monthly retention (optimistic) | 70% | Habit-forming: if students check before every commute, they open the app 20+ times per month. The 70% figure assumes the app becomes part of the morning routine. |
+| Monthly retention (conservative) | 50% | We use 50% as a placeholder until we have 4+ weeks of post-launch cohort data. |
+| Monthly retention (optimistic) | 70% | We use 70% as a placeholder assuming the app becomes part of the daily morning routine. |
 | Customer lifespan (conservative) | 2 months | `1 / (1 - 0.50) = 2` |
 | Customer lifespan (optimistic) | 3.3 months | `1 / (1 - 0.70) = 3.3` |
 
@@ -119,17 +123,16 @@ The app generates no revenue in its current MVP state. LTV is $0 regardless of r
 | Optimistic | $1 | 3.3 | 100% | **$3.30** |
 
 **Calculation (conservative):**
-```
-LTV = ARPU × Average customer lifespan × Gross margin
-    = $1/month × 2.0 months × 100%
-    = $2.00
-```
+**ARPU (monthly):** $1.00
+**Gross margin:** 100%
+**Average lifetime:** 2.0 months
+**LTV:** ARPU × margin × lifetime = $1.00 × 100% × 2.0 = $2.00
 
 **Calculation (optimistic):**
-```
-LTV = $1/month × 3.3 months × 100%
-    = $3.30
-```
+**ARPU (monthly):** $1.00
+**Gross margin:** 100%
+**Average lifetime:** 3.3 months
+**LTV:** ARPU × margin × lifetime = $1.00 × 100% × 3.3 = $3.30
 
 **Sensitivity:** If ARPU drops to $0.50 (student pricing), LTV becomes $1.00 (conservative) or $1.65 (optimistic). If retention drops to 40%, lifespan becomes 1.7 months and LTV becomes $1.70.
 
@@ -179,11 +182,8 @@ Payback period measures how long it takes to recover the cost of acquiring a cus
 | Referral | $0.00 | $1.00 | **Immediate** |
 | **Blended** | **$0.05** | **$1.00** | **~0.05 months (~1.5 days)** |
 
-```
-Payback period = CAC / Monthly net revenue
-QR Flyers: $0.11 / $1.00 = 0.11 months = ~3 days
-Blended: $0.05 / $1.00 = 0.05 months = ~1.5 days
-```
+**QR Flyers:** Payback period = CAC / (ARPU × margin) = $0.11 / ($1.00 × 100%) = 0.11 months = ~3 days
+**Blended:** Payback period = CAC / (ARPU × margin) = $0.05 / ($1.00 × 100%) = 0.05 months = ~1.5 days
 
 Industry benchmark for SaaS payback period: <12 months is healthy. Our projected payback period of under 1 week is extremely strong — but only if the product is good enough that users actually pay.
 
