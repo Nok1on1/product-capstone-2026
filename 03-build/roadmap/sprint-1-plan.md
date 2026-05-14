@@ -1,11 +1,11 @@
 # Sprint 1 Plan
 
-**Team:** Bandersnatch
-**Product:** Bus #3 Real-Time Tracker
-**Sprint:** 1 of 4
-**Dates:** April 24 to May 7 2026
-**Product Owner:** Nikoloz Modebadze
-**Scrum Master:** Nikoloz Kvirikashvili
+**Team:** Bandersnatch  
+**Product:** Bus #3 Real-Time Tracker  
+**Sprint:** 1 of 4  
+**Dates:** April 24 to May 7 2026  
+**Product Owner:** Nikoloz Modebadze  
+**Scrum Master:** Nikoloz Kvirikashvili  
 **Version:** 1.0
 
 ---
@@ -18,22 +18,20 @@ A user can sign up with their email, select a bus stop, and receive a confirmed 
 
 ## Sprint Ceremonies
 
-| Ceremony | When | Where | Who Facilitates |
-|----------|------|-------|----------------|
-| Sprint Planning | Lab 8, Apr 24/25 | In person | Scrum Master |
-| Daily Standup | 10:00 AM every weekday | GitHub Issues | Async -- each member posts |
-| Sprint Review | Week 10, May 7 (Google Meet) | Google Meet | Product Owner |
-| Retrospective | May 7 or 8 | In person | Scrum Master |
+| Ceremony        | When                         | Where         | Who Facilitates            |
+| --------------- | ---------------------------- | ------------- | -------------------------- |
+| Sprint Planning | Lab 8, Apr 24/25             | In person     | Scrum Master               |
+| Daily Standup   | 10:00 AM every weekday       | GitHub Issues | Async -- each member posts |
+| Sprint Review   | Week 10, May 7 (Google Meet) | Google Meet   | Product Owner              |
+| Retrospective   | May 7 or 8                   | In person     | Scrum Master               |
 
 **Async standup format:**
-```
 Yesterday: [what I completed]
 Today: [what I am working on]
 Blocker: [anything stopping me -- or "none"]
 AI note: [what AI generated yesterday and whether it was accepted/modified/discarded]
-```
 
-**Blocker escalation:** If a blocker is not resolved within 24 hours, the Scrum Master pings the team in Slack.
+**Blocker escalation:** If a blocker is not resolved within 24 hours, Nikoloz Kvirikashvili pings the team in Slack.
 
 ---
 
@@ -53,14 +51,14 @@ A story is Done when all of the following are true:
 
 ## Calibration Anchors
 
-Agree these before estimating any stories.
+Agree these before estimating any stories. _(Note: All estimates inherently include the time required for AI output review, testing, and debugging)._
 
-| Points | What It Looks Like for Our Team |
-|--------|--------------------------------|
-| 1 | A single, obvious change. One file. No logic complexity. Example: change a button label. |
-| 3 | A clear feature with a defined path. Some edge cases. Example: add a form with validation. |
-| 5 | A non-trivial feature requiring multiple components or a third-party integration. |
-| 8 | A complex feature with significant uncertainty. Consider splitting before committing. |
+| Points | What It Looks Like for Our Team                                                            |
+| ------ | ------------------------------------------------------------------------------------------ |
+| 1      | A single, obvious change. One file. No logic complexity. Example: change a button label.   |
+| 3      | A clear feature with a defined path. Some edge cases. Example: add a form with validation. |
+| 5      | A non-trivial feature requiring multiple components or a third-party integration.          |
+| 8      | A complex feature with significant uncertainty. Consider splitting before committing.      |
 
 ---
 
@@ -68,20 +66,19 @@ Agree these before estimating any stories.
 
 ### Story S1-01
 
-**User Story:**
+**User Story:**  
 As a KIU student, I want to sign up with my email and select my primary bus stop so that I always see accurate information for my commute.
 
-**Interview Evidence:**
+**Interview Evidence:**  
 Source: Interview P01 (student, Kutaisi, April 2026) -- "I need to know which stop I am waiting at so I don't look at the wrong information."
 
-**Story Points:** 3
-**Assignee:** Nikoloz Kvirikashvili
-**AI Tool:** Google Stitch
+**Story Points:** 3  
+**Assignee:** Nikoloz Kvirikashvili  
+**AI Tool:** Google Stitch  
 **AI Tool Rationale:** Fastest path from AC to working signup form UI with validation.
 
 **Acceptance Criteria:**
 
-```
 AC1:
 Given a new user,
 When they enter a valid email and password (min 8 chars) and select a bus stop,
@@ -96,7 +93,6 @@ AC3:
 Given a user who just signed up,
 When they log out and log back in with the same credentials,
 Then they see their selected bus stop pre-filled.
-```
 
 **Notes:** Use Firebase Auth for authentication. Store bus stop preference in user profile.
 
@@ -104,20 +100,19 @@ Then they see their selected bus stop pre-filled.
 
 ### Story S1-02
 
-**User Story:**
+**User Story:**  
 As a user, I want to see a bus stop selector on the home screen so that I can quickly switch between my frequent stops.
 
-**Interview Evidence:**
+**Interview Evidence:**  
 Source: Interview P02 (student, Kutaisi, April 2026) -- "My stop is KIU Main Gate but sometimes I go to the city center."
 
-**Story Points:** 3
-**Assignee:** Nikoloz Modebadze
-**AI Tool:** Google Stitch
+**Story Points:** 3  
+**Assignee:** Nikoloz Modebadze  
+**AI Tool:** Google Stitch  
 **AI Tool Rationale:** Dropdown selector UI is straightforward — rapid generation.
 
 **Acceptance Criteria:**
 
-```
 AC1:
 Given a logged-in user on the home screen,
 When they see the bus stop dropdown,
@@ -132,7 +127,6 @@ AC3:
 Given a user,
 When they view the list of available stops in the dropdown,
 Then they see: KIU Main Gate, Kutaisi Central, Terjola, Samtredia, Khoni.
-```
 
 **Notes:** Pre-populate with the bus stops identified in interviews.
 
@@ -140,20 +134,19 @@ Then they see: KIU Main Gate, Kutaisi Central, Terjola, Samtredia, Khoni.
 
 ### Story S1-03
 
-**User Story:**
+**User Story:**  
 As a user, I want to see a loading indicator when I query bus status so that I know the app is working.
 
-**Interview Evidence:**
+**Interview Evidence:**  
 Source: Interview P08 (student, Kutaisi, April 2026) -- "I waited for an hour. I didn't know if it was working or not."
 
-**Story Points:** 3
-**Assignee:** Giorgi Mikaberidze
-**AI Tool:** Google Stitch
+**Story Points:** 3  
+**Assignee:** Giorgi Mikaberidze  
+**AI Tool:** Google Stitch  
 **AI Tool Rationale:** Simple loading spinner UI — fast to generate.
 
 **Acceptance Criteria:**
 
-```
 AC1:
 Given a user who clicks "Check Status",
 When the app is fetching data,
@@ -168,7 +161,6 @@ AC3:
 Given a user,
 When the status query fails,
 Then an error message displays with a "Try Again" button.
-```
 
 **Notes:** Handle timeout gracefully. Use mock data for MVP.
 
@@ -176,20 +168,19 @@ Then an error message displays with a "Try Again" button.
 
 ### Story S1-04
 
-**User Story:**
+**User Story:**  
 As a user, I want to see a CONFIRMED or ESTIMATED badge on the bus status so that I know whether to trust the information.
 
-**Interview Evidence:**
+**Interview Evidence:**  
 Source: Interview P06 (student, Kutaisi, April 2026) -- "I just need it to be honest. Not 'three minutes' when you mean twenty."
 
-**Story Points:** 5
-**Assignee:** Besik Meskhia
-**AI Tool:** Google Stitch
+**Story Points:** 5  
+**Assignee:** Besik Meskhia  
+**AI Tool:** Google Stitch  
 **AI Tool Rationale:** Badge UI with color coding — design-heavy story best suited for visual tool.
 
 **Acceptance Criteria:**
 
-```
 AC1:
 Given a user with confirmed real-time data,
 When the status query returns,
@@ -204,7 +195,6 @@ AC3:
 Given a user,
 When the status is displayed,
 Then the estimated arrival time in minutes is clearly shown.
-```
 
 **Notes:** This is the core differentiator. Mock data returns "CONFIRMED" for MVP.
 
@@ -212,20 +202,19 @@ Then the estimated arrival time in minutes is clearly shown.
 
 ### Story S1-05
 
-**User Story:**
+**User Story:**  
 As a user, I want to see crowding level so that I can decide whether to catch an earlier bus.
 
-**Interview Evidence:**
+**Interview Evidence:**  
 Source: Interview P07 (student, Kutaisi, April 2026) -- "I physically could not breathe. There were so many people packed in there."
 
-**Story Points:** 3
-**Assignee:** Nikoloz Kvirikashvili
-**AI Tool:** Google Stitch
+**Story Points:** 3  
+**Assignee:** Nikoloz Kvirikashvili  
+**AI Tool:** Google Stitch  
 **AI Tool Rationale:** Visual indicator UI — fast generation with design tool.
 
 **Acceptance Criteria:**
 
-```
 AC1:
 Given a user viewing status results,
 When the crowding level is available,
@@ -235,28 +224,24 @@ AC2:
 Given a user,
 When no crowding data is available,
 Then no indicator is shown (optional field).
-```
-
-**Notes:** Mock data for MVP crowding levels.
 
 ---
 
 ### Story S1-06
 
-**User Story:**
-As a team, we need the app deployed to Vercel so that real users can test it.
+**User Story:**  
+As a KIU student tester, I want to access the application via a public URL so that I can use it on my phone during my commute.
 
-**Interview Evidence:**
-Source: Lab 5 requirement -- must have deployed URL for user testing.
+**Interview Evidence:**  
+Source: Lab 5 requirement -- must have deployed URL for user testing in the field.
 
-**Story Points:** 3
-**Assignee:** Giorgi Mikaberidze
-**AI Tool:** Claude Code
+**Story Points:** 3  
+**Assignee:** Giorgi Mikaberidze  
+**AI Tool:** Claude Code  
 **AI Tool Rationale:** Vercel deployment requires backend configuration and environment setup — complex multi-file task best suited for full codebase context.
 
 **Acceptance Criteria:**
 
-```
 AC1:
 Given a merged PR to main,
 When the CI completes,
@@ -271,7 +256,6 @@ AC3:
 Given a user,
 When they perform the core flow in production,
 Then events are tracked in GA4.
-```
 
 **Notes:** Configure Vercel with environment variables. Connect GA4.
 
@@ -279,15 +263,15 @@ Then events are tracked in GA4.
 
 ## Sprint 1 Summary
 
-| Story ID | Summary | Points | Assignee | AI Tool | Status |
-|----------|---------|--------|----------|---------|--------|
-| S1-01 | User sign-up with email/password | 3 | Nikoloz Kvirikashvili | Stitch | Not started |
-| S1-02 | Bus stop selector on home screen | 3 | Nikoloz Modebadze | Stitch | Not started |
-| S1-03 | Status query and loading UI | 3 | Giorgi Mikaberidze | Stitch | Not started |
-| S1-04 | CONFIRMED/ESTIMATED status display | 5 | Besik Meskhia | Stitch | Not started |
-| S1-05 | Crowding level indicator | 3 | Nikoloz Kvirikashvili | Stitch | Not started |
-| S1-06 | Deployment to Vercel | 3 | Giorgi Mikaberidze | Claude Code | Not started |
-| **Total** | | **21** | | | |
+| Story ID  | Summary                            | Points | Assignee              | AI Tool     | Status      |
+| --------- | ---------------------------------- | ------ | --------------------- | ----------- | ----------- |
+| S1-01     | User sign-up with email/password   | 3      | Nikoloz Kvirikashvili | Stitch      | Not started |
+| S1-02     | Bus stop selector on home screen   | 3      | Nikoloz Modebadze     | Stitch      | Not started |
+| S1-03     | Status query and loading UI        | 3      | Giorgi Mikaberidze    | Stitch      | Not started |
+| S1-04     | CONFIRMED/ESTIMATED status display | 5      | Besik Meskhia         | Stitch      | Not started |
+| S1-05     | Crowding level indicator           | 3      | Nikoloz Kvirikashvili | Stitch      | Not started |
+| S1-06     | Deployment to Vercel               | 3      | Giorgi Mikaberidze    | Claude Code | Not started |
+| **Total** |                                    | **21** |                       |             |             |
 
 **Capacity check:** 21 points committed out of approximately 52 maximum (40% -- target 60% or below)
 
@@ -297,11 +281,11 @@ Then events are tracked in GA4.
 
 At Sprint Review (May 7, Google Meet), the team will demo:
 
-1. User can sign up and log in
-2. User can select a bus stop
-3. User can query status and see CONFIRMED/ESTIMATED badge
-4. User can see crowding level
-5. App is live on Vercel URL
+1. User sign up and login flow.
+2. Bus stop selection from the dropdown.
+3. Status query returning a CONFIRMED/ESTIMATED badge.
+4. The crowding level indicator rendering correctly.
+5. The full application functioning on a live Vercel URL.
 
 The demo must be live. No screenshots. No pre-recorded video. The application runs in front of the reviewer.
 
@@ -312,7 +296,6 @@ The demo must be live. No screenshots. No pre-recorded video. The application ru
 All AI-assisted work in Sprint 1 must be logged in `docs/ai-usage-log.md`.
 
 Entry format:
-```
 Date: [YYYY-MM-DD]
 Story: [Story ID and summary]
 Tool: [Tool name]
@@ -321,16 +304,16 @@ Files changed: [List of files]
 Accepted / Modified / Discarded: [Which]
 Review notes: [What was checked, what was changed from the AI output]
 Reviewer: [Name]
-```
 
 ---
 
 ## Change Log
 
-| Date | Changes | Author |
-|------|---------|--------|
-| April 21, 2026 | Sprint 1 plan created | Team Bandersnatch |
+| Date           | Changes                                                                                                                              | Author            |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| April 21, 2026 | Sprint 1 plan created                                                                                                                | Team Bandersnatch |
+| May 14, 2026   | Fixed template formatting, updated S1-06 to standard user story format, added AI review time note, and clarified Scrum Master duties | Team Bandersnatch |
 
 ---
 
-*Sprint 1 Plan | Bandersnatch | CS-PD-2026 | Spring 2026*
+_Sprint 1 Plan | Bandersnatch | CS-PD-2026 | Spring 2026_

@@ -422,7 +422,7 @@ Task: Write Firestore security rules
 Prompt summary: N/A (ambient completion — rules filled in as context)
 Files changed: firestore.rules
 Result: Modified
-Review notes: Generated initial rules structure. Added peer_locations public read rule and users/{userId}/public public read rule manually. Note: the current catch-all deny on bus_data/{document=**} may block feedback page writes — see risk R1 in risk register.
+Review notes: Generated initial rules structure. Added peer_locations public read rule and users/{userId}/public public read rule manually. Note: the current catch-all deny on bus_data/{document=\*\*} may block feedback page writes — see risk R1 in risk register.
 Reviewer: Nikoloz Kvirikashvili
 
 ---
@@ -511,15 +511,39 @@ Reviewer: Team Bandersnatch
 
 ---
 
-## Summary
-
-| Tool | Total Entries |
-|---|---|
-| Claude Code | 18 |
-| Google Stitch | 14 |
-| GitHub Copilot | 4 |
-| **Total** | **36** |
+Date: 2026-05-14
+Story: N/A - Lab 6 Agile Documentation
+Tool: Gemini
+Task: Review and revise the Product Roadmap and Sprint 1 Plan to align with the Lab 6 grading rubric. Task included generating missing sprint capacity calculations (under 60% limit), adding comprehensive risk/mitigation tables for all sprints, and reformatting user stories to strictly follow the "As a / I want / So that" template.
+Files changed: product-roadmap.md, sprint-1-plan.md
+Result: Accepted
+Review notes: Reviewed the generated markdown against the strict rubric criteria. Verified that all technical tasks were successfully converted to user-centric stories, required checkpoints were added to timelines, and AI estimation notes were included.
+Reviewer: Besik Meskhia
 
 ---
 
-*AI Usage Log | Bandersnatch | CS-PD-2026 | Spring 2026*
+Date: 2026-05-14
+Story: N/A -- Lab 6 Agile Documentation (Process Map)
+Tool: Gemini
+Task: Refactor the Team Development Process Map to achieve full marks against the Lab 6 grading rubric.
+Prompt summary: Provided the Lab 6 rubric and the initial draft of the process map, requested a refactor to fix any missing criteria.
+Files changed: process-map.md
+Result: Accepted
+Review notes: Verified that the "Definition of Done" was updated to explicitly mention human code review and PO confirmation. Checked that the AI Review process was expanded into a "Who, When, and What" matrix to meet the rubric's specificity requirement.
+Reviewer: Besik Meskhia
+
+---
+
+## Summary
+
+| Tool           | Total Entries |
+| -------------- | ------------- |
+| Claude Code    | 18            |
+| Google Stitch  | 14            |
+| GitHub Copilot | 4             |
+| Gemini         | 2             |
+| **Total**      | **38**        |
+
+---
+
+_AI Usage Log | Bandersnatch | CS-PD-2026 | Spring 2026_
