@@ -312,7 +312,7 @@ Reviewer: [Name]
 | Date           | Changes                                                                                                                              | Author            |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
 | April 21, 2026 | Sprint 1 plan created                                                                                                                | Team Bandersnatch |
-| May 14, 2026   | Fixed template formatting, updated S1-06 to standard user story format, added AI review time note, and clarified Scrum Master duties | Team Bandersnatch |
+| May 14, 2026   | Fixed template formatting, updated S1-06 to standard user story format, added AI review time note, and clarified Scrum Master duties | Besik Meskhia     |
 
 ---
 

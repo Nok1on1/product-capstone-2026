@@ -272,7 +272,7 @@ All user stories across all sprints. Stories not yet allocated to a sprint are i
 | Date           | Version | Changes                                                                                                               | Author            |
 | -------------- | ------- | --------------------------------------------------------------------------------------------------------------------- | ----------------- |
 | April 21, 2026 | 1.0     | Initial roadmap                                                                                                       | Team Bandersnatch |
-| May 14, 2026   | 1.1     | Aligned formatting with template, added risk & capacity calculations for all sprints, included Midterm in milestones. | Team Bandersnatch |
+| May 14, 2026   | 1.1     | Aligned formatting with template, added risk & capacity calculations for all sprints, included Midterm in milestones. | Besik Meskhia     |
 
 ---
 

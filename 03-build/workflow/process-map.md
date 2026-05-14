@@ -172,7 +172,7 @@ AI note: [What AI generated yesterday. Accepted / modified / discarded percentag
 | Date           | Version | Changes                                                                                                        | Author            |
 | -------------- | ------- | -------------------------------------------------------------------------------------------------------------- | ----------------- |
 | April 21, 2026 | 1.0     | Initial process map                                                                                            | Team Bandersnatch |
-| May 14, 2026   | 1.1     | Explicitly defined "Who, When, What" for AI Review process, aligned DoD to rubric wording, updated formatting. | Team Bandersnatch |
+| May 14, 2026   | 1.1     | Explicitly defined "Who, When, What" for AI Review process, aligned DoD to rubric wording, updated formatting. | Besik Meskhia     |
 
 ---
 
