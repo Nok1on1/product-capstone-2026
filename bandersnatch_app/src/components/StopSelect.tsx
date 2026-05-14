@@ -2,12 +2,8 @@
 
 import { Listbox, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import { route3Stops } from "@/data/route3";
-
-const stops = route3Stops.map(stop => ({
-  id: stop.id.toString(),
-  name: stop.name
-}));
+import { useParams } from "next/navigation";
+import { route3Stops, getBusStopName } from "@/data/route3";
 
 interface StopSelectProps {
   value: string;
@@ -15,6 +11,13 @@ interface StopSelectProps {
 }
 
 export function StopSelect({ value, onChange }: StopSelectProps) {
+  const params = useParams();
+  const lang = (params?.lang as string) || "en";
+
+  const stops = route3Stops.map(stop => ({
+    id: stop.id.toString(),
+    name: getBusStopName(stop, lang)
+  }));
   const selectedStop = stops.find((s) => s.id === value) || stops[0];
 
   return (
@@ -43,8 +46,7 @@ export function StopSelect({ value, onChange }: StopSelectProps) {
               <Listbox.Option
                 key={stop.id}
                 className={({ active }) =>
-                  `relative cursor-pointer select-none py-3 pl-10 pr-4 transition-colors ${
-                    active ? "bg-blue-50 dark:bg-slate-800 text-primary-container dark:text-blue-400" : "text-on-surface"
+                  `relative cursor-pointer select-none py-3 pl-10 pr-4 transition-colors ${active ? "bg-blue-50 dark:bg-slate-800 text-primary-container dark:text-blue-400" : "text-on-surface"
                   }`
                 }
                 value={stop.id}

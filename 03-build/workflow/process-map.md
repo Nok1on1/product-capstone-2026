@@ -2,8 +2,8 @@
 
 **Team:** Bandersnatch
 **Product:** Bus #3 Real-Time Tracker
-**Last Updated:** April 21, 2026
-**Version:** 1.0
+**Last Updated:** May 14, 2026
+**Version:** 1.1
 
 ---
 
@@ -15,11 +15,11 @@ This document describes how work flows through our team from idea to deployed in
 
 ## Scrum Roles
 
-| Role | Name | Responsibilities |
-|------|------|-----------------|
-| Product Owner | Nikoloz Modebadze | Owns and orders the backlog. Accepts or rejects sprint increments. Reviews AI-generated features against user interview evidence. |
+| Role                    | Name                  | Responsibilities                                                                                                                      |
+| ----------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Product Owner           | Nikoloz Modebadze     | Owns and orders the backlog. Accepts or rejects sprint increments. Reviews AI-generated features against user interview evidence.     |
 | Scrum Master (Sprint 1) | Nikoloz Kvirikashvili | Facilitates standups, planning, review, and retrospective. Runs AI output review at each standup. Maintains ai-usage-log.md currency. |
-| Scrum Master (Sprint 2) | Besik Meskhia | Rotates after Sprint 1 |
+| Scrum Master (Sprint 2) | Besik Meskhia         | Rotates after Sprint 1                                                                                                                |
 
 ---
 
@@ -27,18 +27,18 @@ This document describes how work flows through our team from idea to deployed in
 
 A story moves through these states. Only the state changes listed below are permitted -- a story cannot skip states.
 
-```
+```text
 Backlog → Refined → Sprint Backlog → In Progress → In Review → Done
 ```
 
-| State | Meaning | Who Sets It |
-|-------|---------|------------|
-| Backlog | Exists but not yet ready for a sprint | PO |
-| Refined | Has a user story, AC, story points, and interview evidence. Ready to be committed to a sprint. | PO after team refinement |
-| Sprint Backlog | Committed to the current sprint. Developer and AI tool assigned. | SM after Sprint Planning |
-| In Progress | Developer has started work | Developer who pulled the story |
-| In Review | PR raised. Awaiting human review. | Developer |
-| Done | All DoD criteria met. PO has confirmed AC. Merged to main. | PO |
+| State          | Meaning                                                                                        | Who Sets It                    |
+| -------------- | ---------------------------------------------------------------------------------------------- | ------------------------------ |
+| Backlog        | Exists but not yet ready for a sprint                                                          | PO                             |
+| Refined        | Has a user story, AC, story points, and interview evidence. Ready to be committed to a sprint. | PO after team refinement       |
+| Sprint Backlog | Committed to the current sprint. Developer and AI tool assigned.                               | SM after Sprint Planning       |
+| In Progress    | Developer has started work                                                                     | Developer who pulled the story |
+| In Review      | PR raised. Awaiting human review.                                                              | Developer                      |
+| Done           | All DoD criteria met. PO has confirmed AC. Merged to main.                                     | PO                             |
 
 ---
 
@@ -46,13 +46,13 @@ Backlog → Refined → Sprint Backlog → In Progress → In Review → Done
 
 A story is Done when every item below is confirmed:
 
-- [ ] Code reviewed by at least one team member who is not the original author
-- [ ] Pull request merged to `main` via GitHub PR -- no direct pushes to main
-- [ ] Acceptance criteria confirmed as met by the Product Owner -- not by the developer who built it
-- [ ] If AI-generated: all AI-generated code is annotated with comments explaining the logic
-- [ ] If AI-generated: entry added to `docs/ai-usage-log.md`
-- [ ] Feature works in the deployed environment (not just locally on the developer's machine)
-- [ ] No new known bugs introduced to the main branch
+- [ ] Human code review completed by at least one team member who is not the original author.
+- [ ] Pull request merged to `main` via GitHub PR -- no direct pushes to main.
+- [ ] Acceptance criteria explicitly confirmed as met by the Product Owner -- not by the developer who built it.
+- [ ] If AI-generated: all AI-generated code is annotated with comments explaining the logic in human terms.
+- [ ] If AI-generated: full usage logged via a new entry in `docs/ai-usage-log.md`.
+- [ ] Feature works in the deployed production environment (Vercel), not just locally on the developer's machine.
+- [ ] No new known bugs introduced to the main branch.
 
 A story that is "mostly done" or "done except for one thing" is not Done. It remains In Review.
 
@@ -60,26 +60,33 @@ A story that is "mostly done" or "done except for one thing" is not Done. It rem
 
 ## AI Review Process
 
-All team members use AI tools. The following process applies to every piece of AI-generated output before it is committed.
+All team members use AI tools. The following strict review process applies to every piece of AI-generated output before it is committed.
 
-### Review Steps
+### The "Who, When, and What" Matrix
+
+- **WHO:** The executing Developer, the PR Reviewer (teammate), and the Product Owner.
+- **WHEN:** During coding (Developer), during the Pull Request (Reviewer), and at Sprint Review (PO).
+- **WHAT:** The review covers Acceptance Criteria (AC) fulfillment, security/PII vulnerabilities, code logic comprehension (via annotations), and proper documentation (logs).
+
+### Execution Steps
 
 1. **Generate:** Developer uses the designated AI tool for the story.
-2. **Read every line:** Developer reads the entire output before accepting any of it. No Tab-to-accept without reading.
-3. **Check against AC:** For every acceptance criterion, confirm the generated output produces a pass result. If any AC fails, edit the output until it passes.
-4. **Security and privacy check:** For any endpoint, form, or data-handling code, confirm no security vulnerability and no PII in logs or storage.
-5. **Annotate:** Add inline comments to AI-generated blocks explaining the logic in the developer's own words.
-6. **Log:** Add an entry to `docs/ai-usage-log.md` before raising the PR.
-7. **PR review:** The human reviewer checks the annotation and the log entry as part of their review. A PR from AI-generated code with no annotation is returned without merge.
+2. **Read every line (Developer):** Developer reads the entire output before accepting any of it. No Tab-to-accept without reading.
+3. **Check against AC (Developer):** For every acceptance criterion, confirm the generated output produces a pass result. If any AC fails, edit the output until it passes.
+4. **Security and privacy check (Developer/Reviewer):** For any endpoint, form, or data-handling code, confirm no security vulnerability and no PII in logs or storage.
+5. **Annotate (Developer):** Add inline comments to AI-generated blocks explaining the logic in the developer's own words.
+6. **Log (Developer):** Add an entry to `docs/ai-usage-log.md` before raising the PR.
+7. **PR validation (PR Reviewer):** The human reviewer checks the code logic, the manual annotations, and verifies the log entry exists as part of their review. A PR containing AI-generated code with no annotation or log is immediately returned without merge.
+8. **Final Acceptance (PO):** PO confirms the AI-generated feature actually solves the user problem based on interview evidence during Sprint Review.
 
 ### AI Tool Assignment
 
-| Story Type | Default AI Tool | Why |
-|-----------|----------------|-----|
-| UI screens and components | Google Stitch | Fastest path from AC to working UI |
-| Complex multi-file backend logic | Claude Code | Best at understanding codebase context |
-| AI features (chatbot, summariser, classifier) | Google AI Studio | Prompt prototyping before API integration |
-| Boilerplate, repetitive patterns, docstrings | GitHub Copilot | Ambient completion -- always on |
+| Story Type                                    | Default AI Tool         | Why                                       |
+| --------------------------------------------- | ----------------------- | ----------------------------------------- |
+| UI screens and components                     | Google Stitch           | Fastest path from AC to working UI        |
+| Complex multi-file backend logic              | Claude Code             | Best at understanding codebase context    |
+| AI features (chatbot, summariser, classifier) | Google AI Studio        | Prompt prototyping before API integration |
+| Boilerplate, repetitive patterns, docstrings  | Cursor Editor / Copilot | Ambient completion -- always on           |
 
 Tool assignments are made at Sprint Planning. Developers can change the tool during execution if a better choice emerges. The change must be noted in the ai-usage-log.md entry.
 
@@ -89,29 +96,30 @@ Tool assignments are made at Sprint Planning. Developers can change the tool dur
 
 ### Branch Naming
 
-```
+```text
 feature/[story-id]-[short-description]
 fix/[story-id]-[short-description]
 ```
 
 Examples:
-```
+
+```text
 feature/s1-04-confirmed-status-display
 fix/s1-03-loading-spinner-fix
 ```
 
 ### PR Process
 
-1. Developer opens PR to `main` when the story is In Review
+1. Developer opens PR to `main` when the story is In Review.
 2. PR title: `[Story ID] Short description`
 3. PR description must include:
    - Story ID and full user story
    - AC checklist (mark each AC as passed or failed with evidence)
    - AI tool used and summary of review (or "No AI used")
    - Screenshots or GIF of the working feature in the deployed environment
-4. One team member reviews and approves
-5. PO confirms AC met (can be done in PR comments or at standup)
-6. Reviewer merges -- not the original developer
+4. One team member (not the original author) reviews the code and AI annotations, then approves.
+5. PO confirms AC met (can be done in PR comments or at standup).
+6. Reviewer merges -- not the original developer.
 
 ### No direct pushes to main
 
@@ -121,12 +129,12 @@ Any commit pushed directly to `main` without a PR review is a process violation.
 
 ## Standup Format
 
-**Cadence:** Daily
-**Location:** GitHub Issues
-**Time:** 10:00 AM every weekday
+**Cadence:** Daily  
+**Location:** GitHub Issues  
+**Time:** 10:00 AM every weekday  
 **Format:**
 
-```
+```text
 Yesterday: [What I completed -- be specific, include story ID]
 Today: [What I am working on -- include story ID]
 Blocker: [Anything stopping me -- or "none"]
@@ -139,52 +147,33 @@ AI note: [What AI generated yesterday. Accepted / modified / discarded percentag
 
 ## Blocker Resolution
 
-| Blocker Type | First Action | If Unresolved After 24h |
-|-------------|-------------|------------------------|
-| Technical (code, environment) | Post in standup with specific description | SM escalates to whole team in Slack |
-| Dependency on another story | Flag in PR or standup | SM reprioritises or re-assigns the blocking story |
-| AI tool failure or hallucination | Note in ai-usage-log.md, try alternative tool | Bring to next standup for team decision |
-| External dependency (API, third party) | Note in risk register | PO adjusts sprint scope if unresolved by Day 5 |
+| Blocker Type                           | First Action                                  | If Unresolved After 24h                           |
+| -------------------------------------- | --------------------------------------------- | ------------------------------------------------- |
+| Technical (code, environment)          | Post in standup with specific description     | SM escalates to whole team in Slack               |
+| Dependency on another story            | Flag in PR or standup                         | SM reprioritises or re-assigns the blocking story |
+| AI tool failure or hallucination       | Note in ai-usage-log.md, try alternative tool | Bring to next standup for team decision           |
+| External dependency (API, third party) | Note in risk register                         | PO adjusts sprint scope if unresolved by Day 5    |
 
 ---
 
 ## Sprint Ceremonies: Who Does What
 
-| Ceremony | Facilitator | Required Attendees | Output |
-|----------|------------|-------------------|--------|
-| Sprint Planning | Scrum Master | All team members | Committed sprint backlog with AC, assignees, AI tools |
-| Daily Standup | Async -- no facilitator | All team members post | Blockers surfaced, coordination confirmed, AI output reviewed |
-| Sprint Review | Product Owner | All team members | PO accepts or rejects each story. Backlog updated. |
-| Retrospective | Scrum Master | All team members | 1 to 3 concrete process changes for next sprint |
-
----
-
-## ai-usage-log.md Entry Format
-
-All AI-assisted work is logged in `docs/ai-usage-log.md`. This is audited at Checkpoint 3.
-
-```
----
-Date: YYYY-MM-DD
-Story: [Story ID] -- [Story summary]
-Tool: [Google Stitch / Claude Code / GitHub Copilot / Google AI Studio]
-Task: [What the AI was asked to generate or assist with]
-Prompt summary: [Brief description of the prompt used]
-Files changed: [List of files the AI output touched]
-Result: Accepted / Modified / Discarded
-Review notes: [What specifically was checked. What was changed from the AI output. Any errors or hallucinations found.]
-Reviewer: [Name]
----
-```
+| Ceremony        | Facilitator             | Required Attendees    | Output                                                        |
+| --------------- | ----------------------- | --------------------- | ------------------------------------------------------------- |
+| Sprint Planning | Scrum Master            | All team members      | Committed sprint backlog with AC, assignees, AI tools         |
+| Daily Standup   | Async -- no facilitator | All team members post | Blockers surfaced, coordination confirmed, AI output reviewed |
+| Sprint Review   | Product Owner           | All team members      | PO accepts or rejects each story. Backlog updated.            |
+| Retrospective   | Scrum Master            | All team members      | 1 to 3 concrete process changes for next sprint               |
 
 ---
 
 ## Change Log
 
-| Date | Version | Changes | Author |
-|------|---------|---------|--------|
-| April 21, 2026 | 1.0 | Initial process map | Team Bandersnatch |
+| Date           | Version | Changes                                                                                                        | Author            |
+| -------------- | ------- | -------------------------------------------------------------------------------------------------------------- | ----------------- |
+| April 21, 2026 | 1.0     | Initial process map                                                                                            | Team Bandersnatch |
+| May 14, 2026   | 1.1     | Explicitly defined "Who, When, What" for AI Review process, aligned DoD to rubric wording, updated formatting. | Besik Meskhia     |
 
 ---
 
-*Process Map | Bandersnatch | CS-PD-2026 | Spring 2026*
+_Process Map | Bandersnatch | CS-PD-2026 | Spring 2026_

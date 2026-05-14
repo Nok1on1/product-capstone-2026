@@ -440,11 +440,53 @@ A developer joining Sprint 1 can start implementation from this document plus th
 
 ---
 
-## 10. Change Log
+## 10. Security, Privacy, and Reliability Basics
+
+Auth risks: Email verification polling may frustrate users who don't receive the verification email promptly; Firebase's spam filters occasionally delay delivery to .edu.ge addresses.
+Sensitive data handled: User email addresses, display names, GPS coordinates (written to Firestore every 5 seconds while on bus), and Base64-encoded profile pictures.
+Failure mode if main service goes down: If Firestore is unavailable, bus status checks, live map, and boarding reports all fail. The app will show error states; boarding state persists in localStorage so users don't lose their on-bus status locally.
+Logging and monitoring plan for Sprint 1: Vercel deployment logs cover server errors. Firestore security rule rejections are visible in Firebase Console. Manual smoke test after each merge to main.
+One thing we will not promise yet: Real-time GPS tracking of the actual Bus #3 vehicle. All bus position data in Sprint 1 is either user-reported or simulated.
+
+---
+
+## 11. Technical Risks and Spikes
+
+Risk: Peer location sharing writes to Firestore every 5 seconds per active user, which may hit Firestore write limits or cause noticeable latency under load.
+
+Why it matters: Location sharing is core to the live map feature; degraded writes mean stale or missing peer markers.
+Mitigation or spike: Test with 10+ simultaneous boarding sessions; consider increasing interval to 10 seconds if write costs or latency become an issue.
+Owner: Team Bandersnatch
+
+
+Risk: GPS accuracy on mobile browsers varies significantly; findNearestStopOnRoute may assign the wrong stop or wrong direction if accuracy is poor.
+
+Why it matters: A wrong direction assignment means boarding reports corrupt the route data and the user sees incorrect ETA information.
+Mitigation or spike: Add an accuracy threshold check (e.g. reject readings worse than 50m) and allow the user to manually confirm their stop before boarding is recorded.
+Owner: Team Bandersnatch
+
+
+Risk: CONFIRMED badge is currently mocked and always returns CONFIRMED regardless of actual data freshness.
+
+Why it matters: This is the core trust problem the product was built to solve; shipping a permanently mocked badge undermines the product's stated purpose.
+Mitigation or spike: Gate the CONFIRMED badge on updatedAt being within a defined freshness window (e.g. 10 minutes); fall back to ESTIMATED if stale.
+Owner: Team Bandersnatch
+
+---
+
+
+## 12. Open Questions
+
+Should the CONFIRMED/ESTIMATED badge threshold be based on report recency, number of reports, or trust score of reporters?
+Does peer location sharing require explicit opt-in consent under Georgian data protection norms, or is the current implicit consent (boarding action implies sharing) sufficient?
+Should the 5-second location write interval be configurable per device to save battery on older phones?
+
+## 13. Change Log
 
 | Date | Version | Changes | Author |
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial system design document | Team Bandersnatch |
+| May 14, 2026 | 2.0 | Added 3 other sections that were present in the template | Team Bandersnatch |
 
 ---
 
