@@ -3,11 +3,45 @@
 **Team:** Bandersnatch
 **Product:** Bus #3 Real-Time Tracker
 **Date:** May 13, 2026
-**Version:** 1.0
+**Version:** 2.0
 
 ---
 
-## System Architecture Diagram
+## 1. Diagram Goal
+
+This diagram shows how a KIU student moves through the core Sprint 1 request — selecting a bus stop, checking real-time status, and reporting their boarding — across the full system from browser to Firebase and back.
+
+---
+
+## 2. Required Boxes
+
+The final diagram includes all of the following:
+
+- **User** — a KIU student on a mobile browser
+- **Browser / client app** — the Next.js App Router running in the browser
+- **Frontend application** — pages, shared components, context providers, and custom hooks
+- **Authentication provider** — Firebase Auth (email/password, email verification, session management)
+- **Backend / server logic** — Next.js Middleware (locale detection and routing); no separate API server
+- **Database** — Firestore (six collections: users, bus_reports, peer_locations, bus_data, buses, alerts)
+- **Analytics** — Google Analytics 4 (choice locked; implementation deferred to post-Sprint 1)
+- **External APIs and services** — Firebase Cloud Messaging, OSRM routing API, OpenStreetMap tile layers
+- **AI touchpoints** — AI is used in the development workflow only; there is no AI feature in the Sprint 1 product runtime
+
+---
+
+## 3. Required Arrows
+
+All arrows in the diagram answer the following:
+
+- **What request leaves the browser?** HTTPS request to `/[lang]/...`; Middleware routes to the correct page
+- **Where is auth checked?** Firebase Auth is called on login and signup; `onAuthStateChanged` is called by AuthProvider on every session; route guards in `useEmailVerification` block unverified users
+- **What is read from or written to the database?** All reads and writes are labeled on diagram edges with the Firestore operation (`getDoc`, `setDoc`, `onSnapshot`, `deleteDoc`, `addDoc`, `updateDoc`) and the collection path
+- **When does analytics fire?** GA4 `gtag()` events fire from page components on key actions (planned; shown as dashed arrows)
+- **What comes back to the user?** ETA + crowding badge on Home; confirmation state on Trip Details; live peer markers on Live Map; push notification via Service Worker
+
+---
+
+## 4. System Architecture Diagram
 
 ```mermaid
 graph TB
@@ -259,7 +293,7 @@ graph TB
         Dark + Light themes"]
         
         GA4["Google Analytics 4
-        (Planned)
+        (Deferred — choice locked)
         ────────────
         7 events
         500K events/mo free"]
@@ -283,19 +317,19 @@ graph TB
     end
 
     %% ── EDGES: USER → CLIENT ──
-    User -->|"HTTPS request<br>`/[lang]/...`"| Middleware
+    User -->|"HTTPS request /[lang]/..."| Middleware
     Middleware -->|"Route to page"| Pages
     User -->|"Install prompt"| SW
     
     %% ── EDGES: CLIENT → DATA (writes) ──
     Signup -->|"setDoc users/{uid}"| Users
-    Feedback -->|"setDoc bus_data/current_status<br>{ merge: true }"| BusData
+    Feedback -->|"setDoc bus_data/current_status { merge: true }"| BusData
     TripDetails -->|"setDoc bus_reports/board_*"| BusReports
-    TripDetails -->|"setDoc peer_locations/{uid}<br>every 5 seconds"| PeerLocations
+    TripDetails -->|"setDoc peer_locations/{uid} every 5 seconds"| PeerLocations
     TripDetails -->|"deleteDoc peer_locations/{uid}"| PeerLocations
     ReportButton -->|"addDoc alerts/{autoId}"| Alerts
-    Account -->|"updateDoc users/{uid}<br>profile picture / stop"| Users
-    Admin -->|"updateDoc users/{uid}<br>trustScore / role"| Users
+    Account -->|"updateDoc users/{uid} profile picture / stop"| Users
+    Admin -->|"updateDoc users/{uid} trustScore / role"| Users
     
     %% ── EDGES: CLIENT → DATA (reads) ──
     Home -->|"getDoc bus_data/current_status"| BusData
@@ -303,7 +337,7 @@ graph TB
     Home -->|"getDocs alerts"| Alerts
     AlertBanner -->|"onSnapshot bus_data/alert"| BusData
     LiveMapC -->|"onSnapshot peer_locations"| PeerLocations
-    RideHistory -->|"query bus_reports<br>where userId == uid"| BusReports
+    RideHistory -->|"query bus_reports where userId == uid"| BusReports
     Account -->|"getDoc users/{uid}"| Users
     Admin -->|"getDoc users/{uid}"| Users
     
@@ -313,30 +347,44 @@ graph TB
     Signup -->|"sendEmailVerification"| FirebaseAuth
     AuthCtx -->|"onAuthStateChanged"| FirebaseAuth
     AuthCtx -->|"getDoc users/{uid}"| Users
-    AuthCtx -->|"setDoc users/{uid}<br>{ merge: true }"| Users
+    AuthCtx -->|"setDoc users/{uid} { merge: true }"| Users
     
     %% ── EDGES: NOTIFICATIONS ──
     useNotifH -->|"getToken(messaging)"| FCM
-    FCM -->|"Push notification"| SW
-    SW -->|"Show notification"| User
+    FCM -->|"push notification"| SW
+    SW -->|"show notification"| User
     
     %% ── EDGES: MAP ──
-    LiveMapC -->|"Fetch route geometry<br>GET /route/v1/driving/..."| OSRM
-    LiveMapC -->|"Tile request"| OSMTiles
-    SW -->|"Cache tile / serve"| OSMTiles
-    LiveMapC -->|"Tile request via SW"| OSMTiles
+    LiveMapC -->|"fetch route geometry GET /route/v1/driving/..."| OSRM
+    LiveMapC -->|"tile request"| OSMTiles
+    SW -->|"cache tile / serve"| OSMTiles
     
-    %% ── EDGES: ANALYTICS (planned) ──
-    Pages -.->|"gtag() events<br>(planned)"| GA4
+    %% ── EDGES: ANALYTICS (deferred) ──
+    Pages -.->|"gtag() events (deferred)"| GA4
     
     %% ── EDGES: DEPLOYMENT ──
-    Vercel -->|"Serve Next.js build"| Middleware
-    Vercel -->|"Provide env vars"| CLIENT
+    Vercel -->|"serve Next.js build"| Middleware
+    Vercel -->|"provide env vars"| CLIENT
 ```
 
 ---
 
-## Data Flow Diagrams
+## 5. AI Annotation
+
+```
+AI in Sprint 1 product runtime: none
+AI in development workflow only:
+  - Google Stitch — UI scaffolding for auth, stop selector, and status screens
+  - Claude Code  — multi-file feature scaffolding, Firestore integration, auth flow, config
+  - GitHub Copilot — always-on inline completion for boilerplate and type definitions
+  - Google AI Studio — reserved for future feature experimentation; not used in Sprint 1
+```
+
+All AI-assisted work is reviewed line by line before merge and logged in `docs/ai-usage-log.md`.
+
+---
+
+## 6. Data Flow Diagrams
 
 ### Signup Flow
 
@@ -411,7 +459,7 @@ sequenceDiagram
 
 ---
 
-## Route Data Model
+## 7. Route Data Model
 
 ```
 Direction 1 (toStation):
@@ -423,42 +471,42 @@ Direction 2 (toCityCentre):
   │ stopId: 1                                              │ stopId: 12
 ```
 
-**Key constraint:** Stop IDs are direction-dependent. Stop "1" in `toStation` is Colchis Fountain; stop "1" in `toCityCentre` is Railway Station.
+**Key constraint:** Stop IDs are direction-dependent. Stop "1" in `toStation` is Colchis Fountain; stop "1" in `toCityCentre` is Railway Station. Direction context is required for all stop lookups.
 
 ---
 
-## Security Boundary Diagram
+## 8. Security Boundary Diagram
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│                    PUBLIC (No Auth Required)                 │
+│                    PUBLIC (No Auth Required)                │
 │                                                            │
-│  peer_locations  (read: anyone)                             │
-│  bus_reports     (read: anyone)                             │
-│  bus_data        (read: anyone)                             │
-│  buses           (read: anyone)                             │
-│  alerts          (read: anyone)                             │
-│  users/{uid}/public (read: anyone)                          │
+│  peer_locations  (read: anyone)                            │
+│  bus_reports     (read: anyone)                            │
+│  bus_data        (read: anyone)                            │
+│  buses           (read: anyone)                            │
+│  alerts          (read: anyone)                            │
+│  users/{uid}/public (read: anyone)                         │
 ├────────────────────────────────────────────────────────────┤
-│                  AUTHENTICATED USERS                        │
+│                  AUTHENTICATED USERS                       │
 │                                                            │
-│  peer_locations/{uid}  (write: only own uid)                │
-│  bus_reports           (write: any auth user)               │
-│  alerts                (write: any auth user)               │
-│  buses                 (write: any auth user)               │
-│  users/{uid}           (write: self, limited fields)        │
+│  peer_locations/{uid}  (write: only own uid)               │
+│  bus_reports           (write: any auth user)              │
+│  alerts                (write: any auth user)              │
+│  buses                 (write: any auth user)              │
+│  users/{uid}           (write: self, limited fields)       │
 ├────────────────────────────────────────────────────────────┤
-│                     ADMIN ONLY                              │
+│                     ADMIN ONLY                             │
 │                                                            │
-│  users/{uid}.role         (write: admin)                    │
-│  users/{uid}.trustScore   (write: admin)                    │
-│  users/{uid}.totalReportsMade (write: admin)                │
+│  users/{uid}.role             (write: admin)               │
+│  users/{uid}.trustScore       (write: admin)               │
+│  users/{uid}.totalReportsMade (write: admin)               │
 └────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Component Dependency Tree
+## 9. Component Dependency Tree
 
 ```
 Root Layout
@@ -489,11 +537,25 @@ Root Layout
 
 ---
 
+## 10. Final Export Check
+
+- [x] Boxes match the written system design
+- [x] Arrows are labeled with Firestore operation and collection path
+- [x] Database (Firestore) is visually distinct as a separate subgraph
+- [x] Auth is shown where it happens (login, signup, and AuthProvider edges)
+- [x] Analytics is shown where events fire (dashed arrows from Pages to GA4)
+- [x] AI annotation is explicit — development workflow only, no Sprint 1 runtime AI
+- [x] Diagram is readable at normal zoom with colour-coded subgraphs
+- [X] PNG exported and committed to `03-build/architecture/architecture-diagram.png`
+
+---
+
 ## Change Log
 
 | Date | Version | Changes | Author |
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial architecture diagram | Team Bandersnatch |
+| May 14, 2026 | 2.0 | Added Diagram Goal, Required Boxes, Required Arrows, AI Annotation, and Final Export Check sections; resolved analytics label from planned to deferred | Team Bandersnatch |
 
 ---
 
