@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable react-hooks/set-state-in-effect */
 
-import { useState, useEffect, use, useMemo } from "react";
+import { useState, useEffect, use, useMemo, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
@@ -108,6 +108,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const [activeBusCount, setActiveBusCount] = useState(0);
   const [alertCount, setAlertCount] = useState(0);
   const [alertedBuses, setAlertedBuses] = useState<{ [busId: string]: string[] }>({});
+  const manualSelectionTimeRef = useRef<number>(0);
 
   const { location, startTracking } = useUserLocation();
 
@@ -133,15 +134,20 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
   useEffect(() => {
     if (location && !isOnBus) {
+      if (Date.now() - manualSelectionTimeRef.current < 10000) {
+        return;
+      }
       const nearest = findNearestStopOnRoute(location.lat, location.lng);
       if (nearest) {
         const stopId = nearest.stop.id.toString();
-        setStop(stopId);
-        updateProfile({ defaultStop: stopId });
-        setShowDetectedIndicator(true);
+        if (stop !== stopId) {
+          setStop(stopId);
+          updateProfile({ defaultStop: stopId });
+          setShowDetectedIndicator(true);
+        }
       }
     }
-  }, [location, isOnBus, updateProfile]);
+  }, [location, isOnBus, updateProfile, stop]);
 
   useEffect(() => {
     if (showDetectedIndicator) {
@@ -206,8 +212,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   }, []);
 
   const handleStopChange = (newStop: string) => {
+    manualSelectionTimeRef.current = Date.now();
     setStop(newStop);
     updateProfile({ defaultStop: newStop });
+    setShowDetectedIndicator(false);
   };
 
   const handleCheckStatus = async () => {
