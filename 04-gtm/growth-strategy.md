@@ -2,114 +2,189 @@
 
 **Team:** Bandersnatch
 **Product:** Bus #3 Real-Time Tracker
-**Date:** May 18, 2026
-**Version:** 2.0
+**Market:** KIU students commuting via Bus #3
+**Date:** May 13, 2026
+**Version:** 1.0
 
 ---
 
 ## Activation Metric
 
-State your activation metric precisely. A vague definition is not gradeable.
+**Aha moment:** A student opens the app, sees the honest bus ETA, and decides to leave for the stop later than they would have without the app — arriving just in time instead of 30+ minutes early.
 
-**Activated user definition:**
-A user is activated when they receive **one confirmed bus status** (`bus_status_confirmed`) at their selected Bus #3 stop within **24 hours** of completing signup (`user_signup_completed`).
+**Activation metric:** 70% of new signups check bus status (`bus_status_viewed` event in GA4) within 24 hours of signup.
 
-**Activation number:** One confirmed bus status.
+**Why this is the aha moment:** From our 12 user interviews, every participant described the same pain: guessing when to leave and leaving excessively early to compensate. The moment the app replaces that guess with a reliable number — "Bus #3 arriving in 8 minutes" — is when the user experiences the product's core value. If a user does not check bus status within 24 hours, they likely signed up out of curiosity and have not yet integrated the app into their commute routine.
 
-**Time window:** Within 24 hours of signup.
-
-**Why this action indicates real value delivered:**
-From our 12 user interviews, every participant described guessing when to leave and compensating by leaving 30+ minutes early. The aha moment is replacing that guess with a reliable number — e.g., "Bus #3 arriving in 8 minutes — CONFIRMED" — so the user can time their departure. This maps to our north star metric (weekly reliable arrival confirmations) and fires only when real-time data is available, not on a generic page view.
-
-**Current activation rate (from your data or benchmark):**
-We do not yet have live cohort data. **Assumption: 31% of signups** reach `bus_status_confirmed` within 24 hours — aligned with marketplace activation benchmarks (25–40%; source: Lab 9 worked example). **Team target: 70%** by end of Sprint 2 after onboarding improvements; we will replace the assumption with GA4 D1 cohort data by Jun 19.
+**Measurement:** GA4 event `bus_status_viewed` fired on each status check. Cohort analysis at D1 post-signup measures the activation rate. Target: 70% activated within 24 hours.
 
 ---
 
-## Acquisition Channel Strategy
+## Audience Analysis
 
-### Primary Channel
+1. **Where does your target user already spend time online?**
+KIU students spend time in student-run Messenger groups, particularly those organized by dorm, year, or specific commute routes (like the Bus #3 Commuter Chat). They also scroll TikTok and Instagram while waiting at the bus stop.
 
-**Channel name:** Bus stop QR flyers at 5 Route #3 stops (KIU Main Gate, K Building, Colchis Fountain, Railway Station, Tsereteli Uni)
+2. **Who do they trust for product recommendations in your category?**
+They trust their peers and classmates experiencing the same daily commute struggles. Recommendations sent directly in group chats or via personal messages hold the highest weight. 
 
-**Channel type:** Organic
-
-**Why this channel fits our product and audience:**
-The target user is physically at these stops 2–5 times per day, phone in hand, at peak pain. A student scanning at 8:30 AM while waiting for a delayed bus is the highest-intent user possible. Interview P08: "I waited for an hour. I was just standing there scrolling TikTok." The flyer intercepts that moment. We go deep on this channel in Sprint 2 — our only paid-out-of-pocket spend (~$5.60).
-
-**How we will use it in Sprint 2:**
-Print 100 A5 laminated flyers with UTM-tagged QR codes; post at all 5 stops by Week 1; replenish weekly; measure scan-to-signup via GA4 `referral_source=qr_flyer`.
-
-**Estimated CAC via this channel:**
-See `04-gtm/financials/unit-economics.md` — Channel 1: **$0.66** (Month 1, Expected Case).
-
-**Scale ceiling:**
-Limited by foot traffic at five stops and flyer decay (~2,500 unique visitors/month before saturation). Cannot scale beyond Kutaisi Bus #3 corridor without adding stops or channels.
+3. **What is the cheapest way to put your product in front of them?**
+The cheapest way is leveraging existing student group chats (free) and placing QR code flyers exactly where they wait for the bus (very low cost of printing).
 
 ---
 
-### Secondary Channel
+## Channel Overview
 
-**Channel name:** KIU student Telegram and WhatsApp groups (Bus #3 commuter chat, Student Council, year-group groups)
-
-**Channel type:** Organic
-
-**Why this channel fits our product and audience:**
-Students already coordinate "is the bus here yet?" in these groups (Interview P11). Zero acquisition cost; peers are the trusted recommendation source. All 12 interview participants are in overlapping groups — authentic testimonials available.
-
-**How we will use it in Sprint 2:**
-One formatted post per group (6 groups, ~800 reachable members) in Week 1; UTM links per group; no repeat posts (spam risk). Seed users before QR flyers peak.
-
-**Estimated CAC via this channel:**
-See unit economics — Channel 2: **$0.00** (non-scalable; one-shot per group per semester).
-
-**Scale ceiling:**
-~800 students across known groups. One post per group per semester — channel exhausts after initial blast (~40 signups estimated).
+| Rank | Channel | Type | Fit | Speed | Cost | Target Users |
+|---|---|---|---|---|---|---|
+| 1 | Bus Stop QR Code Flyers | Direct / Outbound | High | Medium | Low (~$15) | Students waiting at Bus #3 stops |
+| 2 | Student Telegram & WhatsApp Groups | Organic / Community | High | Fast | Free | Existing student group chats |
+| 3 | Referral — Share Status with Friends | Viral / Product-Integrated | High | Slow | Free | Existing users inviting classmates |
 
 ---
 
-### Tertiary Channel
+## Channel 1 — Bus Stop QR Code Flyers
 
-**Channel name:** In-app "Share bus status" link (Sprint 3 story S3-01)
+**Type:** Direct / Outbound
 
-**Channel type:** Viral
+**Description:** Print A5 flyers with a QR code linking to the deployed app URL. Post at the 5 highest-traffic Bus #3 stops: KIU Main Gate, KIU K Building, Colchis Fountain, Railway Station, and Tsereteli Uni.
 
-**Why this channel fits our product and audience:**
-Users already coordinate departures with friends on the same route (Interview P02: "My friend also takes the same bus"). Share sends a teaser link with live ETA; friend signs up to get the same status. Compounds as user base grows but requires product feature shipped.
+### Fit
 
-**How we will use it in Sprint 2:**
-Model at K = 0.20 in growth projection; ship share feature mid-Sprint 2 if capacity allows; track `invite_sent` and signup attribution in GA4. $0 spend.
+The target user is physically present at these stops 2–5 times per day. They are standing idle, waiting for a bus, with their phone in hand — the exact moment of peak relevance. A student who scans the QR code at 8:30 AM while waiting for a delayed bus is the highest-intent user possible. The channel reaches users at the point of pain, not through an abstract ad.
 
-**Estimated CAC via this channel:**
-See unit economics — Channel 3: **$0.00** direct spend; effective CAC reduction via viral coefficient.
+Interview evidence: P08 said "I waited for an hour. I was just standing there scrolling TikTok." The flyer intercepts that scrolling moment.
 
-**Scale ceiling:**
-K = 0.20 (below viral threshold of 1.0) — supplements organic channels but cannot replace them. ~4 new users/week at 100 WAUs until base grows.
+### Speed
 
----
+Medium — flyers can be printed and posted within 2 days of design approval. First users can onboard the same day. However, flyers degrade in weather and may be removed by cleaners, requiring weekly replenishment. Reach is limited to students who pass through those specific stops.
 
-## Channel Priority Ranking
+### Cost
 
-| Priority | Channel | Type | Rationale |
-|----------|---------|------|-----------|
-| 1 | Bus stop QR flyers | Organic | Highest contextual fit — captures users at the exact moment of pain; only channel with deliberate Sprint 2 spend and measurable UTM. |
-| 2 | Telegram & WhatsApp groups | Organic | Fastest time-to-first-user (hours) and $0 cost, but one-shot per group — seed only, not scalable. |
-| 3 | Share bus status referral | Viral | Compounds over time at $0 spend but slowest to start and weakest magnitude (K = 0.20); deferred until feature ships and base exists. |
+Approximately $15 total for the MVP experiment:
 
----
+| Item | Cost |
+|---|---|
+| 100 A5 flyers (color, local print shop) | ~10 GEL ($3) |
+| Lamination (weatherproofing) | ~5 GEL ($1.50) |
+| Tape + staples | ~5 GEL ($1.50) |
+| Design time (in-house, Canva) | Free |
+| **Total** | **~$6** |
 
-## Channels We Are Not Pursuing in Sprint 2 and Why
+### Expected Reach
 
-| Channel type | Reason not pursuing now |
-|-------------|------------------------|
-| Paid | $0 marketing budget. Instagram/Facebook targeting "Kutaisi, 18–25, KIU" yields ~$20/user vs ~$0.11 QR (CPM $8–12, 0.5% CTR, 10% signup). Bus #3 commuters cannot be targeted separately from non-commuters. Timing mismatch: ad at 10 PM vs need at 7:30 AM bus stop. Revisit after PMF evidence and grant budget. |
-| Sales | B2C student utility with no supply-side or institutional buyer in Sprint 2. No facility managers or operators to outbound to until university transit dashboard is built post-traction. |
+Each flyer at a busy stop (KIU Main Gate) is seen by an estimated 200–400 students per day. With 5 stops over 2 weeks: estimated 5,000–10,000 impressions. Expected conversion rate: 1–3% scan-to-signup = **50–300 new users** over 2 weeks.
 
 ---
 
-## Connection to Growth Projection
+## Channel 2 — Student Telegram & WhatsApp Groups
 
-The channels above feed directly into `04-gtm/growth-projection.xlsx` (Expected, Best, Worst tabs). Conversion rates and cost inputs are documented in `04-gtm/financials/unit-economics.md` and sourced in the spreadsheet **Assumptions** tab. Scenario sensitivity: **signup-to-activation rate** ±50% (31% expected, 46.5% best, 15.5% worst) — our highest product risk is whether students trust and act on confirmed status after prior tracker failures.
+**Type:** Organic / Community
+
+**Description:** Post a formatted announcement in existing KIU student Telegram and WhatsApp groups where Bus #3 commuters already coordinate. Include a short description of the problem, the value proposition ("honest bus status — no more guessing"), and the app link.
+
+### Fit
+
+The user is already in these groups. Interview P11 mentioned relying on "Messenger group chats" as a coping strategy. The groups are an existing distribution channel with zero acquisition cost — students are already asking "is the bus here yet?" in these chats. The product replaces that conversation with a direct answer.
+
+The 12 interview participants are already part of these groups and can be the first wave of seed users. Their testimonials ("I used to leave 2 hours early, now I check the app") are authentic promotion material.
+
+### Speed
+
+Fast — a single post in a group with 200+ members can generate 20–50 signups within 24 hours. No design or printing needed. However, group admins may flag repeated posts as spam, so this is a one-shot channel per group per semester.
+
+### Cost
+
+Free. Requires only writing a post and having 2–3 team members share it in their respective groups.
+
+### Expected Reach
+
+| Group | Estimated Members | Est. Signups (5% conversion) |
+|---|---|---|
+| KIU Student Council Telegram | 400+ | 20 |
+| Bus #3 Commuter Chat Telegram | 200+ | 10 |
+| Year-group WhatsApp groups (4 groups × 50) | 200+ | 10 |
+| **Total** | **800+ students** | **40+ signups** |
+
+---
+
+## Channel 3 — Referral (Share Status with Friends)
+
+**Type:** Viral / Product-Integrated
+
+**Description:** An in-app "Share bus status" button that generates a link or screenshot the user can send to a friend via any messaging app. The link opens the app with the sender's bus stop and ETA pre-filled. The friend sees the same status information without needing to sign up (teaser view), with a "Get the app" call-to-action.
+
+### Fit
+
+The product has a natural viral mechanic: if you are at the bus stop and your friend is still at home, you share your status so they know when to leave. Interview P02 said "My friend also takes the same bus" — users already coordinate departures. The share feature makes that coordination one tap instead of a text message conversation.
+
+### Speed
+
+Slow — the share feature is built (Sprint 3 item in the roadmap) but requires users to be active first. Viral coefficient depends on existing user base. With an estimated K-factor of 0.2 (20% of users share, 1 in 5 recipients sign up), the channel compounds slowly but sustainably.
+
+### Cost
+
+Free — the share feature is already in the roadmap as story S3-01. No additional spend.
+
+### Expected Reach
+
+| Metric | Estimate |
+|---|---|
+| Weekly active users | 100 (after Channels 1+2) |
+| Share rate (% of active users who share per week) | 20% |
+| Shares per week | 20 |
+| Conversion rate (recipient to signup) | 20% |
+| New users from referral per week | 4 |
+| Cumulative referral users after 4 weeks | ~16 |
+
+---
+
+## Channel Comparison
+
+| Dimension | Channel 1 (QR Flyers) | Channel 2 (Groups) | Channel 3 (Referral) |
+|---|---|---|---|
+| **Type** | Direct / Outbound | Organic / Community | Viral / Product |
+| **Time to first user** | 2 days | 1 hour | 2–4 weeks |
+| **Cost per user** | ~$0.02 | $0 | $0 |
+| **Scalability** | Limited by stop foot traffic | Limited by group size and admin tolerance | Compounds with user base |
+| **User quality** | High (captured at pain point) | Medium (passive group member) | High (trusted invite from friend) |
+| **Measurement** | QR scan events + signup source | UTM link + signup source | `invite_sent` event in GA4 |
+
+### Recommended Phasing
+
+| Phase | Week | Channels Active | Goal |
+|---|---|---|---|
+| 1 | May 19–25 | Channel 2 (Groups) + Channel 1 (Flyers) | Reach 50 signups |
+| 2 | May 26–Jun 1 | Channel 1 + Channel 2 + Channel 3 (if built) | Reach 150 signups |
+| 3 | Jun 2–8 | All three + iterate based on CAC data | Reach 300 signups |
+
+---
+
+## Channel Ranking Rationale
+
+| Rank | Channel | Why This Rank |
+|------|---------|---------------|
+| 1 | Bus Stop QR Code Flyers | Highest fit — captures users at the exact moment of pain (waiting at the bus stop). Medium speed (2 days to deploy). $6 total cost. Highest conversion potential because the call-to-action is contextually perfect. |
+| 2 | Student Telegram & WhatsApp Groups | Zero cost and fastest time-to-first-user (1 hour). However, it is a one-shot channel per group per semester — once the post is made, it cannot be repeated without being flagged as spam. Reach is limited to existing group sizes (~800 students). |
+| 3 | Referral — Share Status with Friends | Lowest cost and compounds with user base, but slowest to start (requires existing users) and weakest magnitude (K = 0.20 means 100 users generate only 20 new users). It supplements the other two channels but cannot replace them. |
+
+---
+
+## Rejected Channel: Paid Social Media Ads (Instagram / Facebook)
+
+**Type:** Paid / Digital Advertising
+
+**Why rejected:**
+
+1. **Cost:** KIU students are a narrow demographic within a small geographic area (Kutaisi). Instagram's targeting can narrow to "located in Kutaisi, aged 18–25, interested in KIU" but the audience size is too small for the platform's delivery algorithm to optimize effectively. Estimated CPM: $8–12. With a $50 budget, we would reach ~5,000 impressions with an estimated 0.5% CTR = 25 clicks. At a generous 10% signup conversion = 2.5 users. **Cost per user: ~$20.** Compare to Channel 1 ($0.02/user) and Channel 2 ($0/user).
+
+2. **Targeting precision:** The people who need this app are specifically Bus #3 commuters. Instagram cannot distinguish Bus #3 riders from students who live on campus and never take the bus. We would waste budget reaching irrelevant users.
+
+3. **Timing mismatch:** Paid ads work best for products with a clear purchase intent (e-commerce, SaaS). Our product is a free utility that requires behaviour change. A student who sees an ad at 10 PM is unlikely to remember it at 7:30 AM the next morning when they are at the bus stop. The QR flyer captures them at exactly that 7:30 AM moment.
+
+4. **Budget:** The team has $0 marketing budget. Channel 1 costs $6 out-of-pocket. Channels 2 and 3 cost nothing. Paid ads would require external funding or personal expense with no guarantee of return.
+
+**When it would make sense:** After we have product-market fit evidence (40%+ buffer reduction from Experiment 1) and a budget from a grant or university sponsorship. At that point, Instagram/Facebook ads targeting KIU students with testimonial content could scale acquisition beyond the organic ceiling.
 
 ---
 
@@ -117,32 +192,24 @@ The channels above feed directly into `04-gtm/growth-projection.xlsx` (Expected,
 
 | Assumption | If False, Fallback |
 |---|---|
-| Students will scan a QR code at a bus stop | Coffee-coupon incentive experiment; hand out flyers in person at peak hours if scan rate &lt; 1%. |
-| Group admins will allow the post | Contact admins first; individual DMs if blocked. |
-| Students will share bus status without incentive | User interviews on friction; one-tap share if share rate &lt; 10%. |
-| App provides reliable ETAs | Fix data source first (Risk R2) — no channel compensates for broken product. |
+| Students will scan a QR code at a bus stop | Run a QR usage experiment: offer a small incentive (coffee coupon) for scanning. If scan rate is below 1%, switch to handing out flyers in person during peak hours. |
+| Group admins will allow the post | Contact admins directly before posting. Offer a value exchange (early access, direct feedback channel). If denied, individual DMs instead of group posts. |
+| Students will share bus status with friends | If share rate is below 10% after 4 weeks, run a user interview sprint to understand friction. Add a friction-reducing feature (one-tap share, pre-filled message). |
+| The app works reliably enough to earn referrals | This is the core product risk (see Risk R2 in risk register). If the app provides wrong ETAs, no growth channel can compensate — users will not refer a broken product. Fix the data source first. |
 
 ---
 
 ## Open Questions
 
-1. Actual QR scan-to-signup rate at KIU stops (benchmark: 1–3%, HubSpot campus QR).
-2. Group post conversion vs 5% assumption.
-3. Referral share rate vs 20% assumption.
-4. Acquisition drop during exam weeks and semester breaks.
+What we do not yet know that we need to answer in the first 4 weeks of live operation:
 
----
+1. **What is the actual QR scan-to-signup rate at KIU bus stops?** Our 1–3% estimate is from HubSpot benchmarks for campus QR campaigns. KIU students may scan at a different rate — especially at outdoor stops in varying weather.
 
-## Sign-off
+2. **Will group admins allow our post, and how many signups does one post actually drive?** We assume admins will allow it and 5% of members will sign up. If admins block the post or the conversion rate is below 2%, this channel is exhausted before it delivers meaningful numbers.
 
-All team members have reviewed and agreed on this strategy:
+3. **Do users share bus status without an incentive?** Our referral channel assumes 20% of active users share per week with 20% recipient conversion. If either number is materially lower (e.g., 5% share rate), the referral channel contributes negligibly.
 
-| Name | Role | Date |
-|------|------|------|
-| Nikoloz Modebadze | Discovery Lead | May 18, 2026 |
-| Nikoloz Kvirikashvili | Program Lead | May 18, 2026 |
-| Giorgi Mikaberidze | Tech Lead | May 18, 2026 |
-| Besik Meskhia | Flexible | May 18, 2026 |
+4. **How does demand shift during exam periods and semester breaks?** Our growth projection assumes steady weekly acquisition. If acquisition drops 60% during exam weeks (when students commute less) or collapses during breaks, the six-month trajectory changes significantly.
 
 ---
 
@@ -151,8 +218,7 @@ All team members have reviewed and agreed on this strategy:
 | Date | Version | Changes | Author |
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial growth strategy | Team Bandersnatch |
-| May 14, 2026 | 1.1 | Added activation metric, channel ranking | Team Bandersnatch |
-| May 18, 2026 | 2.0 | Lab 9 alignment: activation format, Organic/Organic/Viral types, template sections | Team Bandersnatch |
+| May 14, 2026 | 1.1 | Added activation metric, channel ranking rationale, open questions | Team Bandersnatch |
 
 ---
 
