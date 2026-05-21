@@ -45,12 +45,47 @@ KIU students who commute via Bus #3 (approximately 400+ students per semester) l
 
 ## Repository Structure
 
-- `00-foundation/` -- Team contract, problem statements, ICP
+| Directory | Contents |
+|-----------|----------|
+| `00-foundation/` | Team contract, problem statements, ICP |
+| `01-discovery/` | Interview scripts, logs, and synthesis |
+| `02-design/` | Prototypes, system design, tech stack, architecture diagram, risk register |
+| `03-build/` | Analytics, experiments, roadmap, sprint plans, process map |
+| `04-gtm/` | Growth strategy, unit economics, loops & moats, traction evidence |
+| `docs/` | AI usage log, standup log |
+| `bandersnatch_app/` | Deployed application source code |
+| `milestones/` | Weekly milestone tracking documents |
 
-- `01-discovery/` -- Interview scripts, logs, and synthesis
+---
 
-- `milestones/` -- Weekly milestone tracking documents
+## Deliverables
+
+| Artifact | Link |
+|----------|------|
+| **Deployed Application** | [product-capstone-2026.vercel.app](https://product-capstone-2026.vercel.app/en) |
+| **High-Fidelity Prototype** | [Stitch Prototype](https://stitch.withgoogle.com/projects/2218021865639894004) |
+| **Analytics Dashboard** | [`03-build/analytics/dashboard-link.md`](03-build/analytics/dashboard-link.md) |
+| **System Design** | [`03-build/architecture/system-design.md`](03-build/architecture/system-design.md) |
+| **Tech Stack** | [`03-build/architecture/tech-stack.md`](03-build/architecture/tech-stack.md) |
+| **Architecture Diagram** | [`03-build/architecture/architecture-diagram.md`](03-build/architecture/architecture-diagram.md) |
+| **Risk Register** | [`03-build/architecture/risk-register.md`](03-build/architecture/risk-register.md) |
+| **Event Schema** | [`03-build/analytics/event-schema.md`](03-build/analytics/event-schema.md) |
+| **North Star Metric** | [`03-build/analytics/north-star-metric.md`](03-build/analytics/north-star-metric.md) |
+| **Experiment Plan** | [`03-build/experiments/experiment-plan.md`](03-build/experiments/experiment-plan.md) |
+| **Product Roadmap** | [`03-build/roadmap/product-roadmap.md`](03-build/roadmap/product-roadmap.md) |
+| **Sprint 1 Plan** | [`03-build/roadmap/sprint-1-plan.md`](03-build/roadmap/sprint-1-plan.md) |
+| **Process Map** | [`03-build/workflow/process-map.md`](03-build/workflow/process-map.md) |
+| **Growth Strategy** | [`04-gtm/growth-strategy.md`](04-gtm/growth-strategy.md) |
+| **Unit Economics** | [`04-gtm/financials/unit-economics.md`](04-gtm/financials/unit-economics.md) |
+| **Loops & Moats** | [`04-gtm/loops-and-moats.md`](04-gtm/loops-and-moats.md) |
+| **Growth Projections** | [`04-gtm/financials/growth-projection.xlsx`](04-gtm/financials/growth-projection.xlsx) |
+| **12-Month Financial Model** | [`04-gtm/financials/12-month-model.xlsx`](04-gtm/financials/12-month-model.xlsx) |
+| **Traction Evidence** | [`04-gtm/traction/`](04-gtm/traction/) |
+| **AI Usage Log** | [`docs/ai-usage-log.md`](docs/ai-usage-log.md) |
+| **Standup Log** | [`docs/standup-log.md`](docs/standup-log.md) |
+
+---
 
 ## Status
 
-Final Problem Statement defined
+Sprint 1 complete — deployed MVP live at [product-capstone-2026.vercel.app](https://product-capstone-2026.vercel.app/en).
