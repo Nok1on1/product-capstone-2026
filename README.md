@@ -1,23 +1,45 @@
 <img width="240" height="240" alt="Eye_1" src="https://github.com/user-attachments/assets/1c941f47-9abb-4c84-bf50-b3b57975a295" />
 
-# Bandersnatch -- Product Capstone 2026
+# Bandersnatch — Product Capstone 2026
 
 **Course:** CS-PD-2026 Product Development for Software Engineers
-
 **Semester:** Spring 2026
-
 **Institution:** Kutaisi International University
+
+**Live App:** [product-capstone-2026.vercel.app](https://product-capstone-2026.vercel.app/en)
+
+---
+
+## Deliverables
+
+| Artifact                    | Link                                                                                                  |
+| --------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Live App**                | [product-capstone-2026.vercel.app](https://product-capstone-2026.vercel.app/en)                       |
+| **Analytics Dashboard**     | [Firebase Console → Analytics](https://console.firebase.google.com/project/bandersnatch123/analytics) |
+| **High-Fidelity Prototype** | [Stitch Prototype](https://stitch.withgoogle.com/projects/2218021865639894004)                        |
+| **System Design**           | [03-build/architecture/system-design.md](03-build/architecture/system-design.md)                      |
+| **Tech Stack**              | [03-build/architecture/tech-stack.md](03-build/architecture/tech-stack.md)                            |
+| **Architecture Diagram**    | [03-build/architecture/architecture-diagram.png](03-build/architecture/architecture-diagram.png)      |
+| **Event Schema**            | [03-build/analytics/event-schema.md](03-build/analytics/event-schema.md)                              |
+| **Experiment Plan**         | [03-build/experiments/experiment-plan.md](03-build/experiments/experiment-plan.md)                    |
+| **Growth Strategy**         | [04-gtm/growth-strategy.md](04-gtm/growth-strategy.md)                                                |
+| **Unit Economics**          | [04-gtm/financials/unit-economics.md](04-gtm/financials/unit-economics.md)                            |
+| **Growth Projection**       | [04-gtm/financials/growth-projection.xlsx](04-gtm/financials/growth-projection.xlsx)                  |
+| **12-Month Model**          | [04-gtm/financials/12-month-model.xlsx](04-gtm/financials/12-month-model.xlsx)                        |
+| **AI Usage Log**            | [docs/ai-usage-log.md](docs/ai-usage-log.md)                                                          |
+
+---
 
 ## Team
 
 The Bandersnatch team consists of the following members:
 
-| **Name** | **Role** | **GitHub** |
-| --- | --- | --- |
-| Nikoloz Kvirikashili | Program Lead | [RonchegLemoncheg](https://github.com/RonchegLemoncheg) |
-| Nikoloz Modebadze | Discovery Lead | [NW0RK](https://github.com/NW0RK) |
-| Giorgi Mikaberidze | Tech Lead | [Nok1on1](https://github.com/Nok1on1) |
-| Besik Meskhia | Flexible | [Besika40k](https://github.com/Besika40k) |
+| **Name**             | **Role**       | **GitHub**                                              |
+| -------------------- | -------------- | ------------------------------------------------------- |
+| Nikoloz Kvirikashili | Program Lead   | [RonchegLemoncheg](https://github.com/RonchegLemoncheg) |
+| Nikoloz Modebadze    | Discovery Lead | [NW0RK](https://github.com/NW0RK)                       |
+| Giorgi Mikaberidze   | Tech Lead      | [Nok1on1](https://github.com/Nok1on1)                   |
+| Besik Meskhia        | Flexible       | [Besika40k](https://github.com/Besika40k)               |
 
 ## Project: Problem Statement
 
@@ -34,13 +56,9 @@ KIU students who commute via Bus #3 (approximately 400+ students per semester) l
 **ICP Characteristics:**
 
 - Commutes 5+ days per week via Bus #3.
-
 - Has early morning classes (9:00 AM or earlier) at least 3 days per week.
-
 - Limited disposable income (taxi fare competes with food budget).
-
 - No personal vehicle or reliable alternative transportation.
-
 - Intercity commuters (Terjola/Samtredia) are a high-pain subsegment facing multi-stage journeys.
 
 ## Repository Structure

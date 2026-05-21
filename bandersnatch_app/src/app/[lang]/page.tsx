@@ -7,7 +7,8 @@ import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
 import { motion, AnimatePresence } from "framer-motion";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { logEvent } from "firebase/analytics";
+import { db, analytics } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useUserLocation } from "@/hooks/useUserLocation";
@@ -89,6 +90,11 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
     }
     setOnboardingCheckDone(true);
   }, [loading, user, profile, lang, router, onboardingCheckDone]);
+
+  useEffect(() => {
+    if (analytics) logEvent(analytics, "app_opened", { authenticated: !!user, language: lang });
+  }, []);
+
   const {
     hydrated,
     isOnBus,
@@ -245,6 +251,12 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
     setTimeout(() => {
       setStatus("success");
+      if (analytics) logEvent(analytics, "bus_status_confirmed", {
+        bus_line: "#3",
+        bus_stop: stop,
+        status_confidence: hasLiveData ? "confirmed" : "estimated",
+        crowd_level: crowding?.toLowerCase() ?? "unknown",
+      });
     }, 1500);
   };
 
@@ -256,6 +268,11 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
     params.set("currentStop", stop);
     if (destinationStop) params.set("destination", destinationStop);
     params.set("direction", dir);
+    if (analytics) logEvent(analytics, "departure_decision_made", {
+      current_stop: stop,
+      destination: destinationStop ?? "none",
+      direction: dir,
+    });
     router.push(`/${lang}/trip-details?${params.toString()}`);
   };
 
@@ -432,7 +449,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.96 }}
-                onClick={() => setStatus("idle")}
+                onClick={() => {
+                  if (analytics) logEvent(analytics, "bus_status_queried_again", { stop_id: stop });
+                  setStatus("idle");
+                }}
                 className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
               >
                 {dict.checkAgain}

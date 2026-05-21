@@ -67,7 +67,7 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
 
       // Send verification email
       await sendEmailVerification(userCredential.user);
-      
+
       // Redirect to verification page
       router.push(`/${lang}/verify-email?email=${encodeURIComponent(email)}`);
     } catch (err: any) {

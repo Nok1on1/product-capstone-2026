@@ -91,9 +91,6 @@ This prototype is the design blueprint. Lab 6 adds:
 - Real data persistence (bus status queries, user sessions actually save)
 - Vercel deployment (public URL for real user testing)
 
-**Live app URL (completed after Lab 6):**
-[https://product-capstone-2026.vercel.app/en]
 
----
 
 *Stitch Prototype | Bandersnatch | CS-PD-2026 | Spring 2026*
