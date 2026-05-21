@@ -4,6 +4,7 @@ import { useState, use } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
+import { logUserSignupCompleted } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { StopSelect } from "@/components/StopSelect";
@@ -60,6 +61,9 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
         profilePicture: null,
         createdAt: new Date().toISOString(),
       });
+
+      // Log signup event for analytics
+      await logUserSignupCompleted("email", stop);
 
       // Send verification email
       await sendEmailVerification(userCredential.user);
