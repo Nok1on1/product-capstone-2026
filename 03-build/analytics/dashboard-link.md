@@ -47,9 +47,8 @@ The core user flow fires these events in order:
 
 | Metric | Value | Date Range |
 |---|---|---|
-| Total unique users | _populated from live data_ | _experiment window_ |
-| Core flow completions | _populated from live data_ | _experiment window_ |
-| `bus_status_confirmed` events | _populated from live data_ | _experiment window_ |
+| Total unique users | 15 | May 21, 2026 |
+| `user_signup_completed` events | 2 | May 21, 2026 |
 
 ---
 
