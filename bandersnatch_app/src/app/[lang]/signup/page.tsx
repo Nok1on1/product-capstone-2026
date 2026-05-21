@@ -46,6 +46,10 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
     setLoading(true);
     setError("");
 
+    // Read acquisition source from URL params (hidden tracking)
+    const params = new URLSearchParams(window.location.search);
+    const acquisitionSource = params.get("source") || params.get("utm_source") || null;
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
@@ -60,6 +64,7 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
         emailVerified: false,
         profilePicture: null,
         createdAt: new Date().toISOString(),
+        acquisitionSource,
       });
 
       // Log signup event for analytics

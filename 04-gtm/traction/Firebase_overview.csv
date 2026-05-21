@@ -1,0 +1,176 @@
+# ----------------------------------------
+# Firebase overview
+# ----------------------------------------
+# How are active users trending?
+# Start date: 20260521
+# End date: 20260521
+Nth day,30 days,7 days,1 day
+0000,21,20,20
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Nth day
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+App,Version,Status
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+App,Crash-free users
+
+
+# Start date: 20260520
+# End date: 20260520
+App,Crash-free users
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Nth day,Average engagement time per active user
+0000,37.8
+
+# Start date: 20260521
+# End date: 20260521
+Nth day,Engaged sessions per active user
+0000,0
+
+# Start date: 20260521
+# End date: 20260521
+Nth day,Average engagement time per session
+0000,36
+
+#  
+# Start date: 20260409
+# End date: 20260520
+Cohort,Active users
+0000,1
+0001,0
+0002,0
+0003,0
+0004,0
+0005,0
+0006,0
+0007,0
+0008,0
+0009,0
+0010,0
+0011,0
+0012,0.5
+0013,NaN
+0014,NaN
+0015,NaN
+0016,NaN
+0017,NaN
+0018,NaN
+0019,NaN
+0020,NaN
+0021,NaN
+0022,NaN
+0023,NaN
+0024,NaN
+0025,NaN
+0026,NaN
+0027,NaN
+0028,NaN
+0029,NaN
+0030,NaN
+0031,NaN
+0032,NaN
+0033,NaN
+0034,NaN
+0035,NaN
+0036,NaN
+0037,NaN
+0038,NaN
+0039,NaN
+0040,NaN
+0041,NaN
+
+# How well do you retain your users?
+# Start date: 20260405
+# End date: 20260516
+Date,Week 0,Week 1,Week 2,Week 3,Week 4,Week 5
+Apr 5 - Apr 11,0,0,0,0,0,0
+Apr 12 - Apr 18,0,0,0,0,0,-1
+Apr 19 - Apr 25,0,0,0,0,-1,-1
+Apr 26 - May 2,0,0,0,-1,-1,-1
+May 3 - May 9,2,0,-1,-1,-1,-1
+May 10 - May 16,0,-1,-1,-1,-1,-1
+
+# Where does your average 120d value come from?
+# Start date: 20260521
+# End date: 20260521
+First user primary channel group (Default Channel Group),Average 120d value
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Page title and screen class,Views
+Bandersnatch - Home,20
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Event name,Event count
+page_view,20
+session_start,18
+first_visit,17
+user_engagement,7
+user_signup_completed,2
+bus_status_confirmed,1
+
+# What are your top performing key events?
+# Start date: 20260521
+# End date: 20260521
+Event name,Key events
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Nth day,Total revenue
+
+
+# Start date: 20260521
+# End date: 20260521
+Nth day,Purchase revenue
+
+
+# Start date: 20260521
+# End date: 20260521
+Nth day,Total ad revenue
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Nth day,Average purchase revenue per active user
+
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Country ID,Active users
+BG,1
+GE,18
+US,1
+
+# Start date: 20260521
+# End date: 20260521
+Country,Active users
+GE,18
+BG,1
+US,1
+
+#  
+# Start date: 20260521
+# End date: 20260521
+Device model,Active users

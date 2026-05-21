@@ -13,6 +13,7 @@ export interface UserProfile {
   emailVerified?: boolean;
   createdAt: Timestamp | string;
   onboardingCompleted?: boolean;
+  acquisitionSource?: string | null;
 }
 
 // Type for when we're updating trust score or report count
