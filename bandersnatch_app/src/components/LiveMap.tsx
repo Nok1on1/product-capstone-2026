@@ -174,7 +174,7 @@ function OffsetPolyline({
   return null;
 }
 
-// ─── Simulated bus – To Station (Blue) ───────────────────────────────────────
+// ─── Simulated bus – To Station (Blue) ──────────────────────────────────────
 function SimulatedBusStation({ dictMap }: { dictMap: any }) {
   const [position, setPosition] = useState<[number, number]>([
     toStationStops[0].lat,
