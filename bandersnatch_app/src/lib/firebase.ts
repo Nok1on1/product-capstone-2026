@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getMessaging, isSupported } from "firebase/messaging";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,6 +18,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let messaging: ReturnType<typeof getMessaging> | null = null;
+let analytics: ReturnType<typeof getAnalytics> | null = null;
 
 if (typeof window !== "undefined") {
   isSupported().then((supported) => {
@@ -24,6 +26,11 @@ if (typeof window !== "undefined") {
       messaging = getMessaging(app);
     }
   });
+  try {
+    analytics = getAnalytics(app);
+  } catch (err) {
+    console.error("Failed to initialize analytics:", err);
+  }
 }
 
-export { app, auth, db, messaging };
+export { app, auth, db, messaging, analytics };
