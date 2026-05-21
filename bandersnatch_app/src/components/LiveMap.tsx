@@ -190,7 +190,7 @@ function SimulatedBusStation({ dictMap }: { dictMap: any }) {
       toStationStops[1].lat,
       toStationStops[1].lng,
     ];
-    const duration = 2800;
+    const duration = 15000;
 
     function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t;
@@ -278,7 +278,7 @@ function SimulatedBusCity({ dictMap }: { dictMap: any }) {
       toCityCentreStops[1].lat,
       toCityCentreStops[1].lng,
     ];
-    const duration = 2800;
+    const duration = 15000;
 
     function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t;
