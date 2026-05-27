@@ -56,7 +56,7 @@ Equivalent downtime: 7.2 hours per month
 **SLI definition:**
 - Metric: Percentage of bus status check attempts that complete successfully (user queries a stop and receives a status without a 5xx or client error)
 - Formula: `successful_status_checks / total_status_checks x 100`
-- Measured by: Firebase Analytics events — `bus_status_confirmed` vs `bus_status_queried_again` as a proxy. We count the ratio of successful status confirmations to total query attempts.
+- Measured by: Firebase Analytics events — `bus_status_confirmed` vs (`app_opened` + `user_session_started` + `bus_status_queried_again`) as a proxy. We count the ratio of successful status confirmations to total query attempts.
 - Measurement frequency: Calculated daily from Firebase Analytics event data
 - Current measured value: Not yet measured — analytics is instrumented but we do not have enough data to establish a baseline
 
