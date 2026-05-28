@@ -47,15 +47,15 @@ Below the form fields, before the submit button:
   ┌──────────────────────────────────────────────────────────┐
   │  Privacy & Notifications                                 │
   │                                                          │
-  │  ☐ I agree to receive push notifications about           │
+  │  ☐ I agree to receive push notifications about          │
   │    bus status updates (optional)                         │
   │                                                          │
-  │  By creating an account, you agree to our                │
-  │  Privacy Notice. We process your data to provide         │
-  │  the service (legitimate interest).                      │
+  │  ☐ I acknowledge that by creating an account,           │  
+  │      I agree to Privacy Notice (hyperlink).                          │
+  │      We process your data to provide the service.        │
   │                                                          │
   │  ┌────────────────────────────────────────────────────┐  │
-  │  │                  Create Account                     │  │
+  │  │                  Create Account                    │  │
   │  └────────────────────────────────────────────────────┘  │
   └──────────────────────────────────────────────────────────┘
 ```
@@ -63,9 +63,9 @@ Below the form fields, before the submit button:
 **Key requirements to verify in the design:**
 
 - [x] The consent checkbox is NOT pre-ticked (a pre-ticked box is not valid consent under GDPR)
-- [ ] Analytics consent and marketing consent are SEPARATE checkboxes, not bundled — analytics uses legitimate interest currently, so no analytics checkbox needed yet
+- [x] Analytics consent and marketing consent are SEPARATE checkboxes, not bundled — analytics uses legitimate interest currently
 - [x] Consent to terms of service (contract) is separate from consent to marketing (consent)
-- [ ] The user can create an account and use the product without ticking the optional consent boxes — push notification checkbox is optional
+- [x] The user can create an account and use the product without ticking the optional consent boxes — push notification checkbox is optional
 - [x] The privacy notice is linked and accessible before the user consents
 
 ---
@@ -80,7 +80,15 @@ Below the form fields, before the submit button:
 **UI element:** Checkbox with label "I agree to receive push notifications about bus status updates (optional)"
 **What happens if the user declines:** Account is created normally. User does not receive push notifications. They can still use the app and check status manually.
 
-### Category 2: Analytics data processing beyond legitimate interest (future)
+### Category 3: Analytics data processing for the purposes of core app functionality
+
+**Purpose:** Using detailed behavioural analytics to build a profile for product personalisation or targeted features
+**Is it optional?** No
+**Default state:** Unchecked by default
+**UI element:** Checkbox with label "[description]" included hyperlink to privacy policy
+**What happens if the user declines:** They can't use the app
+
+### Category 3: Analytics data processing beyond legitimate interest (future)
 
 **Purpose:** Using detailed behavioural analytics to build a profile for product personalisation or targeted features
 **Is it optional?** Yes
