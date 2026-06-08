@@ -80,15 +80,7 @@ Below the form fields, before the submit button:
 **UI element:** Checkbox with label "I agree to receive push notifications about bus status updates (optional)"
 **What happens if the user declines:** Account is created normally. User does not receive push notifications. They can still use the app and check status manually.
 
-### Category 3: Analytics data processing for the purposes of core app functionality
-
-**Purpose:** Using detailed behavioural analytics to build a profile for product personalisation or targeted features
-**Is it optional?** No
-**Default state:** Unchecked by default
-**UI element:** Checkbox with label "[description]" included hyperlink to privacy policy
-**What happens if the user declines:** They can't use the app
-
-### Category 3: Analytics data processing beyond legitimate interest (future)
+### Category 2: Analytics data processing beyond legitimate interest (future)
 
 **Purpose:** Using detailed behavioural analytics to build a profile for product personalisation or targeted features
 **Is it optional?** Yes
@@ -109,8 +101,30 @@ Consent must be as easy to withdraw as it was to give. If consent was one click,
 **Where can a user withdraw consent?**
 Account > Settings > Notification preferences
 
+**What the user will see:**
+
+```
+In Account > Settings > Notification preferences:
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Notification Preferences                            │
+  │                                                      │
+  │  Push notifications about bus status updates         │
+  │  [Enabled]                          [Disable]        │
+  │                                                      │
+  │  Analytics profiling for personalised content        │
+  │  [Disabled]                          [Enable]        │
+  │                                                      │
+  │  (Toggling a setting saves immediately —             │
+  │   no separate Save button needed)                    │
+  └──────────────────────────────────────────────────────┘
+```
+
 **How many steps does withdrawal take?**
-Two steps: navigate to Account page, toggle off the push notifications switch.
+Two steps: navigate to Account > Settings, toggle the switch. The toggle itself is the only action — no confirmation dialog required, matching the one-click nature of consent.
+
+**What data is deleted on withdrawal?**
+When a user disables push notification consent, the FCM token is removed from Firestore and no further push notifications are sent. Analytics profiling opt-out means only aggregate (non-profiling) analytics continue.
 
 **Implementation status:** Not yet built — gap acknowledged.
 
@@ -163,4 +177,4 @@ Consent records are retained for the life of the account plus 2 years, to handle
 | No consent withdrawal UI in Account/Settings | Giorgi Mikaberidze | Sprint 2 (by 5 June 2026) |
 | Consent record not stored in Firestore user document | Nikoloz Kvirikashvili | Sprint 2 (by 5 June 2026) |
 | No privacy notice link on signup page | Nikoloz Modebadze | Sprint 2 (by 5 June 2026) |
-| Analytics/browser notification consent not separated into distinct categories | Besik Meskhia | Sprint 2 (by 5 June 2026) |
+| Push notification consent checkbox copy and styling not finalised | Besik Meskhia | Sprint 2 (by 5 June 2026) |
