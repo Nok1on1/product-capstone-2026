@@ -27,25 +27,25 @@ export function BottomNav({ lang }: { lang: string }) {
   if (pathname.includes("/login") || pathname.includes("/signup")) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-2 pb-safe bg-white dark:bg-slate-950 border-t border-outline-variant dark:border-slate-800 shadow-[0_-1px_3px_0_rgba(0,0,0,0.05)] md:hidden transition-colors duration-200">
+    <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-2 pb-safe bg-white/95 dark:bg-slate-950/95 border-t border-outline-variant dark:border-slate-800 shadow-[0_-1px_10px_0_rgba(15,23,42,0.08)] backdrop-blur-md md:hidden transition-colors duration-200">
       {navItems.map((item) => {
         const isActive = pathname === item.href || (item.href === `/${lang}` && pathname === `/${lang}/`);
         return (
           <Link
             key={item.name}
             href={item.href}
-            className={`relative flex flex-col items-center justify-center rounded-lg px-3 py-2 flex-1 ${
+            className={`relative flex flex-col items-center justify-center rounded-lg px-3 py-2 flex-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30 ${
               isActive ? "text-primary-container dark:text-blue-400" : "text-slate-500 dark:text-slate-400 hover:text-primary-container dark:hover:text-blue-400"
             }`}
           >
             {isActive && (
               <motion.div
                 layoutId="bottom-nav-indicator"
-                className="absolute inset-0 bg-blue-50 dark:bg-slate-900 rounded-lg -z-10"
-                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                className="absolute inset-x-2 inset-y-1 bg-blue-50 dark:bg-slate-900 rounded-lg -z-10"
+                transition={{ type: "spring", bounce: 0.18, duration: 0.5 }}
               />
             )}
-            <motion.div whileTap={{ scale: 0.8 }}>
+            <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.88 }}>
               <AnimatedIcon icon={item.icon} isActive={isActive} className="text-[24px]" />
             </motion.div>
             <span className="text-[10px] sm:text-[12px] font-semibold uppercase tracking-wider mt-1 truncate w-full text-center">

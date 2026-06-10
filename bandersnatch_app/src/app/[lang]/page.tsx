@@ -5,7 +5,7 @@ import { useState, useEffect, use, useMemo, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   doc,
   getDoc,
@@ -34,9 +34,10 @@ import Skeleton from "@/components/Skeleton";
 import { toStationStops, toCityCentreStops } from "@/data/route3";
 
 function BackgroundAnimation() {
+  const shouldReduceMotion = useReducedMotion();
   const buses = useMemo(
     () =>
-      Array.from({ length: 5 }, (_, i) => ({
+      Array.from({ length: 4 }, (_, i) => ({
         startX: `${15 + ((i * 17) % 70)}%`,
         startY: `${10 + ((i * 23) % 75)}%`,
         endX: `${80 - ((i * 13) % 60)}%`,
@@ -48,8 +49,10 @@ function BackgroundAnimation() {
     [],
   );
 
+  if (shouldReduceMotion) return null;
+
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10" aria-hidden="true">
       {buses.map((bus, i) => (
         <motion.div
           key={i}
@@ -64,8 +67,9 @@ function BackgroundAnimation() {
           transition={{
             duration: bus.duration,
             repeat: Infinity,
-            ease: "linear",
+            ease: "easeInOut",
             delay: bus.delay,
+            repeatDelay: 2,
           }}
         >
           <span
@@ -369,7 +373,7 @@ export default function Home({
   );
 
   return (
-    <main className="flex-grow flex flex-col items-center justify-center p-5 pb-32">
+    <main className="flex-grow flex flex-col items-center justify-center p-5 pt-6 pb-32">
       <BackgroundAnimation />
       <AnimatePresence>
         {hydrated && isOnBus && (
@@ -384,9 +388,12 @@ export default function Home({
 
       <motion.div
         layout
-        className="w-full max-w-md bg-white dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-xl p-6 relative overflow-visible shadow-sm transition-colors duration-200"
+        initial={{ opacity: 0, y: 12, scale: 0.99 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+        className="w-full max-w-md bg-white dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-6 relative overflow-visible shadow-sm transition-colors duration-200"
       >
-        <div className="absolute top-0 left-0 w-full h-1 bg-primary-container dark:bg-blue-500 rounded-t-xl"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-primary-container dark:bg-blue-500 rounded-t-lg"></div>
 
         <motion.div layout="position" className="mb-6">
           <h1 className="text-3xl font-bold text-on-surface dark:text-slate-100 mb-2 tracking-tight">
@@ -468,10 +475,11 @@ export default function Home({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
             >
-              <motion.button
+            <motion.button
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={handleCheckStatus}
-                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-xl py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm transition-colors"
+                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-xl py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/40"
               >
                 <span className="material-symbols-outlined">search</span>
                 {dict.checkStatus}
@@ -564,14 +572,16 @@ export default function Home({
                 </div>
               </div>
               <motion.button
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={handleLiveTracker}
-                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-xl py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm transition-colors"
+                className="w-full bg-primary-container dark:bg-blue-600 text-on-primary font-semibold text-xl py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm transition-colors hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/40"
               >
                 <span className="material-symbols-outlined">route</span>
                 {tripDict.title}
               </motion.button>
               <motion.button
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={() => {
                   if (analytics)
@@ -580,7 +590,7 @@ export default function Home({
                     });
                   setStatus("idle");
                 }}
-                className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30"
               >
                 {dict.checkAgain}
               </motion.button>
@@ -596,8 +606,9 @@ export default function Home({
         className="w-full max-w-md mt-8 grid grid-cols-2 gap-4"
       >
         <motion.div
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-surface-container dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-3 flex flex-col justify-between h-24 shadow-sm cursor-pointer hover:shadow-md transition-all"
+          className="bg-surface-container dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-3 flex flex-col justify-between h-24 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
         >
           <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
             <span className="material-symbols-outlined text-lg">
@@ -610,8 +621,9 @@ export default function Home({
           </div>
         </motion.div>
         <motion.div
+          whileHover={{ y: -2 }}
           whileTap={{ scale: 0.95 }}
-          className="bg-surface-container dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-3 flex flex-col justify-between h-24 shadow-sm cursor-pointer hover:shadow-md transition-all"
+          className="bg-surface-container dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-3 flex flex-col justify-between h-24 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
         >
           <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
             <span className="material-symbols-outlined text-lg">warning</span>

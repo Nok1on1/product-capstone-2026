@@ -18,9 +18,10 @@ export function OnBusButton() {
       transition={{ type: "spring", bounce: 0.3 }}
     >
       <motion.button
+        whileHover={{ y: -1 }}
         whileTap={{ scale: 0.92 }}
         onClick={isOnBus ? disembark : boardBus}
-        className={`flex items-center gap-2 px-5 py-3 rounded-full shadow-lg font-semibold text-sm transition-colors ${
+        className={`flex items-center gap-2 px-5 py-3 rounded-full shadow-lg font-semibold text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/40 ${
           isOnBus
             ? "bg-red-500 hover:bg-red-600 text-white"
             : "bg-primary-container hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-on-primary"

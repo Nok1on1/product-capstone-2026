@@ -24,6 +24,9 @@
   --color-success-container: #7cf994;
   --color-warning: #8a6800;
   --color-warning-container: #ffdf9a;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #410002;
 }
 
 :root {
@@ -36,6 +39,9 @@
   --surface-container-lowest: #ffffff;
   --outline: #737686;
   --outline-variant: #c3c6d7;
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --on-error-container: #410002;
 }
 
 .dark {
@@ -48,6 +54,9 @@
   --surface-container-lowest: #0f172a;
   --outline: #475569; /* slate-600 */
   --outline-variant: #334155; /* slate-700 */
+  --error: #ffb4ab;
+  --error-container: #690005;
+  --on-error-container: #ffdad6;
 }
 
 body {
@@ -94,4 +103,21 @@ body {
 .leaflet-overlay-pane path {
   stroke-dasharray: 8 4;
   animation: dash-draw 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .pulse-ring,
+  .animated-bus-marker,
+  .leaflet-overlay-pane path {
+    animation: none !important;
+  }
 }

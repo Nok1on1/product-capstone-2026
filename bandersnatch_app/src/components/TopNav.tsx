@@ -38,10 +38,11 @@ export function TopNav({ lang }: { lang: string }) {
   };
 
   return (
-    <header className="flex justify-between items-center h-14 px-4 w-full sticky top-0 z-50 bg-white dark:bg-slate-950 border-b border-outline-variant dark:border-slate-800 shadow-sm transition-colors duration-200">
+    <header className="sticky top-0 z-50 w-full border-b border-outline-variant/80 bg-white/95 shadow-sm backdrop-blur-md transition-colors duration-200 dark:border-slate-800 dark:bg-slate-950/90">
+      <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
       <div className="flex items-center">
 
-        <Link href={`/${lang}`} className="text-xl font-black text-primary-container dark:text-blue-400 tracking-tighter">
+        <Link href={`/${lang}`} className="text-xl font-black text-primary-container dark:text-blue-400 tracking-tighter focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30 rounded">
           Bandersnatch
         </Link>
       </div>
@@ -54,7 +55,7 @@ export function TopNav({ lang }: { lang: string }) {
             <Link 
               key={item.name}
               href={item.href} 
-              className={`relative font-bold text-sm uppercase tracking-wider pb-1 ${
+              className={`relative font-bold text-sm uppercase tracking-wider pb-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30 rounded ${
                 isActive ? "text-primary-container dark:text-blue-400" : "text-slate-500 hover:text-primary-container dark:text-slate-400 dark:hover:text-blue-400 transition-colors"
               }`}
             >
@@ -74,7 +75,8 @@ export function TopNav({ lang }: { lang: string }) {
       <div className="flex items-center gap-2">
         <button 
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")} 
-          className="text-outline dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-all p-1.5 rounded-full flex items-center justify-center"
+          className="text-outline dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors p-1.5 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30"
+          aria-label="Toggle color theme"
         >
           {mounted ? (
             <span className="material-symbols-outlined">
@@ -84,12 +86,13 @@ export function TopNav({ lang }: { lang: string }) {
             <div className="w-6 h-6" /> 
           )}
         </button>
-        <button onClick={toggleLanguage} className="font-bold text-sm text-outline dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 px-2 py-1 rounded-md transition-all">
+        <button onClick={toggleLanguage} className="font-bold text-sm text-outline dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900 px-2 py-1 rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30">
           {lang === "en" ? "KA" : "EN"}
         </button>
-        <Link href={`/${lang}/account`} className={`hover:bg-slate-50 dark:hover:bg-slate-900 active:opacity-80 transition-all duration-200 p-1 rounded-full flex items-center justify-center ${pathname.includes("/account") ? "text-primary-container dark:text-blue-400" : "text-outline dark:text-slate-400"}`}>
+        <Link href={`/${lang}/account`} className={`hover:bg-slate-50 dark:hover:bg-slate-900 active:opacity-80 transition-colors duration-200 p-1 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30 ${pathname.includes("/account") ? "text-primary-container dark:text-blue-400" : "text-outline dark:text-slate-400"}`}>
           <AnimatedIcon icon="account_circle" isActive={pathname.includes("/account")} className="text-3xl" />
         </Link>
+      </div>
       </div>
     </header>
   );

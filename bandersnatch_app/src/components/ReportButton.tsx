@@ -86,9 +86,10 @@ export function ReportButton() {
         transition={{ type: "spring", bounce: 0.3 }}
       >
         <motion.button
+          whileHover={{ y: -1 }}
           whileTap={{ scale: 0.92 }}
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 px-5 py-3 rounded-full shadow-lg font-semibold text-sm transition-colors bg-warning hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-on-primary"
+          className="flex items-center gap-2 px-5 py-3 rounded-full shadow-lg font-semibold text-sm transition-colors bg-warning hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-on-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500/40"
         >
           <span className="material-symbols-outlined text-lg">report_problem</span>
           Report Issue
@@ -112,7 +113,8 @@ export function ReportButton() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="fixed bottom-0 left-0 right-0 z-40 rounded-t-2xl bg-white dark:bg-slate-900 p-6 shadow-2xl max-w-md mx-auto"
+              transition={{ type: "spring", bounce: 0.12, duration: 0.35 }}
+              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-lg bg-white dark:bg-slate-900 p-6 shadow-2xl max-w-md mx-auto border border-outline-variant dark:border-slate-800"
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-on-surface dark:text-slate-100">
@@ -120,7 +122,8 @@ export function ReportButton() {
                 </h2>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200"
+                  className="text-on-surface-variant dark:text-slate-400 hover:text-on-surface dark:hover:text-slate-200 rounded-full p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30"
+                  aria-label="Close report dialog"
                 >
                   <span className="material-symbols-outlined">close</span>
                 </button>
@@ -136,7 +139,7 @@ export function ReportButton() {
                     value={selectedBus}
                     onChange={(e) => setSelectedBus(e.target.value)}
                     disabled={isLoading}
-                    className="w-full border border-outline-variant dark:border-slate-700 rounded-lg px-4 py-2 bg-white dark:bg-slate-800 text-on-surface dark:text-slate-100 disabled:opacity-50"
+                  className="w-full border border-outline-variant dark:border-slate-700 rounded-lg px-4 py-2 bg-white dark:bg-slate-800 text-on-surface dark:text-slate-100 disabled:opacity-50"
                   >
                     <option key="default" value="">Choose a bus...</option>
                     {buses.map((bus, index) => (
@@ -171,7 +174,7 @@ export function ReportButton() {
                     whileTap={{ scale: 0.96 }}
                     type="button"
                     onClick={() => setIsOpen(false)}
-                    className="flex-1 border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    className="flex-1 border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30"
                   >
                     Cancel
                   </motion.button>
@@ -179,7 +182,7 @@ export function ReportButton() {
                     whileTap={{ scale: 0.96 }}
                     type="submit"
                     disabled={isSubmitting || !selectedBus || !reason.trim()}
-                    className="flex-1 bg-warning hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-on-primary font-semibold py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-warning hover:bg-yellow-600 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-on-primary font-semibold py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500/40"
                   >
                     {isSubmitting ? (
                       <>
