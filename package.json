@@ -1,0 +1,10 @@
+{
+  "name": "product-capstone-2026",
+  "private": true,
+  "scripts": {
+    "setup": "npm --prefix bandersnatch_app install && npm --prefix bandersnatch_app run build",
+    "dev": "npm --prefix bandersnatch_app run dev",
+    "build": "npm --prefix bandersnatch_app run build",
+    "lint": "npm --prefix bandersnatch_app run lint"
+  }
+}
