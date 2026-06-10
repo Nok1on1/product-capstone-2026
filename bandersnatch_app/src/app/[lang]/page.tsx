@@ -92,6 +92,10 @@ function parseSelectedStop(value: string): { direction: "station" | "city"; stop
   return { direction: "station", stopId: Number(value) || 10 };
 }
 
+function normalizeReportReason(reason: string) {
+  return reason.trim().toLowerCase();
+}
+
 export default function Home({
   params,
 }: {
@@ -368,9 +372,21 @@ export default function Home({
         hasLiveData,
         liveEtaMinutes: hasLiveData ? 7 : null,
         delayPattern,
+        locale: lang === "ka" ? "ka" : "en",
       }),
-    [selectedStop, location, hasLiveData, delayPattern]
+    [selectedStop, location, hasLiveData, delayPattern, lang]
   );
+
+  const getReportReasonLabel = (reason: string) => {
+    const normalizedReason = normalizeReportReason(reason);
+    if (normalizedReason === "broken air conditioning") {
+      return dict.reportReasons.brokenAirConditioning;
+    }
+    if (normalizedReason === "it crashed") {
+      return dict.reportReasons.crashed;
+    }
+    return reason;
+  };
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-5 pt-6 pb-32">
@@ -414,7 +430,7 @@ export default function Home({
             </span>
             <div className="min-w-0">
               <p className="text-xs font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">
-                When should I leave?
+                {dict.leaveQuestion}
               </p>
               <p className="text-2xl font-black text-blue-900 dark:text-blue-100 tracking-tight mt-1">
                 {departureRecommendation.summary}
@@ -672,7 +688,7 @@ export default function Home({
                         <span className="text-error dark:text-red-400 mt-1">
                           •
                         </span>
-                        <span>{reason}</span>
+                        <span>{getReportReasonLabel(reason)}</span>
                       </li>
                     ))}
                   </ul>
