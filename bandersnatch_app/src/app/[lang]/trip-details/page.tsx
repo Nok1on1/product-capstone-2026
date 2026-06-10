@@ -6,6 +6,7 @@ import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useBusState } from "@/context/BusStateContext";
 import { useUserLocation } from "@/hooks/useUserLocation";
 import { findNearestStopOnRoute } from "@/lib/location-utils";
+import { joinRideGroup } from "@/lib/joinRideGroup";
 import {
   getNext3Stops,
   getNextScheduledBus,
@@ -77,6 +78,8 @@ export default function TripDetailsPage({
     | "city"
     | null;
 
+    
+
   useEffect(() => {
     startTracking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -99,6 +102,18 @@ export default function TripDetailsPage({
       setDestination(destinationParam);
     }
   }, [destinationParam, destination, setDestination]);
+
+
+  const handleFindGroup = async () => {
+    try {
+       if (!direction) return;
+      const groupId = await joinRideGroup(direction);
+
+      router.push(`/${lang}/find-ride?groupId=${groupId}`);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     const updateETA = () => {
@@ -395,7 +410,7 @@ export default function TripDetailsPage({
         <motion.button
           whileTap={{ scale: 0.96 }}
           onClick={handleNotHere}
-          className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          className="w-full cursor-pointer bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-medium py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
         >
           <EyeOff className="w-5 h-5" />
           {dict.notHere}
@@ -403,7 +418,7 @@ export default function TripDetailsPage({
         <motion.button
           whileTap={{ scale: 0.96 }}
           onClick={handleBusIsHere}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-colors"
+          className="w-full cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-colors"
         >
           <CheckCircle className="w-5 h-5" />
           {dict.busIsHere}
@@ -426,8 +441,8 @@ export default function TripDetailsPage({
           <p className="text-xs text-white/90">{dict.splitRideSub}</p>
         </div>
         <button
-          onClick={() => router.push(`/${lang}/find-ride`)}
-          className="bg-black/20 text-white text-xs font-medium px-3 py-1.5 rounded-full hover:bg-black/30 transition-colors flex-shrink-0"
+          onClick={handleFindGroup}
+          className="bg-black/20 text-white cursor-pointer text-xs font-medium px-3 py-1.5 rounded-full hover:bg-black/30 transition-colors flex-shrink-0"
         >
           {dict.findGroup}
         </button>
