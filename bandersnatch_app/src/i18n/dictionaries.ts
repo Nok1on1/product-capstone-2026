@@ -26,6 +26,11 @@ const dictionaries = {
       activeIssuesReported: "Active Issues Reported",
       followingBusesIssues: "The following buses have reported issues:",
       busId: "Bus",
+      leaveQuestion: "When should I leave?",
+      reportReasons: {
+        brokenAirConditioning: "Broken air conditioning",
+        crashed: "It crashed",
+      },
     },
     routes: {
       title: "Bus #3",
@@ -243,6 +248,11 @@ const dictionaries = {
       activeIssuesReported: "აქტიური შეტყობინებები",
       followingBusesIssues: "შემდეგ ავტობუსებზე დაფიქსირდა შეფერხება:",
       busId: "ავტობუსი",
+      leaveQuestion: "როდის უნდა გავიდე?",
+      reportReasons: {
+        brokenAirConditioning: "კონდიციონერი გაფუჭებულია",
+        crashed: "ავარიაში მოყვა",
+      },
     },
     routes: {
       title: "ავტობუსი #3",

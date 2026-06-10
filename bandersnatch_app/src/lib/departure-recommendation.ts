@@ -4,6 +4,7 @@ import { getStopsInDirection, getTimetableETAFromNow } from "@/lib/timetable";
 import { DelayPattern } from "@/lib/delay-prediction";
 
 type Direction = "station" | "city";
+type Locale = "en" | "ka";
 
 interface DepartureRecommendationInput {
   stopId: number;
@@ -13,6 +14,7 @@ interface DepartureRecommendationInput {
   liveEtaMinutes?: number | null;
   delayPattern?: DelayPattern | null;
   now?: Date;
+  locale?: Locale;
 }
 
 export interface DepartureRecommendation {
@@ -25,11 +27,37 @@ export interface DepartureRecommendation {
   detail: string;
 }
 
-function formatTime(date: Date) {
-  return new Intl.DateTimeFormat("en-US", {
+function formatTime(date: Date, locale: Locale) {
+  return new Intl.DateTimeFormat(locale === "ka" ? "ka-GE" : "en-US", {
     hour: "numeric",
     minute: "2-digit",
   }).format(date);
+}
+
+function getConfidenceLabel(
+  confidence: DepartureRecommendation["confidence"],
+  delayPattern: DelayPattern | null | undefined,
+  locale: Locale
+) {
+  if (locale === "ka") {
+    if (confidence === "confirmed") return "ლაივ შეტყობინება";
+    if (confidence === "historical") {
+      const confidenceLabels: Record<string, string> = {
+        low: "დაბალი",
+        medium: "საშუალო",
+        high: "მაღალი",
+      };
+      const label = confidenceLabels[delayPattern?.confidence ?? "low"] ?? "დაბალი";
+      return `${label} სანდოობის ისტორიული ნიმუში`;
+    }
+    return "განრიგის მიხედვით";
+  }
+
+  if (confidence === "confirmed") return "live report";
+  if (confidence === "historical") {
+    return `${delayPattern?.confidence ?? "low"} confidence historical pattern`;
+  }
+  return "timetable estimate";
 }
 
 export function getDepartureRecommendation({
@@ -40,6 +68,7 @@ export function getDepartureRecommendation({
   liveEtaMinutes,
   delayPattern,
   now = new Date(),
+  locale = "en",
 }: DepartureRecommendationInput): DepartureRecommendation {
   const stops = getStopsInDirection(direction);
   const stop = stops.find((item) => item.id === stopId) ?? null;
@@ -75,17 +104,17 @@ export function getDepartureRecommendation({
         : "timetable";
 
   const stopName =
-    typeof stop?.name === "string" ? stop.name : stop?.name.en ?? "your stop";
+    typeof stop?.name === "string"
+      ? stop.name
+      : stop?.name[locale] ?? stop?.name.en ?? (locale === "ka" ? "თქვენი გაჩერება" : "your stop");
   const etaText =
     expectedArrivalMinutes == null
-      ? "schedule unavailable"
-      : `bus expected in ${expectedArrivalMinutes} min`;
-  const confidenceText =
-    confidence === "confirmed"
-      ? "live report"
-      : confidence === "historical"
-        ? `${delayPattern?.confidence ?? "low"} confidence historical pattern`
-        : "timetable estimate";
+      ? locale === "ka" ? "განრიგი მიუწვდომელია" : "schedule unavailable"
+      : locale === "ka"
+        ? `ავტობუსი მოსალოდნელია ${expectedArrivalMinutes} წთ-ში`
+        : `bus expected in ${expectedArrivalMinutes} min`;
+  const confidenceText = getConfidenceLabel(confidence, delayPattern, locale);
+  const formattedLeaveBy = formatTime(leaveBy, locale);
 
   return {
     stop,
@@ -93,7 +122,9 @@ export function getDepartureRecommendation({
     expectedArrivalMinutes,
     walkingMinutes,
     confidence,
-    summary: `Leave by ${formatTime(leaveBy)}`,
-    detail: `Bus #3 at ${stopName}: ${etaText}. ${walkingMinutes} min walk, ${confidenceText}.`,
+    summary: locale === "ka" ? `გადით ${formattedLeaveBy}-მდე` : `Leave by ${formattedLeaveBy}`,
+    detail: locale === "ka"
+      ? `ავტობუსი #3 გაჩერებაზე ${stopName}: ${etaText}. ${walkingMinutes} წთ ფეხით, ${confidenceText}.`
+      : `Bus #3 at ${stopName}: ${etaText}. ${walkingMinutes} min walk, ${confidenceText}.`,
   };
 }
