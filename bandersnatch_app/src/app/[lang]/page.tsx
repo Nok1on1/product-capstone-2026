@@ -18,19 +18,22 @@ import { OnBusButton } from "@/components/OnBusButton";
 import { ReportButton } from "@/components/ReportButton";
 import { getNextScheduledBus } from "@/lib/timetable";
 import Skeleton from "@/components/Skeleton";
+import { toStationStops, toCityCentreStops } from "@/data/route3";
 
 function BackgroundAnimation() {
-  const buses = useMemo(() =>
-    Array.from({ length: 5 }, (_, i) => ({
-      startX: `${15 + (i * 17) % 70}%`,
-      startY: `${10 + (i * 23) % 75}%`,
-      endX: `${80 - (i * 13) % 60}%`,
-      endY: `${15 + (i * 29 + 10) % 70}%`,
-      scale: 0.5 + i * 0.1,
-      duration: 20 + i * 8,
-      delay: i * 4,
-    })),
-    []);
+  const buses = useMemo(
+    () =>
+      Array.from({ length: 5 }, (_, i) => ({
+        startX: `${15 + ((i * 17) % 70)}%`,
+        startY: `${10 + ((i * 23) % 75)}%`,
+        endX: `${80 - ((i * 13) % 60)}%`,
+        endY: `${15 + ((i * 29 + 10) % 70)}%`,
+        scale: 0.5 + i * 0.1,
+        duration: 20 + i * 8,
+        delay: i * 4,
+      })),
+    [],
+  );
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
@@ -64,7 +67,11 @@ function BackgroundAnimation() {
   );
 }
 
-export default function Home({ params }: { params: Promise<{ lang: string }> }) {
+export default function Home({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
   const { lang } = use(params);
   const dict = getDictionary(lang as Locale).home;
   const onBusDict = getDictionary(lang as Locale).onBus;
@@ -92,7 +99,11 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   }, [loading, user, profile, lang, router, onboardingCheckDone]);
 
   useEffect(() => {
-    if (analytics) logEvent(analytics, "app_opened", { authenticated: !!user, language: lang });
+    if (analytics)
+      logEvent(analytics, "app_opened", {
+        authenticated: !!user,
+        language: lang,
+      });
   }, []);
 
   const {
@@ -108,12 +119,16 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
   const [stop, setStop] = useState("10");
   const [destinationStop, setDestinationStop] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
-  const [crowding, setCrowding] = useState<"Low" | "Medium" | "High" | null>(null);
+  const [crowding, setCrowding] = useState<"Low" | "Medium" | "High" | null>(
+    null,
+  );
   const [showDetectedIndicator, setShowDetectedIndicator] = useState(false);
   const [timetableETA, setTimetableETA] = useState<number | null>(null);
   const [activeBusCount, setActiveBusCount] = useState(0);
   const [alertCount, setAlertCount] = useState(0);
-  const [alertedBuses, setAlertedBuses] = useState<{ [busId: string]: string[] }>({});
+  const [alertedBuses, setAlertedBuses] = useState<{
+    [busId: string]: string[];
+  }>({});
   const manualSelectionTimeRef = useRef<number>(0);
 
   const { location, startTracking } = useUserLocation();
@@ -182,7 +197,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
         // Fetch all alerts with status open
         const alertsSnapshot = await getDocs(collection(db, "alerts"));
         const openAlerts = alertsSnapshot.docs.filter(
-          (doc) => doc.data().status === "open"
+          (doc) => doc.data().status === "open",
         );
 
         // Build a set of bus IDs that have alerts
@@ -251,30 +266,44 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
 
     setTimeout(() => {
       setStatus("success");
-      if (analytics) logEvent(analytics, "bus_status_confirmed", {
-        bus_line: "#3",
-        bus_stop: stop,
-        status_confidence: hasLiveData ? "confirmed" : "estimated",
-        crowd_level: crowding?.toLowerCase() ?? "unknown",
-      });
+      if (analytics)
+        logEvent(analytics, "bus_status_confirmed", {
+          bus_line: "#3",
+          bus_stop: stop,
+          status_confidence: hasLiveData ? "confirmed" : "estimated",
+          crowd_level: crowding?.toLowerCase() ?? "unknown",
+        });
     }, 1500);
   };
 
   const handleLiveTracker = () => {
-    const dir = isOnBus && ctxCurrentStop
-      ? (ctxCurrentStop.id >= 1 && ctxCurrentStop.id <= 14 ? "station" : "city")
-      : "station";
-    const params = new URLSearchParams();
-    params.set("currentStop", stop);
-    if (destinationStop) params.set("destination", destinationStop);
-    params.set("direction", dir);
-    if (analytics) logEvent(analytics, "departure_decision_made", {
-      current_stop: stop,
+  let dir = "station";
+
+  if (isOnBus && ctxCurrentStop) {
+    const isStationStop = toStationStops.some(
+      (stop) => stop.id === ctxCurrentStop.id
+    );
+    dir = isStationStop ? "station" : "city";
+  } else {
+    // Extract the original ID and route from the selected stop's unique ID
+    const [route, originalId] = stop.split('-');
+    dir = route === 'station' ? "station" : "city";
+  }
+
+  const params = new URLSearchParams();
+  // Extract the original ID for the API
+  const originalStopId = stop.includes('-') ? stop.split('-')[1] : stop;
+  params.set("currentStop", originalStopId);
+  if (destinationStop) params.set("destination", destinationStop);
+  params.set("direction", dir);
+  if (analytics)
+    logEvent(analytics, "departure_decision_made", {
+      current_stop: originalStopId,
       destination: destinationStop ?? "none",
       direction: dir,
     });
-    router.push(`/${lang}/trip-details?${params.toString()}`);
-  };
+  router.push(`/${lang}/trip-details?${params.toString()}`);
+};
 
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-5 pb-32">
@@ -300,7 +329,9 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           <h1 className="text-3xl font-bold text-on-surface dark:text-slate-100 mb-2 tracking-tight">
             {dict.title}
           </h1>
-          <p className="text-on-surface-variant dark:text-slate-400">{dict.subtitle}</p>
+          <p className="text-on-surface-variant dark:text-slate-400">
+            {dict.subtitle}
+          </p>
         </motion.div>
 
         <motion.div layout="position" className="mb-4 z-30 relative">
@@ -319,7 +350,9 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                 exit={{ opacity: 0, y: -4 }}
                 className="text-xs text-success dark:text-green-400 mt-1 flex items-center gap-1"
               >
-                <span className="material-symbols-outlined text-[14px]">location_on</span>
+                <span className="material-symbols-outlined text-[14px]">
+                  location_on
+                </span>
                 {onBusDict.nearestStopDetected}
               </motion.p>
             )}
@@ -360,7 +393,9 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               </motion.button>
               <div className="mt-4 text-center">
                 <p className="text-sm font-medium text-outline dark:text-slate-500 flex items-center justify-center gap-1">
-                  <span className="material-symbols-outlined text-[16px]">schedule</span>
+                  <span className="material-symbols-outlined text-[16px]">
+                    schedule
+                  </span>
                   {dict.typically}
                 </p>
               </div>
@@ -388,10 +423,11 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               <div className="flex justify-between items-start">
                 <div>
                   <div
-                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2 ${hasLiveData
-                      ? "bg-success-container dark:bg-green-900 text-success dark:text-green-300"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
-                      }`}
+                    className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mb-2 ${
+                      hasLiveData
+                        ? "bg-success-container dark:bg-green-900 text-success dark:text-green-300"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
+                    }`}
                   >
                     <span className="material-symbols-outlined text-[14px]">
                       {hasLiveData ? "check_circle" : "help_outline"}
@@ -399,9 +435,7 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                     {hasLiveData ? dict.confirmed : tripDict.unconfirmed}
                   </div>
                   <h2 className="text-4xl font-black text-on-surface dark:text-slate-100 tracking-tighter">
-                    {hasLiveData
-                      ? "7"
-                      : timetableETA ?? "?"}{" "}
+                    {hasLiveData ? "7" : (timetableETA ?? "?")}{" "}
                     <span className="text-lg font-medium text-on-surface-variant dark:text-slate-400">
                       {dict.mins}
                     </span>
@@ -416,12 +450,13 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                   </div>
                   {hasLiveData && crowding ? (
                     <div
-                      className={`flex items-center gap-1 ${crowding === "Low"
-                        ? "text-success dark:text-green-400"
-                        : crowding === "Medium"
-                          ? "text-warning dark:text-yellow-400"
-                          : "text-red-600 dark:text-red-400"
-                        }`}
+                      className={`flex items-center gap-1 ${
+                        crowding === "Low"
+                          ? "text-success dark:text-green-400"
+                          : crowding === "Medium"
+                            ? "text-warning dark:text-yellow-400"
+                            : "text-red-600 dark:text-red-400"
+                      }`}
                     >
                       <span
                         className="material-symbols-outlined"
@@ -433,8 +468,12 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                     </div>
                   ) : (
                     <div className="flex items-center gap-1 text-gray-500 dark:text-gray-400">
-                      <span className="material-symbols-outlined text-[18px]">help_outline</span>
-                      <span className="font-bold text-sm">{tripDict.unknown}</span>
+                      <span className="material-symbols-outlined text-[18px]">
+                        help_outline
+                      </span>
+                      <span className="font-bold text-sm">
+                        {tripDict.unknown}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -450,7 +489,10 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
               <motion.button
                 whileTap={{ scale: 0.96 }}
                 onClick={() => {
-                  if (analytics) logEvent(analytics, "bus_status_queried_again", { stop_id: stop });
+                  if (analytics)
+                    logEvent(analytics, "bus_status_queried_again", {
+                      stop_id: stop,
+                    });
                   setStatus("idle");
                 }}
                 className="w-full border border-outline-variant dark:border-slate-700 text-on-surface dark:text-slate-200 font-semibold py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
@@ -473,10 +515,14 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
           className="bg-surface-container dark:bg-slate-900 border border-outline-variant dark:border-slate-800 rounded-lg p-3 flex flex-col justify-between h-24 shadow-sm cursor-pointer hover:shadow-md transition-all"
         >
           <div className="flex items-center gap-2 text-on-surface-variant dark:text-slate-400">
-            <span className="material-symbols-outlined text-lg">directions_bus</span>
+            <span className="material-symbols-outlined text-lg">
+              directions_bus
+            </span>
             <span className="font-bold text-sm">{dict.activeBuses}</span>
           </div>
-          <div className="text-3xl font-black text-primary-container dark:text-blue-400">{activeBusCount}</div>
+          <div className="text-3xl font-black text-primary-container dark:text-blue-400">
+            {activeBusCount}
+          </div>
         </motion.div>
         <motion.div
           whileTap={{ scale: 0.95 }}
@@ -526,7 +572,9 @@ export default function Home({ params }: { params: Promise<{ lang: string }> }) 
                   <ul className="text-on-surface-variant dark:text-slate-300 mt-1 space-y-1">
                     {reasons.map((reason, idx) => (
                       <li key={idx} className="text-xs flex items-start gap-2">
-                        <span className="text-error dark:text-red-400 mt-1">•</span>
+                        <span className="text-error dark:text-red-400 mt-1">
+                          •
+                        </span>
                         <span>{reason}</span>
                       </li>
                     ))}
