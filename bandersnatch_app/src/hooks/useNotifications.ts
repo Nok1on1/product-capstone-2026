@@ -2,9 +2,14 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 
 import { useState, useEffect, useCallback } from "react";
-import { getMessaging, getToken, deleteToken, onMessage } from "firebase/messaging";
-import { doc, setDoc, deleteDoc } from "firebase/firestore";
+import { getToken, deleteToken, onMessage } from "firebase/messaging";
+import { doc, setDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
+import {
+  getFirebaseMessaging,
+  getNotificationVapidKey,
+  registerMessagingServiceWorker,
+} from "@/lib/firebase-init";
 
 interface NotificationPreferences {
   alerts: boolean;
@@ -38,9 +43,25 @@ export function useNotifications() {
     setDoc(ref, {
       token,
       preferences,
-      createdAt: new Date().toISOString(),
-    });
+      platform: "web",
+      userAgent: navigator.userAgent,
+      updatedAt: serverTimestamp(),
+    }, { merge: true });
   }, [token, preferences]);
+
+  const syncToken = useCallback(async () => {
+    const messaging = await getFirebaseMessaging();
+    const vapidKey = getNotificationVapidKey();
+    if (!messaging || !vapidKey) return null;
+
+    const serviceWorkerRegistration = await registerMessagingServiceWorker();
+    const fcmToken = await getToken(messaging, {
+      vapidKey,
+      serviceWorkerRegistration,
+    });
+    if (fcmToken) setToken(fcmToken);
+    return fcmToken || null;
+  }, []);
 
   const requestPermission = useCallback(async () => {
     if (!supported) return null;
@@ -49,16 +70,9 @@ export function useNotifications() {
       setPermission(result);
       if (result === "granted") {
         try {
-          const messaging = getMessaging();
-          const fcmToken = await getToken(messaging, {
-            vapidKey: process.env.NEXT_PUBLIC_FCM_VAPID_KEY,
-          });
-          if (fcmToken) {
-            setToken(fcmToken);
-          }
-          return fcmToken;
-        } catch {
-          console.warn("FCM token registration failed");
+          return await syncToken();
+        } catch (error) {
+          console.warn("FCM token registration failed", error);
           return null;
         }
       }
@@ -67,12 +81,20 @@ export function useNotifications() {
       setPermission("default");
       return null;
     }
-  }, [supported]);
+  }, [supported, syncToken]);
+
+  useEffect(() => {
+    if (!supported || permission !== "granted" || token) return;
+    syncToken().catch((error) => {
+      console.warn("FCM token sync failed", error);
+    });
+  }, [permission, supported, syncToken, token]);
 
   const unsubscribe = useCallback(async () => {
     if (!token) return;
     try {
-      const messaging = getMessaging();
+      const messaging = await getFirebaseMessaging();
+      if (!messaging) return;
       await deleteToken(messaging);
       if (auth.currentUser) {
         await deleteDoc(doc(db, "users", auth.currentUser.uid, "fcmTokens", token));
@@ -92,22 +114,25 @@ export function useNotifications() {
 
   useEffect(() => {
     if (permission !== "granted") return;
-    let messaging: ReturnType<typeof getMessaging> | null = null;
-    try {
-      messaging = getMessaging();
-    } catch {
-      return;
-    }
+    let cleanup: (() => void) | undefined;
 
-    const unsubscribeMessage = onMessage(messaging, (payload) => {
+    getFirebaseMessaging().then((messaging) => {
+      if (!messaging) return;
+      cleanup = onMessage(messaging, (payload) => {
       if (payload.notification) {
         const title = payload.notification.title || "Bandersnatch";
         const body = payload.notification.body || "";
-        new Notification(title, { body });
+        new Notification(title, {
+          body,
+          icon: "/launcher_icon192.png",
+          badge: "/launcher_icon192.png",
+          data: payload.data,
+        });
       }
+      });
     });
 
-    return () => unsubscribeMessage();
+    return () => cleanup?.();
   }, [permission]);
 
   return {

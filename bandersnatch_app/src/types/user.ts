@@ -10,6 +10,7 @@ export interface UserProfile {
   totalReportsMade: number;
   defaultStop: string;
   profilePicture?: string | null;
+  profilePictureStoragePath?: string | null;
   emailVerified?: boolean;
   createdAt: Timestamp | string;
   onboardingCompleted?: boolean;

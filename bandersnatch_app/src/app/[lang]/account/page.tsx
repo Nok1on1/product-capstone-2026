@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { auth, db } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
+import { uploadProfilePicture } from "@/lib/profile-picture";
 import Link from "next/link";
 import { StopSelect } from "@/components/StopSelect";
 import { motion } from "framer-motion";
@@ -86,9 +87,8 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
       return;
     }
 
-    // Validate file size (max 500KB to be safe with Firestore)
-    if (file.size > 500 * 1024) {
-      setPicError("Image must be less than 500KB.");
+    if (file.size > 5 * 1024 * 1024) {
+      setPicError("Image must be less than 5MB.");
       return;
     }
 
@@ -96,43 +96,22 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
     setPicError("");
 
     try {
-      // Convert image to Base64
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        try {
-          const base64String = event.target?.result as string;
-          console.log("Image converted to Base64");
+      const { downloadURL, path } = await uploadProfilePicture(user.uid, file);
 
-          // Update Firestore user document with Base64 image
-          await updateDoc(doc(db, "users", user.uid), {
-            profilePicture: base64String,
-          });
-          console.log("Firestore updated with profile picture");
+      await updateDoc(doc(db, "users", user.uid), {
+        profilePicture: downloadURL,
+        profilePictureStoragePath: path,
+      });
 
-          // Update local profile context
-          await updateProfile({ profilePicture: base64String });
-          console.log("Profile context updated");
-          
-          setUploadingPicture(false);
-        } catch (err: any) {
-          console.error("Profile picture update error:", err);
-          setPicError(err.message || "Failed to save profile picture.");
-          setUploadingPicture(false);
-        }
-      };
-
-      reader.onerror = () => {
-        setPicError("Failed to read file.");
-        setUploadingPicture(false);
-      };
-
-      reader.readAsDataURL(file);
+      await updateProfile({
+        profilePicture: downloadURL,
+        profilePictureStoragePath: path,
+      });
     } catch (err: any) {
       console.error("Profile picture upload error:", err);
       setPicError(err.message || "Failed to upload profile picture.");
-      setUploadingPicture(false);
     } finally {
-      // Reset file input
+      setUploadingPicture(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }

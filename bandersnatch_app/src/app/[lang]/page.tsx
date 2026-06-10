@@ -6,7 +6,15 @@ import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
 import { motion, AnimatePresence } from "framer-motion";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy,
+  limit as firestoreLimit,
+} from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
 import { db, analytics } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -17,6 +25,11 @@ import { OnBusBanner } from "@/components/OnBusBanner";
 import { OnBusButton } from "@/components/OnBusButton";
 import { ReportButton } from "@/components/ReportButton";
 import { getNextScheduledBus } from "@/lib/timetable";
+import { getDepartureRecommendation } from "@/lib/departure-recommendation";
+import {
+  DelayReportLike,
+  getDelayPatternForNow,
+} from "@/lib/delay-prediction";
 import Skeleton from "@/components/Skeleton";
 import { toStationStops, toCityCentreStops } from "@/data/route3";
 
@@ -65,6 +78,14 @@ function BackgroundAnimation() {
       ))}
     </div>
   );
+}
+
+function parseSelectedStop(value: string): { direction: "station" | "city"; stopId: number } {
+  const [route, id] = value.split("-");
+  if (route === "city" || route === "station") {
+    return { direction: route, stopId: Number(id) };
+  }
+  return { direction: "station", stopId: Number(value) || 10 };
 }
 
 export default function Home({
@@ -129,6 +150,7 @@ export default function Home({
   const [alertedBuses, setAlertedBuses] = useState<{
     [busId: string]: string[];
   }>({});
+  const [delayReports, setDelayReports] = useState<DelayReportLike[]>([]);
   const manualSelectionTimeRef = useRef<number>(0);
 
   const { location, startTracking } = useUserLocation();
@@ -185,6 +207,24 @@ export default function Home({
       setTimetableETA(m);
     }, 60000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const fetchDelayReports = async () => {
+      try {
+        const reportsQuery = query(
+          collection(db, "bus_reports"),
+          orderBy("timestamp", "desc"),
+          firestoreLimit(250)
+        );
+        const snapshot = await getDocs(reportsQuery);
+        setDelayReports(snapshot.docs.map((doc) => doc.data() as DelayReportLike));
+      } catch (error) {
+        console.error("Error fetching delay reports:", error);
+      }
+    };
+
+    fetchDelayReports();
   }, []);
 
   // Fetch active buses and alerts
@@ -305,6 +345,29 @@ export default function Home({
   router.push(`/${lang}/trip-details?${params.toString()}`);
 };
 
+  const selectedStop = useMemo(() => parseSelectedStop(stop), [stop]);
+  const delayPattern = useMemo(
+    () =>
+      getDelayPatternForNow(
+        delayReports,
+        selectedStop.direction,
+        selectedStop.stopId
+      ),
+    [delayReports, selectedStop]
+  );
+  const departureRecommendation = useMemo(
+    () =>
+      getDepartureRecommendation({
+        stopId: selectedStop.stopId,
+        direction: selectedStop.direction,
+        userLocation: location,
+        hasLiveData,
+        liveEtaMinutes: hasLiveData ? 7 : null,
+        delayPattern,
+      }),
+    [selectedStop, location, hasLiveData, delayPattern]
+  );
+
   return (
     <main className="flex-grow flex flex-col items-center justify-center p-5 pb-32">
       <BackgroundAnimation />
@@ -332,6 +395,28 @@ export default function Home({
           <p className="text-on-surface-variant dark:text-slate-400">
             {dict.subtitle}
           </p>
+        </motion.div>
+
+        <motion.div
+          layout="position"
+          className="mb-5 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 rounded-lg p-4"
+        >
+          <div className="flex items-start gap-3">
+            <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 mt-0.5">
+              directions_walk
+            </span>
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-wide text-blue-700 dark:text-blue-300">
+                When should I leave?
+              </p>
+              <p className="text-2xl font-black text-blue-900 dark:text-blue-100 tracking-tight mt-1">
+                {departureRecommendation.summary}
+              </p>
+              <p className="text-sm text-blue-700 dark:text-blue-300 mt-1 leading-snug">
+                {departureRecommendation.detail}
+              </p>
+            </div>
+          </div>
         </motion.div>
 
         <motion.div layout="position" className="mb-4 z-30 relative">

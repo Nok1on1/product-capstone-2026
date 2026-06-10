@@ -22,6 +22,10 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import {
+  reportBusStatus,
+  reportBusTrackingEvent,
+} from "@/lib/bus-reporting";
+import {
   incrementTrustScore,
   decrementTrustScore,
   incrementReportCount,
@@ -154,6 +158,7 @@ export function BusStateProvider({ children }: { children: React.ReactNode }) {
     const loc = currentUserLocationRef.current;
     let boardDirection: Direction | null = null;
     let boardStopId: number | undefined;
+    let boardStopName: string | undefined;
 
     if (loc) {
       const nearest = findNearestStopOnRoute(loc.lat, loc.lng);
@@ -162,6 +167,10 @@ export function BusStateProvider({ children }: { children: React.ReactNode }) {
         setDirection(nearest.direction);
         boardDirection = nearest.direction;
         boardStopId = nearest.stop.id;
+        boardStopName =
+          typeof nearest.stop.name === "string"
+            ? nearest.stop.name
+            : nearest.stop.name.en;
         const stops = nearest.direction === "station" ? toStationStops : toCityCentreStops;
         const idx = stops.findIndex((s) => s.id === nearest.stop.id);
         if (idx < stops.length - 1) {
@@ -175,93 +184,158 @@ export function BusStateProvider({ children }: { children: React.ReactNode }) {
 
     try {
       const uid = auth.currentUser?.uid;
-      if (uid) {
-        await setDoc(doc(db, "bus_reports", `board_${uid}_${Date.now()}`), {
-          userId: uid,
-          action: "boarded",
-          direction: boardDirection,
-          currentStopId: boardStopId,
-          timestamp: serverTimestamp(),
-        });
-        await incrementTrustScore(uid, 1);
-        await incrementReportCount(uid);
-      }
+      if (!uid) return;
+
+      await reportBusTrackingEvent({
+        action: "boarded",
+        direction: boardDirection,
+        stopId: boardStopId,
+        stopName: boardStopName,
+        location: loc
+          ? {
+              lat: loc.lat,
+              lng: loc.lng,
+              accuracy: loc.accuracy,
+              heading: loc.heading,
+              speed: loc.speed,
+            }
+          : null,
+      });
+      await incrementTrustScore(uid, 1);
+      await incrementReportCount(uid);
     } catch (err) {
       console.error("Failed to report boarding:", err);
     }
   }, [setIsOnBus]);
 
   const disembark = useCallback(async () => {
+    const loc = currentUserLocationRef.current;
+    const lastStop = currentStop;
+    const lastDirection = direction;
+
     setIsOnBus(false);
 
     try {
       const uid = auth.currentUser?.uid;
-      if (uid) {
-        await setDoc(doc(db, "bus_reports", `disembark_${uid}_${Date.now()}`), {
-          userId: uid,
-          action: "disembarked",
-          lastStopId: currentStop?.id,
-          timestamp: serverTimestamp(),
-        });
-        await incrementTrustScore(uid, 1);
-      }
+      if (!uid) return;
+
+      await reportBusTrackingEvent({
+        action: "disembarked",
+        direction: lastDirection,
+        stopId: lastStop?.id,
+        stopName:
+          typeof lastStop?.name === "string"
+            ? lastStop.name
+            : lastStop?.name.en,
+        location: loc
+          ? {
+              lat: loc.lat,
+              lng: loc.lng,
+              accuracy: loc.accuracy,
+              heading: loc.heading,
+              speed: loc.speed,
+            }
+          : null,
+      });
+      await incrementTrustScore(uid, 1);
     } catch (err) {
       console.error("Failed to report disembark:", err);
     }
-  }, [setIsOnBus, currentStop]);
+  }, [setIsOnBus, currentStop, direction]);
 
   const reportNotHere = useCallback(async () => {
     try {
       const uid = auth.currentUser?.uid;
-      if (uid) {
-        await setDoc(doc(db, "bus_reports", `not_here_${uid}_${Date.now()}`), {
-          userId: uid,
-          type: "not_here",
-          timestamp: serverTimestamp(),
-        });
-        await decrementTrustScore(uid, 1);
-        await incrementReportCount(uid);
-      }
+      if (!uid) return;
+
+      const loc = currentUserLocationRef.current;
+      await reportBusStatus({
+        type: "not_here",
+        direction,
+        stopId: currentStop?.id,
+        stopName:
+          typeof currentStop?.name === "string"
+            ? currentStop.name
+            : currentStop?.name.en,
+        location: loc
+          ? {
+              lat: loc.lat,
+              lng: loc.lng,
+              accuracy: loc.accuracy,
+              heading: loc.heading,
+              speed: loc.speed,
+            }
+          : null,
+      });
+      await decrementTrustScore(uid, 1);
+      await incrementReportCount(uid);
     } catch (err) {
       console.error("Failed to report not here:", err);
     }
-  }, []);
+  }, [currentStop, direction]);
 
   const reportBusIsHere = useCallback(async () => {
     try {
       const uid = auth.currentUser?.uid;
-      if (uid) {
-        await setDoc(doc(db, "bus_reports", `bus_is_here_${uid}_${Date.now()}`), {
-          userId: uid,
-          type: "bus_is_here",
-          timestamp: serverTimestamp(),
-        });
-        await incrementTrustScore(uid, 2);
-        await incrementReportCount(uid);
-      }
+      if (!uid) return;
+
+      const loc = currentUserLocationRef.current;
+      await reportBusStatus({
+        type: "bus_is_here",
+        direction,
+        stopId: currentStop?.id,
+        stopName:
+          typeof currentStop?.name === "string"
+            ? currentStop.name
+            : currentStop?.name.en,
+        location: loc
+          ? {
+              lat: loc.lat,
+              lng: loc.lng,
+              accuracy: loc.accuracy,
+              heading: loc.heading,
+              speed: loc.speed,
+            }
+          : null,
+      });
+      await incrementTrustScore(uid, 2);
+      await incrementReportCount(uid);
     } catch (err) {
       console.error("Failed to report bus is here:", err);
     }
-  }, []);
+  }, [currentStop, direction]);
 
   const reportCrowding = useCallback(async (level: "Low" | "Medium" | "High") => {
     try {
       const uid = auth.currentUser?.uid;
-      if (uid) {
-        await setDoc(doc(db, "bus_reports", `crowding_${uid}_${Date.now()}`), {
-          userId: uid,
-          type: "crowding_report",
-          level,
-          stopId: currentStop?.id,
-          timestamp: serverTimestamp(),
-        });
-        await incrementTrustScore(uid, 1);
-        await incrementReportCount(uid);
-      }
+      if (!uid) return;
+
+      const loc = currentUserLocationRef.current;
+      await reportBusStatus({
+        type: "crowding_report",
+        level,
+        direction,
+        stopId: currentStop?.id,
+        stopName:
+          typeof currentStop?.name === "string"
+            ? currentStop.name
+            : currentStop?.name.en,
+        location: loc
+          ? {
+              lat: loc.lat,
+              lng: loc.lng,
+              accuracy: loc.accuracy,
+              heading: loc.heading,
+              speed: loc.speed,
+            }
+          : null,
+      });
+      await incrementTrustScore(uid, 1);
+      await incrementReportCount(uid);
     } catch (err) {
       console.error("Failed to report crowding:", err);
     }
-  }, [currentStop]);
+  }, [currentStop, direction]);
 
   const value = useMemo(
     () => ({

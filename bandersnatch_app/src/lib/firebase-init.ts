@@ -1,5 +1,32 @@
 import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getMessaging, isSupported, Messaging } from "firebase/messaging";
+import { app, db } from "@/lib/firebase";
+
+export function getNotificationVapidKey() {
+  return (
+    process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY ||
+    process.env.NEXT_PUBLIC_FCM_VAPID_KEY ||
+    ""
+  );
+}
+
+export async function getFirebaseMessaging(): Promise<Messaging | null> {
+  if (typeof window === "undefined") return null;
+  const supported = await isSupported();
+  if (!supported) return null;
+  return getMessaging(app);
+}
+
+export async function registerMessagingServiceWorker() {
+  if (
+    typeof window === "undefined" ||
+    !("serviceWorker" in navigator)
+  ) {
+    return undefined;
+  }
+
+  return navigator.serviceWorker.register("/firebase-messaging-sw.js");
+}
 
 /**
  * Initialize Firestore with sample bus and alert data

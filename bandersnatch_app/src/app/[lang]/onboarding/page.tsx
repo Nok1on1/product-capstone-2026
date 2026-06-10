@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { StopSelect } from "@/components/StopSelect";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useUserLocation } from "@/hooks/useUserLocation";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const steps = [
   "welcome",
@@ -28,6 +29,7 @@ export default function OnboardingPage({
   const router = useRouter();
   const { profile, updateProfile, user, loading: authLoading } = useAuth();
   const { location, error: locationError, isTracking, startTracking } = useUserLocation();
+  const { permission: notificationPermission, requestPermission } = useNotifications();
 
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedStop, setSelectedStop] = useState("10");
@@ -53,6 +55,10 @@ export default function OnboardingPage({
       setSelectedStop(profile.defaultStop);
     }
   }, [profile]);
+
+  useEffect(() => {
+    setNotificationGranted(notificationPermission === "granted");
+  }, [notificationPermission]);
 
   const currentStep = steps[currentStepIndex];
   const progress = ((currentStepIndex + 1) / steps.length) * 100;
@@ -83,16 +89,13 @@ export default function OnboardingPage({
   }, [startTracking]);
 
   const requestNotifications = useCallback(async () => {
-    if ("Notification" in window && Notification.permission === "default") {
-      const result = await Notification.requestPermission();
-      if (result === "granted") {
-        setNotificationGranted(true);
-      }
-    } else if ("Notification" in window && Notification.permission === "granted") {
-      setNotificationGranted(true);
-    }
+    const fcmToken = await requestPermission();
+    setNotificationGranted(
+      Boolean(fcmToken) ||
+        ("Notification" in window && Notification.permission === "granted")
+    );
     handleNext();
-  }, [handleNext]);
+  }, [handleNext, requestPermission]);
 
   if (!ready) {
     return (

@@ -5,19 +5,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { BusStop, toStationStops, toCityCentreStops } from "@/data/route3";
 import { findNearestStopOnRoute, isInCenterArea } from "@/lib/location-utils";
 import { LocationData } from "@/hooks/useUserLocation";
-
-// TODO: FIREBASE SETUP - Bus tracking reporting
-// ============================================================
-// What needs to be done:
-// 1. Uncomment the Firebase imports below
-// 2. Ensure Firestore security rules allow writes for authenticated users:
-//    match /bus_tracking/{trackingId} {
-//      allow read, write: if request.auth != null;
-//    }
-// 3. Verify Firebase is initialized in src/lib/firebase.ts
-// ============================================================
-// import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-// import { auth, db } from "@/lib/firebase";
+import { reportBusTrackingEvent } from "@/lib/bus-reporting";
 
 interface UseBusTrackingReturn {
   isOnBus: boolean;
@@ -25,8 +13,8 @@ interface UseBusTrackingReturn {
   nextStop: BusStop | null;
   direction: "station" | "city" | null;
   etaMinutes: number | null;
-  boardBus: () => void;
-  disembark: () => void;
+  boardBus: () => Promise<void>;
+  disembark: () => Promise<void>;
 }
 
 const SLOW_SPEED_THRESHOLD_KMH = 5;
@@ -45,7 +33,7 @@ export function useBusTracking(
   const slowSpeedStartRef = useRef<number | null>(null);
   const lastDirectionRef = useRef<"station" | "city" | null>(null);
 
-  const boardBus = useCallback(() => {
+  const boardBus = useCallback(async () => {
     if (!userLocation) return;
 
     const nearest = findNearestStopOnRoute(userLocation.lat, userLocation.lng);
@@ -67,61 +55,51 @@ export function useBusTracking(
     setIsOnBus(true);
     slowSpeedStartRef.current = null;
 
-    // TODO: FIREBASE SETUP - Report boarding event
-    // Collection: "bus_tracking"
-    // Document: auto-generated ID (via addDoc or setDoc with doc())
-    // Schema: {
-    //   userId: auth.currentUser?.uid,
-    //   action: "boarded",
-    //   boardingStopId: nearest.stop.id,
-    //   boardingStopName: nearest.stop.name,
-    //   direction: nearest.direction,
-    //   lat: userLocation.lat,
-    //   lng: userLocation.lng,
-    //   timestamp: serverTimestamp()
-    // }
-    // Security rules needed: allow write if request.auth != null;
-    //
-    // Example (uncomment after setup):
-    // if (auth.currentUser) {
-    //   const trackingRef = doc(db, "bus_tracking", `${auth.currentUser.uid}_${Date.now()}`);
-    //   await setDoc(trackingRef, {
-    //     userId: auth.currentUser.uid,
-    //     action: "boarded",
-    //     boardingStopId: nearest.stop.id,
-    //     boardingStopName: nearest.stop.name,
-    //     direction: nearest.direction,
-    //     lat: userLocation.lat,
-    //     lng: userLocation.lng,
-    //     timestamp: serverTimestamp(),
-    //   });
-    // }
+    try {
+      await reportBusTrackingEvent({
+        action: "boarded",
+        stopId: nearest.stop.id,
+        stopName:
+          typeof nearest.stop.name === "string"
+            ? nearest.stop.name
+            : nearest.stop.name.en,
+        direction: nearest.direction,
+        location: {
+          lat: userLocation.lat,
+          lng: userLocation.lng,
+          accuracy: userLocation.accuracy,
+          heading: userLocation.heading,
+          speed: userLocation.speed,
+        },
+      });
+    } catch (error) {
+      console.error("Failed to persist boarding event:", error);
+    }
   }, [userLocation]);
 
-  const disembark = useCallback(() => {
-    // TODO: FIREBASE SETUP - Report disembarking event
-    // Collection: "bus_tracking"
-    // Schema: {
-    //   userId: auth.currentUser?.uid,
-    //   action: "disembarked",
-    //   lastStopId: currentStop?.id,
-    //   lastStopName: currentStop?.name,
-    //   direction: lastDirectionRef.current,
-    //   timestamp: serverTimestamp()
-    // }
-    //
-    // Example (uncomment after setup):
-    // if (auth.currentUser) {
-    //   const trackingRef = doc(db, "bus_tracking", `${auth.currentUser.uid}_${Date.now()}`);
-    //   await setDoc(trackingRef, {
-    //     userId: auth.currentUser.uid,
-    //     action: "disembarked",
-    //     lastStopId: currentStop?.id,
-    //     lastStopName: currentStop?.name,
-    //     direction: lastDirectionRef.current,
-    //     timestamp: serverTimestamp(),
-    //   });
-    // }
+  const disembark = useCallback(async () => {
+    try {
+      await reportBusTrackingEvent({
+        action: "disembarked",
+        stopId: currentStop?.id,
+        stopName:
+          typeof currentStop?.name === "string"
+            ? currentStop.name
+            : currentStop?.name.en,
+        direction: lastDirectionRef.current,
+        location: userLocation
+          ? {
+              lat: userLocation.lat,
+              lng: userLocation.lng,
+              accuracy: userLocation.accuracy,
+              heading: userLocation.heading,
+              speed: userLocation.speed,
+            }
+          : null,
+      });
+    } catch (error) {
+      console.error("Failed to persist disembarking event:", error);
+    }
 
     setIsOnBus(false);
     setCurrentStop(null);
@@ -129,7 +107,7 @@ export function useBusTracking(
     setDirection(null);
     setEtaMinutes(null);
     slowSpeedStartRef.current = null;
-  }, []);
+  }, [currentStop, userLocation]);
 
   useEffect(() => {
     if (!isOnBus || !userLocation || !direction) return;
@@ -175,7 +153,7 @@ export function useBusTracking(
         Date.now() - slowSpeedStartRef.current >
         SLOW_SPEED_TIMEOUT_MS
       ) {
-        disembark();
+        void disembark();
       }
     } else {
       slowSpeedStartRef.current = null;
