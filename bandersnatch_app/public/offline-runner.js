@@ -149,6 +149,32 @@
     wasGrounded: true,
   };
 
+  const palettes = {
+    day: { skyTop: "#bfe2ff", skyMid: "#e9f4ff", skyBottom: "#fff4dc", cloud: "#ffffff", hillFar: "#cbdcbd", hillNear: "#98bb86", grass: "#96c476", building: "#e8eef9", building2: "#f5eddd", roof: "#d97706", station: "#1e3a8a", roadTop: "#647181", roadBottom: "#313948" },
+    sunset: { skyTop: "#5c7cb9", skyMid: "#b891ab", skyBottom: "#f2aa85", cloud: "#ffdac7", hillFar: "#8a9a83", hillNear: "#688560", grass: "#658c53", building: "#bac3d4", building2: "#c4beaf", roof: "#a65800", station: "#122863", roadTop: "#4a5462", roadBottom: "#242a35" },
+    night: { skyTop: "#12233d", skyMid: "#1e3a5f", skyBottom: "#263552", cloud: "#dbeafe", hillFar: "#263f36", hillNear: "#31533f", grass: "#42693e", building: "#334155", building2: "#3d4656", roof: "#f59e0b", station: "#1d4ed8", roadTop: "#475569", roadBottom: "#1f2937" },
+    sunrise: { skyTop: "#678bba", skyMid: "#b7a9c7", skyBottom: "#ffd3b5", cloud: "#ffe9dd", hillFar: "#9ba992", hillNear: "#7d9e72", grass: "#7da564", building: "#cdd6e6", building2: "#dbd2be", roof: "#bd6c04", station: "#173278", roadTop: "#535e6e", roadBottom: "#282f3c" }
+  };
+  let currentColors = { ...palettes.day };
+
+  function hexToRgb(hex) {
+    const h = hex.replace('#', '');
+    return {
+      r: parseInt(h.substring(0, 2), 16),
+      g: parseInt(h.substring(2, 4), 16),
+      b: parseInt(h.substring(4, 6), 16)
+    };
+  }
+
+  function interpolateColor(c1, c2, factor) {
+    const rgb1 = hexToRgb(c1);
+    const rgb2 = hexToRgb(c2);
+    const r = Math.round(rgb1.r + factor * (rgb2.r - rgb1.r));
+    const g = Math.round(rgb1.g + factor * (rgb2.g - rgb1.g));
+    const b = Math.round(rgb1.b + factor * (rgb2.b - rgb1.b));
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
   const game = {
     running: false,
     over: false,
@@ -162,6 +188,14 @@
     lastMilestone: 0,
     flash: 0,
     shake: 0,
+    nightStrength: 0,
+    stars: Array.from({ length: 45 }, () => ({
+      x: Math.random() * base.width,
+      y: Math.random() * (base.groundY - 120),
+      size: 0.6 + Math.random() * 1.5,
+      blinkPhase: Math.random() * Math.PI * 2,
+      blinkSpeed: 0.02 + Math.random() * 0.05
+    })),
     clouds: [
       { x: 160, y: 68, size: 1, speed: 0.14 },
       { x: 520, y: 94, size: 0.78, speed: 0.11 },
@@ -508,10 +542,9 @@
   }
 
   function drawCloud(cloud) {
-    const tint = cssVar("--runner-cloud", "#ffffff");
     ctx.save();
     ctx.globalAlpha = 0.76;
-    ctx.fillStyle = tint;
+    ctx.fillStyle = currentColors.cloud;
     circle(cloud.x, cloud.y, 22 * cloud.size);
     circle(cloud.x + 22 * cloud.size, cloud.y + 4, 16 * cloud.size);
     circle(cloud.x - 24 * cloud.size, cloud.y + 6, 14 * cloud.size);
@@ -532,7 +565,7 @@
 
   function drawCampusLayer(offset) {
     const horizon = world.groundY - 88;
-    ctx.fillStyle = cssVar("--runner-hill-far", "#c8d7bd");
+    ctx.fillStyle = currentColors.hillFar;
     drawPath([
       [0, horizon + 34],
       [90, horizon + 10],
@@ -547,7 +580,7 @@
     ]);
     ctx.fill();
 
-    ctx.fillStyle = cssVar("--runner-hill-near", "#97b48b");
+    ctx.fillStyle = currentColors.hillNear;
     drawPath([
       [0, horizon + 54],
       [120, horizon + 28],
@@ -571,16 +604,16 @@
       const stop = estimateStops[absoluteIndex % estimateStops.length];
       const displayName = stop.name.length > 16 ? stop.name.substring(0, 14) + ".." : stop.name;
 
-      drawBuilding(x + 30, buildingBase, 82, 58, cssVar("--runner-building", "#e8eef9"), "#bad0f8");
-      drawBuilding(x + 135, buildingBase, 58, 42, cssVar("--runner-building-2", "#f3eee1"), "#d8caa4");
-      ctx.fillStyle = cssVar("--runner-roof", "#d97706");
+      drawBuilding(x + 30, buildingBase, 82, 58, currentColors.building, "#bad0f8");
+      drawBuilding(x + 135, buildingBase, 58, 42, currentColors.building2, "#d8caa4");
+      ctx.fillStyle = currentColors.roof;
       drawPath([
         [x + 20, buildingBase - 58],
         [x + 72, buildingBase - 86],
         [x + 124, buildingBase - 58],
       ]);
       ctx.fill();
-      ctx.fillStyle = cssVar("--runner-station", "#25416d");
+      ctx.fillStyle = currentColors.station;
       roundRect(x + 262, buildingBase - 48, 122, 48, 6);
       ctx.fillStyle = "#f8fafc";
       ctx.font = "800 11px system-ui";
@@ -597,9 +630,9 @@
     const curbY = world.groundY - 3;
     const roadTop = world.groundY + 4;
     const roadGradient = ctx.createLinearGradient(0, roadTop, 0, world.height);
-    roadGradient.addColorStop(0, cssVar("--runner-road-top", "#5b6473"));
-    roadGradient.addColorStop(1, cssVar("--runner-road-bottom", "#2f3745"));
-    ctx.fillStyle = cssVar("--runner-grass", "#9bc77a");
+    roadGradient.addColorStop(0, currentColors.roadTop);
+    roadGradient.addColorStop(1, currentColors.roadBottom);
+    ctx.fillStyle = currentColors.grass;
     ctx.fillRect(0, world.groundY - 15, world.width, 18);
     ctx.fillStyle = "#d6b980";
     ctx.fillRect(0, curbY, world.width, 7);
@@ -841,14 +874,30 @@
     ctx.restore();
   }
 
+  function drawStars(offset) {
+    if (game.nightStrength <= 0) return;
+    ctx.save();
+    ctx.fillStyle = "#ffffff";
+    game.stars.forEach((star) => {
+      const starX = (star.x - offset * 0.05) % world.width;
+      const x = starX < 0 ? starX + world.width : starX;
+      const opacity = (Math.sin(frame * star.blinkSpeed + star.blinkPhase) * 0.5 + 0.5) * game.nightStrength;
+      ctx.globalAlpha = opacity * 0.8;
+      circle(x, star.y, star.size);
+    });
+    ctx.restore();
+  }
+
   function drawBackground() {
     const distance = game.score * 7 + (game.running ? frame * game.speed * 0.18 : 0);
     const sky = ctx.createLinearGradient(0, 0, 0, world.groundY);
-    sky.addColorStop(0, cssVar("--runner-sky-top", "#dbeafe"));
-    sky.addColorStop(0.58, cssVar("--runner-sky-mid", "#eff6ff"));
-    sky.addColorStop(1, cssVar("--runner-sky-bottom", "#fff7ed"));
+    sky.addColorStop(0, currentColors.skyTop);
+    sky.addColorStop(0.58, currentColors.skyMid);
+    sky.addColorStop(1, currentColors.skyBottom);
     ctx.fillStyle = sky;
     ctx.fillRect(-28, -28, world.width + 56, world.height + 56);
+
+    drawStars(distance);
 
     game.clouds.forEach((cloud) => {
       if (game.running && !reducedMotionQuery.matches) {
@@ -874,8 +923,37 @@
     game.scorePulse = reducedMotionQuery.matches ? 0 : 1;
   }
 
+  function updateColors() {
+    const cycleLength = 2000;
+    const progress = (game.score % cycleLength) / cycleLength; // 0.0 to 1.0
+
+    let p1, p2, factor;
+    if (progress < 0.25) {
+      p1 = palettes.day; p2 = palettes.day; factor = 0;
+    } else if (progress < 0.35) {
+      p1 = palettes.day; p2 = palettes.sunset; factor = (progress - 0.25) / 0.10;
+    } else if (progress < 0.50) {
+      p1 = palettes.sunset; p2 = palettes.night; factor = (progress - 0.35) / 0.15;
+    } else if (progress < 0.75) {
+      p1 = palettes.night; p2 = palettes.night; factor = 0;
+    } else if (progress < 0.85) {
+      p1 = palettes.night; p2 = palettes.sunrise; factor = (progress - 0.75) / 0.10;
+    } else {
+      p1 = palettes.sunrise; p2 = palettes.day; factor = (progress - 0.85) / 0.15;
+    }
+
+    game.nightStrength = progress >= 0.35 && progress <= 0.85 
+      ? (progress < 0.50 ? (progress - 0.35) / 0.15 : (progress > 0.75 ? 1.0 - (progress - 0.75) / 0.10 : 1.0))
+      : 0;
+
+    for (const key in palettes.day) {
+      currentColors[key] = interpolateColor(p1[key], p2[key], factor);
+    }
+  }
+
   function update() {
     frame += 1;
+    updateColors();
     ctx.save();
     if (game.shake > 0) {
       const shake = reducedMotionQuery.matches ? 0 : game.shake;
