@@ -162,6 +162,10 @@ canvas {
   display: contents;
 }
 
+#game-screen[hidden] {
+  display: none;
+}
+
 button {
   min-height: 50px;
   border: 0;

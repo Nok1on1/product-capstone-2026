@@ -170,7 +170,7 @@
     }
 
     game.obstacles.forEach((obstacle) => {
-      obstacle.y = obstacle.type === "sign" ? world.groundY - 118 : world.groundY - 44;
+      obstacle.y = obstacleY(obstacle.type);
     });
   }
 
@@ -190,7 +190,7 @@
     stopDrivingSound();
     scoreEl.textContent = "0";
     messageEl.classList.remove("hidden");
-    messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Hold Duck for signs. Tap the road to jump.</span>";
+    messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Jump cones. Hold Duck for touchdown planes.</span>";
   }
 
   function minutesUntilNextDeparture(now) {
@@ -295,15 +295,35 @@
     player.ducking = value;
   }
 
+  function obstacleY(type) {
+    if (type === "plane") return world.groundY - 72;
+    if (type === "sign") return world.groundY - 118;
+    return world.groundY - 44;
+  }
+
   function spawnObstacle() {
     const tuning = mobileTuning();
-    const isSign = Math.random() > (world.mobile ? 0.68 : 0.62);
+    const roll = Math.random();
+    const planeChance = world.mobile ? 0.24 : 0.28;
+    const type =
+      game.score > 35 && roll < planeChance
+        ? "plane"
+        : roll > (world.mobile ? 0.68 : 0.62)
+          ? "sign"
+          : "cone";
+    const dimensions =
+      type === "plane"
+        ? { width: 96, height: 38 }
+        : type === "sign"
+          ? { width: 42, height: 54 }
+          : { width: 34, height: 44 };
+
     game.obstacles.push({
       x: world.width + 40,
-      y: isSign ? world.groundY - 118 : world.groundY - 44,
-      width: isSign ? 42 : 34,
-      height: isSign ? 54 : 44,
-      type: isSign ? "sign" : "cone",
+      y: obstacleY(type),
+      width: dimensions.width,
+      height: dimensions.height,
+      type,
     });
     game.nextObstacleIn =
       tuning.minObstacle +
@@ -392,6 +412,38 @@
     ctx.fillText("KIU", obstacle.x + 8, obstacle.y + 26);
   }
 
+  function drawPlane(obstacle) {
+    const x = obstacle.x;
+    const y = obstacle.y;
+    ctx.fillStyle = "#334155";
+    roundRect(x + 16, y + 12, 66, 16, 8);
+    ctx.beginPath();
+    ctx.moveTo(x + 80, y + 12);
+    ctx.lineTo(x + 96, y + 20);
+    ctx.lineTo(x + 80, y + 28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#64748b";
+    ctx.beginPath();
+    ctx.moveTo(x + 34, y + 16);
+    ctx.lineTo(x + 58, y);
+    ctx.lineTo(x + 70, y + 16);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x + 38, y + 24);
+    ctx.lineTo(x + 66, y + 38);
+    ctx.lineTo(x + 72, y + 24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#bfdbfe";
+    roundRect(x + 24, y + 15, 12, 6, 3);
+    roundRect(x + 40, y + 15, 12, 6, 3);
+    ctx.fillStyle = "#111827";
+    circle(x + 30, y + 32, 3);
+    circle(x + 76, y + 32, 3);
+  }
+
   function circle(x, y, r) {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -459,7 +511,8 @@
 
     drawBackground();
     game.obstacles.forEach((obstacle) => {
-      if (obstacle.type === "sign") drawSign(obstacle);
+      if (obstacle.type === "plane") drawPlane(obstacle);
+      else if (obstacle.type === "sign") drawSign(obstacle);
       else drawCone(obstacle);
     });
     drawBus(player.x, player.y, player.ducking);
@@ -510,6 +563,9 @@
   });
 
   resizeCanvas();
+  gameSuggestion.hidden = false;
+  estimatesScreen.hidden = false;
+  gameScreen.hidden = true;
   reset();
   renderEstimates();
   update();
