@@ -233,6 +233,10 @@ button:active {
   padding: 14px;
 }
 
+.game-suggestion[hidden] {
+  display: none;
+}
+
 .game-suggestion h2 {
   margin-bottom: 4px;
 }

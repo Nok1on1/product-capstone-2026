@@ -45,6 +45,7 @@
 
   drivingSound.loop = true;
   drivingSound.volume = 0.32;
+  duckSound.loop = true;
   duckSound.volume = 0.5;
   jumpSounds.forEach((sound) => {
     sound.volume = 0.55;
@@ -81,6 +82,21 @@
   function stopDrivingSound() {
     drivingSound.pause();
     drivingSound.currentTime = 0;
+  }
+
+  function startDuckSound() {
+    if (!audioReady || game.over) return;
+    try {
+      duckSound.currentTime = 0;
+      void duckSound.play();
+    } catch {
+      // Audio is best-effort because browsers may still block playback.
+    }
+  }
+
+  function stopDuckSound() {
+    duckSound.pause();
+    duckSound.currentTime = 0;
   }
 
   function playRandomJumpSound() {
@@ -188,6 +204,7 @@
     player.vy = 0;
     player.ducking = false;
     stopDrivingSound();
+    stopDuckSound();
     scoreEl.textContent = "0";
     messageEl.classList.remove("hidden");
     messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Jump cones. Hold Duck for touchdown planes.</span>";
@@ -248,6 +265,7 @@
     game.running = false;
     player.ducking = false;
     stopDrivingSound();
+    stopDuckSound();
     renderEstimates();
     gameScreen.hidden = true;
     estimatesScreen.hidden = false;
@@ -290,7 +308,10 @@
     event?.preventDefault?.();
     if (!game.running || game.over) return;
     if (value && !player.ducking) {
-      playSound(duckSound);
+      startDuckSound();
+    }
+    if (!value && player.ducking) {
+      stopDuckSound();
     }
     player.ducking = value;
   }
@@ -361,6 +382,7 @@
     game.running = false;
     game.over = true;
     stopDrivingSound();
+    stopDuckSound();
     game.best = Math.max(game.best, Math.floor(game.score));
     localStorage.setItem(storageKey, String(game.best));
     bestEl.textContent = String(game.best);
