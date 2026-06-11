@@ -63,6 +63,7 @@ export default function Signup({ params }: { params: Promise<{ lang: string }> }
         totalReportsMade: 0,
         emailVerified: false,
         profilePicture: null,
+        offlineRunnerHighScore: 0,
         createdAt: new Date().toISOString(),
         acquisitionSource,
       });

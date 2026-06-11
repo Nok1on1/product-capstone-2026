@@ -15,6 +15,8 @@ export interface UserProfile {
   createdAt: Timestamp | string;
   onboardingCompleted?: boolean;
   acquisitionSource?: string | null;
+  offlineRunnerHighScore?: number;
+  offlineRunnerHighScoreUpdatedAt?: string;
 }
 
 // Type for when we're updating trust score or report count

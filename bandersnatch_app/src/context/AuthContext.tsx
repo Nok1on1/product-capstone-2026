@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               profilePicture: null,
               emailVerified: false,
               createdAt: new Date().toISOString(),
+              offlineRunnerHighScore: 0,
             });
           }
         } catch (error) {
@@ -60,6 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             profilePicture: null,
             emailVerified: false,
             createdAt: new Date().toISOString(),
+            offlineRunnerHighScore: 0,
           });
         }
       } else {

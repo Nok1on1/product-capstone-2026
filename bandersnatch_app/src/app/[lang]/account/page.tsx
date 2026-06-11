@@ -7,11 +7,17 @@ import { doc, updateDoc } from "firebase/firestore";
 import { uploadProfilePicture } from "@/lib/profile-picture";
 import Link from "next/link";
 import { StopSelect } from "@/components/StopSelect";
-import { motion } from "framer-motion";
-import { use, useRef, useState, useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { use, useEffect, useRef, useState, useMemo } from "react";
 
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import Skeleton from "@/components/Skeleton";
+import {
+  getRunnerLeaderboard,
+  readLocalRunnerHighScore,
+  RunnerLeaderboard,
+  syncLocalRunnerHighScore,
+} from "@/lib/game-score";
 
 function getBadge(reports: number): { label: string; color: string; icon: string } {
   if (reports >= 100) return { label: "Expert", color: "text-purple-600 dark:text-purple-400", icon: "workspace_premium" };
@@ -62,6 +68,11 @@ function TrustScoreGauge({ score }: { score: number }) {
   );
 }
 
+function formatRank(rank: number | null) {
+  if (!rank) return "Unranked";
+  return `#${rank}`;
+}
+
 export default function Account({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
   const dict = getDictionary(lang as Locale).common;
@@ -72,6 +83,11 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingPicture, setUploadingPicture] = useState(false);
   const [picError, setPicError] = useState("");
+  const [runnerScore, setRunnerScore] = useState(0);
+  const [leaderboard, setLeaderboard] = useState<RunnerLeaderboard | null>(null);
+  const [leaderboardOpen, setLeaderboardOpen] = useState(false);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(false);
+  const [leaderboardError, setLeaderboardError] = useState("");
 
   const handleProfilePictureClick = () => {
     fileInputRef.current?.click();
@@ -122,6 +138,58 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
   const reports = profile?.totalReportsMade ?? 0;
   const badge = useMemo(() => getBadge(reports), [reports]);
   const milestone = useMemo(() => getNextMilestone(reports), [reports]);
+  const runnerRank = leaderboard?.currentUserRank ?? null;
+  const currentUserInTop100 = !!leaderboard?.top.some(
+    (entry) => entry.userId === user?.uid
+  );
+
+  const loadLeaderboard = async () => {
+    if (!user) return;
+    setLeaderboardLoading(true);
+    setLeaderboardError("");
+    try {
+      const board = await getRunnerLeaderboard(user.uid);
+      setLeaderboard(board);
+    } catch (error) {
+      console.error("Failed to load runner leaderboard", error);
+      setLeaderboardError("Could not load rankings right now.");
+    } finally {
+      setLeaderboardLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user || !profile) return;
+    let cancelled = false;
+
+    const syncScore = async () => {
+      const localHighScore = readLocalRunnerHighScore();
+      const profileHighScore = profile.offlineRunnerHighScore ?? 0;
+      setRunnerScore(Math.max(localHighScore, profileHighScore));
+
+      try {
+        const highScore = await syncLocalRunnerHighScore({
+          userId: user.uid,
+          displayName: profile.displayName,
+          email: profile.email || user.email,
+          profileHighScore,
+        });
+        if (!cancelled) {
+          setRunnerScore(highScore);
+          await loadLeaderboard();
+        }
+      } catch (error) {
+        console.error("Failed to sync runner score", error);
+      }
+    };
+
+    void syncScore();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, profile?.offlineRunnerHighScore, profile?.displayName, profile?.email]);
 
   if (loading) {
     return (
@@ -241,6 +309,41 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
               </div>
             </div>
           )}
+
+          <motion.button
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => {
+              setLeaderboardOpen(true);
+              void loadLeaderboard();
+            }}
+            className="mt-4 w-full bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-lg p-4 text-left flex items-center gap-4 hover:bg-amber-100/70 dark:hover:bg-amber-900/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40"
+          >
+            <div className="h-12 w-12 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                emoji_events
+              </span>
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                Bus Runner Ranking
+              </p>
+              <p className="text-2xl font-black text-amber-900 dark:text-amber-100 tracking-tight">
+                {formatRank(runnerRank)}
+              </p>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold">
+                Best
+              </p>
+              <p className="text-xl font-black text-amber-900 dark:text-amber-100">
+                {runnerScore}
+              </p>
+            </div>
+            <span className="material-symbols-outlined text-amber-700 dark:text-amber-300">
+              chevron_right
+            </span>
+          </motion.button>
         </div>
 
         <div className="mb-8 space-y-4">
@@ -272,6 +375,139 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
           </motion.button>
         </div>
       </div>
+
+      <AnimatePresence>
+        {leaderboardOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setLeaderboardOpen(false)}
+              className="fixed inset-0 z-[60] bg-black/50"
+            />
+            <motion.section
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.98 }}
+              transition={{ type: "spring", bounce: 0.12, duration: 0.35 }}
+              className="fixed inset-x-3 bottom-3 z-[70] mx-auto max-h-[82vh] max-w-md overflow-hidden rounded-xl border border-outline-variant bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="runner-leaderboard-title"
+            >
+              <div className="border-b border-outline-variant p-4 dark:border-slate-800">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-wide text-amber-600 dark:text-amber-300">
+                      Bus Runner
+                    </p>
+                    <h2 id="runner-leaderboard-title" className="text-xl font-black text-on-surface dark:text-slate-100">
+                      Rankings
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setLeaderboardOpen(false)}
+                    className="rounded-full p-1 text-on-surface-variant hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container/30 dark:text-slate-400 dark:hover:bg-slate-800"
+                    aria-label="Close rankings"
+                  >
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <div className="rounded-lg bg-amber-50 p-3 text-center dark:bg-amber-950/30">
+                    <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">Your rank</p>
+                    <p className="text-2xl font-black text-amber-900 dark:text-amber-100">{formatRank(runnerRank)}</p>
+                  </div>
+                  <div className="rounded-lg bg-blue-50 p-3 text-center dark:bg-blue-950/30">
+                    <p className="text-xs font-semibold text-blue-700 dark:text-blue-300">Your best</p>
+                    <p className="text-2xl font-black text-blue-900 dark:text-blue-100">{runnerScore}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="max-h-[56vh] overflow-y-auto p-3">
+                {leaderboardLoading && (
+                  <div className="py-8 text-center text-sm font-medium text-on-surface-variant dark:text-slate-400">
+                    Loading rankings...
+                  </div>
+                )}
+
+                {leaderboardError && (
+                  <div className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700 dark:bg-red-950/30 dark:text-red-300">
+                    {leaderboardError}
+                  </div>
+                )}
+
+                {!leaderboardLoading && !leaderboardError && leaderboard && (
+                  <div className="space-y-2">
+                    {leaderboard.top.length === 0 && (
+                      <div className="py-8 text-center text-sm font-medium text-on-surface-variant dark:text-slate-400">
+                        No scores yet. Your next offline run can take first place.
+                      </div>
+                    )}
+
+                    {leaderboard.top.map((entry, index) => {
+                      const isCurrentUser = entry.userId === user.uid;
+                      return (
+                        <div
+                          key={entry.userId}
+                          className={`grid grid-cols-[48px_1fr_auto] items-center gap-3 rounded-lg border p-3 ${
+                            isCurrentUser
+                              ? "border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30"
+                              : "border-outline-variant bg-surface-container-lowest dark:border-slate-800 dark:bg-slate-950"
+                          }`}
+                        >
+                          <div className="text-center text-sm font-black text-on-surface dark:text-slate-100">
+                            #{index + 1}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-on-surface dark:text-slate-100">
+                              {entry.displayName}
+                            </p>
+                            {isCurrentUser && (
+                              <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                                You
+                              </p>
+                            )}
+                          </div>
+                          <div className="text-lg font-black text-primary-container dark:text-blue-400">
+                            {entry.highScore}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {!currentUserInTop100 && leaderboard.currentUserEntry && leaderboard.currentUserRank && (
+                      <>
+                        <div className="py-2 text-center text-xs font-bold uppercase tracking-wide text-on-surface-variant dark:text-slate-500">
+                          Your score
+                        </div>
+                        <div className="grid grid-cols-[48px_1fr_auto] items-center gap-3 rounded-lg border border-amber-300 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950/30">
+                          <div className="text-center text-sm font-black text-on-surface dark:text-slate-100">
+                            #{leaderboard.currentUserRank}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-on-surface dark:text-slate-100">
+                              {leaderboard.currentUserEntry.displayName}
+                            </p>
+                            <p className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                              You
+                            </p>
+                          </div>
+                          <div className="text-lg font-black text-primary-container dark:text-blue-400">
+                            {leaderboard.currentUserEntry.highScore}
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            </motion.section>
+          </>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
