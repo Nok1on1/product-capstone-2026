@@ -20,6 +20,21 @@ The app is currently free with no paid tier. Future monetisation options under c
 **Current ARPU:** $0/month (MVP)
 **Projected ARPU (with premium tier):** $1/month
 
+### Expansion Economics Thesis
+
+Bandersnatch starts with KIU Bus #3 because that route is the validated pain point, but the product is not structurally limited to one route. The underlying workflow - choose a stop, check an honest arrival signal, see confidence/freshness, and optionally add a rider report - is the same workflow needed by bus commuters in other Georgian cities.
+
+Tbilisi already shows that Georgian riders understand and expect live bus visibility when the city has the infrastructure to support it. The gap is that students and riders in smaller cities do not consistently receive the same reliable, user-friendly pre-departure experience. This makes Kutaisi a focused proof market, not the ceiling of the opportunity.
+
+The strongest post-MVP economics come from city or operator partnerships. If a municipality shares its built-in bus GPS feed, Bandersnatch no longer depends on peer-collected location reports as the primary location source. Peer reporting remains useful for freshness checks, crowding, delays, and rider trust, but the baseline bus position becomes official and exact. That lowers operational risk, improves user trust, and allows the same lightweight interface to expand across routes with limited additional build cost.
+
+| Expansion lever | Economic impact | Why it matters |
+|---|---|---|
+| Reuse the same app flow across cities | Lower marginal product cost per new route | Most Georgian city bus systems share the same basic rider need: stop, direction, ETA, confidence, and disruption context |
+| Municipal bus GPS integration | Lower data collection burden and higher accuracy | Official bus location removes the need to bootstrap every route only from peer reports |
+| Peer reports retained as a trust layer | Better accuracy without high operating cost | Riders can still confirm crowding, missed buses, stale GPS, and on-the-ground disruptions |
+| City/university sponsorship | Revenue can shift from individual students to institutions | Institutions benefit from reduced commute uncertainty and aggregate route-performance insight |
+
 ---
 
 ## CAC by Channel
@@ -136,6 +151,18 @@ The app generates no revenue in its current MVP state. LTV is $0 regardless of r
 
 **Sensitivity:** If ARPU drops to $0.50 (student pricing), LTV becomes $1.00 (conservative) or $1.65 (optimistic). If retention drops to 40%, lifespan becomes 1.7 months and LTV becomes $1.70.
 
+### Partnership LTV Upside
+
+The $1/month student subscription model is intentionally conservative because it assumes every paying user must be converted individually. A municipal or university agreement changes the economics:
+
+| Model | Conservative contract | Users covered | Effective annual revenue per covered user |
+|---|---|---|---|
+| KIU sponsorship | 500 GEL/semester, 2 semesters | 400 Bus #3 commuters | 2.50 GEL/year |
+| Small-city pilot | 3,000 GEL/year per city or operator | 1,000 regular route users | 3.00 GEL/year |
+| Multi-route city license | 10,000 GEL/year | 5,000 regular route users | 2.00 GEL/year |
+
+These are not included in the base LTV:CAC ratio because no partnership has been signed. They show why the product becomes more attractive after GPS access: the city already owns the location data, while Bandersnatch supplies the rider-facing layer, confidence labels, reporting loop, and analytics. In that model, CAC is concentrated into partnership development rather than one-by-one user acquisition.
+
 ---
 
 ## LTV:CAC Ratio
@@ -202,6 +229,18 @@ Industry benchmark for SaaS payback period: <12 months is healthy. Our projected
 
 **Stress test:** If ARPU is $0.50 AND retention is 40% AND CAC rises to $0.50 (paid channels), LTV:CAC drops to 1.7:1. This is still above the 1:1 breakeven line but below the 3:1 healthy benchmark. At this point we would need to either raise prices or find cheaper channels.
 
+### Rollout Cost Sensitivity
+
+The main scaling risk is not rebuilding the app for each city. It is whether we can access trustworthy live location data. Without a city agreement, each new route needs enough active riders to seed reliable peer reports. With a city GPS feed, the marginal rollout is mostly configuration: routes, stops, translations, local onboarding, and QA.
+
+| Scenario | Data source | Rollout complexity | Economics implication |
+|---|---|---|---|
+| Peer-only expansion | Rider reports and schedule estimates | Medium | Cheap to launch, but slower to earn trust in a new city |
+| Hybrid expansion | City GPS plus peer confirmation | Low to medium | Best case: accurate location from day one, community layer improves confidence |
+| Official white-label | City/operator GPS and sponsored distribution | Medium | Higher partnership effort, but stronger recurring revenue and lower consumer CAC |
+
+This is why the roadmap prioritizes a bus operator data conversation. A deal with the city would eliminate the largest variable cost in accuracy - collecting enough location reports - while preserving the community reporting loop that makes the app more honest than a basic official tracker.
+
 ---
 
 ## Assumption Sources
@@ -215,6 +254,8 @@ Industry benchmark for SaaS payback period: <12 months is healthy. Our projected
 | Referral K-factor (0.2) | Conservative estimate for a utility app with no incentive program (source: Lenny's Newsletter, B2C referral benchmarks) |
 | Monthly retention (50–70%) | Estimated for a commute-frequency product. Daily-use products see 60–80% monthly retention. We use 50% conservatively since commute is 5 days/week, not 7. |
 | Comparable transit app pricing | Bolt: $0.50/ride; Citymapper Premium: $3/month; Moovit: free with ads (source: respective app stores, April 2026) |
+| Tbilisi precedent | User-provided market observation: Tbilisi riders already have a form of live bus visibility, while comparable smaller-city experiences remain inconsistent |
+| Municipal GPS expansion | Product architecture assumption: if a city/operator grants access to built-in bus GPS, peer reports become an accuracy and trust layer rather than the primary location source |
 
 ---
 
@@ -252,6 +293,7 @@ We commit to updating this document with real data once available. Until then, a
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial unit economics | Team Bandersnatch |
 | May 14, 2026 | 1.1 | Added refinement schedule for assumption validation timeline | Team Bandersnatch |
+| June 11, 2026 | 1.2 | Added expansion economics thesis covering Tbilisi precedent, smaller-city rollout, and municipal GPS partnership upside | Team Bandersnatch |
 
 ---
 

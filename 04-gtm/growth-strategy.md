@@ -150,6 +150,26 @@ Free — the share feature is already in the roadmap as story S3-01. No addition
 | **User quality** | High (captured at pain point) | Medium (passive group member) | High (trusted invite from friend) |
 | **Measurement** | QR scan events + signup source | UTM link + signup source | `invite_sent` event in GA4 |
 
+---
+
+## Expansion Channel - City / Operator GPS Partnership
+
+The first three channels are user-acquisition channels for the validated KIU Bus #3 route. The next growth channel is a partnership channel: a city, university, or bus operator gives Bandersnatch access to official bus GPS data and helps distribute the app to riders.
+
+Tbilisi already has a version of this expectation: riders are used to the idea that buses can be visible in real time. The opportunity is that other Georgian cities do not consistently provide an equally trustworthy, rider-friendly pre-departure experience. Bandersnatch can start where the pain is validated, then reuse the same product pattern for other routes and cities because the transport workflow is simple and similar: select stop, select direction, check ETA, understand confidence, and optionally add a rider report.
+
+### Why It Changes Growth Economics
+
+| Factor | Peer-only MVP | City GPS partnership |
+|---|---|---|
+| Location source | Rider reports and schedule estimates | Official built-in bus GPS as baseline |
+| Peer reports | Primary source of confirmation | Accuracy, crowding, disruption, and freshness layer |
+| New-city launch risk | Need enough riders before the data feels trustworthy | Accurate position available from launch |
+| CAC profile | Mostly student-by-student acquisition | Partnership distribution plus local onboarding |
+| Marginal rollout work | Community seeding and route setup | Route setup, QA, partner integration, local launch |
+
+This does not replace the community loop. It makes the community loop more valuable: students no longer need to supply basic bus location just to make the app work, but they can still improve the signal by reporting overcrowding, missing buses, stale GPS, or route disruptions.
+
 ### Recommended Phasing
 
 | Phase | Week | Channels Active | Goal |
@@ -157,6 +177,8 @@ Free — the share feature is already in the roadmap as story S3-01. No addition
 | 1 | May 19–25 | Channel 2 (Groups) + Channel 1 (Flyers) | Reach 50 signups |
 | 2 | May 26–Jun 1 | Channel 1 + Channel 2 + Channel 3 (if built) | Reach 150 signups |
 | 3 | Jun 2–8 | All three + iterate based on CAC data | Reach 300 signups |
+
+**Post-demo phase:** After the first three acquisition phases, the next growth milestone is a KIU pilot plus city/operator GPS outreach. The goal is to prepare a second-route or second-city launch where official bus location data reduces the need to seed peer reports from zero.
 
 ---
 
@@ -211,6 +233,8 @@ What we do not yet know that we need to answer in the first 4 weeks of live oper
 
 4. **How does demand shift during exam periods and semester breaks?** Our growth projection assumes steady weekly acquisition. If acquisition drops 60% during exam weeks (when students commute less) or collapses during breaks, the six-month trajectory changes significantly.
 
+5. **Which Georgian cities can provide built-in bus GPS data through a partner agreement?** If GPS access is available, expansion economics improve because the app no longer needs to build trust from peer location reports alone. If GPS access is not available, each new city needs a stronger rider seeding plan before launch.
+
 ---
 
 ## Change Log
@@ -219,6 +243,7 @@ What we do not yet know that we need to answer in the first 4 weeks of live oper
 |---|---|---|---|
 | May 13, 2026 | 1.0 | Initial growth strategy | Team Bandersnatch |
 | May 14, 2026 | 1.1 | Added activation metric, channel ranking rationale, open questions | Team Bandersnatch |
+| June 11, 2026 | 1.2 | Added city/operator GPS partnership as post-demo expansion channel and clarified national rollout economics | Team Bandersnatch |
 
 ---
 

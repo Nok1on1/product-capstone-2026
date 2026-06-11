@@ -46,7 +46,7 @@ This source outline adapts the Lab 12 pitch deck template to the Bandersnatch pr
 
 **TAM, broader student commute decision-support model:** 100 campus-route commuter cohorts x 500 students x $1/month x 8 months = $400,000/year, excluding institutional analytics and operator partnerships.
 
-**Rationale:** This is intentionally bottom-up and starts with the single validated route before expanding to other universities and route-constrained commuter populations.
+**Rationale:** This is intentionally bottom-up and starts with the single validated route before expanding to other universities and route-constrained commuter populations. Tbilisi already proves that Georgian riders understand live bus visibility when the city provides usable infrastructure; the opportunity is to bring the same expectation to smaller cities where riders still lack a reliable pre-departure layer.
 
 ---
 
@@ -92,6 +92,8 @@ This source outline adapts the Lab 12 pitch deck template to the Bandersnatch pr
 
 **Revenue to date:** Pre-revenue. Monetization is deferred until the product proves repeated commute value.
 
+**Expansion economics:** The app is lightweight because every city route uses the same core workflow: stop, direction, ETA, confidence label, and rider report. If a city/operator shares built-in bus GPS data, Bandersnatch can use official bus position as the baseline and keep peer reports for crowding, disruption checks, and accuracy improvement. That reduces the need to bootstrap location data city by city and makes future rollouts mostly route configuration, partner onboarding, and local GTM.
+
 ---
 
 ## Slide 8: Go-to-Market
@@ -130,10 +132,10 @@ This source outline adapts the Lab 12 pitch deck template to the Bandersnatch pr
 
 | Line item | Amount | Purpose |
 |-----------|--------|---------|
-| Engineering and reliability | 30,000 GEL | Real GPS/partner integration, freshness thresholds, automated tests |
+| Engineering and reliability | 30,000 GEL | Municipal GPS/partner integration, freshness thresholds, automated tests |
 | Campus expansion and GTM | 18,000 GEL | QR campaigns, student ambassador rollout, university outreach |
 | Legal, privacy, and infrastructure | 12,000 GEL | Consent review, Firebase/Vercel growth costs, security hardening |
 
-**Milestone:** By March 2027, reach 500 monthly active KIU commuters, one signed institutional pilot, and validated retention for the daily commute flow.
+**Milestone:** By March 2027, reach 500 monthly active KIU commuters, one signed institutional pilot, one active city/operator GPS data conversation, and validated retention for the daily commute flow.
 
 **Contact:** Team Bandersnatch, repository https://github.com/Nok1on1/product-capstone-2026, live product https://product-capstone-2026.vercel.app/en

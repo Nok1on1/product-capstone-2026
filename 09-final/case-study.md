@@ -77,6 +77,8 @@ The go-to-market strategy starts with high-intent channels:
 
 The business model remains pre-revenue during validation. The post-MVP model is a $1/month student premium tier plus university sponsorship of about 500 GEL per semester. Unit economics estimate a blended CAC of $0.05 and conservative LTV of $2.00 if the paid tier is validated.
 
+The growth economics improve after the first route because the product is simple by design. The same stop, direction, ETA, confidence, and rider-report workflow can be reused across other Georgian cities and bus routes. Tbilisi already demonstrates that live bus visibility is a familiar expectation in Georgia; the gap is that smaller cities do not consistently give riders a reliable pre-departure experience. If a city or bus operator shares built-in vehicle GPS data, Bandersnatch can use exact official bus positions while keeping peer reports as an added trust layer for crowding, disruptions, and stale-data checks.
+
 The primary moat claim is Switching Costs, with Network Effects emerging. As students save stops, schedules, and trust history, switching to a generic tool becomes less attractive. As more students report status, the community signal becomes stronger.
 
 ## Lessons Learned
@@ -85,7 +87,7 @@ The biggest lesson was that product value came from honest uncertainty, not perf
 
 The second lesson was that analytics instrumentation must be treated as product infrastructure, not an afterthought. The signup undercount made traction harder to explain even though observed user behavior was strong. Future work should prioritize event QA, cohort tracking, and clean source attribution.
 
-The third lesson was to keep scope anchored to the validated route. A broader city transit app is tempting, but the evidence supports a focused tool for KIU Bus #3 commuters first. Winning that route gives the team a credible path to other campus commute routes later.
+The third lesson was to keep scope anchored to the validated route while designing the model so it can travel. A broader city transit app is tempting, but the evidence supports a focused tool for KIU Bus #3 commuters first. Winning that route gives the team a credible path to other campus commute routes later, especially if a municipal GPS partnership reduces the need to rely on peer-collected location data in each new city.
 
 ## Next Steps
 
@@ -94,3 +96,4 @@ The third lesson was to keep scope anchored to the validated route. A broader ci
 3. Run a two-week QR flyer experiment with UTM links.
 4. Add personalized departure recommendations.
 5. Pursue a KIU institutional pilot and bus operator data conversation.
+6. Package the route configuration model for a second Georgian city pilot.
