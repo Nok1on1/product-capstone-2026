@@ -383,6 +383,10 @@
           ? { width: 42, height: 54 }
           : { width: 34, height: 44 };
 
+    const stopAbbr = type === "sign" 
+      ? estimateStops[Math.floor(Math.random() * estimateStops.length)].name.substring(0, 3).toUpperCase()
+      : "";
+
     game.obstacles.push({
       x: world.width + 40,
       y: obstacleY(type),
@@ -390,6 +394,7 @@
       height: dimensions.height,
       type,
       phase: Math.random() * Math.PI * 2,
+      stopAbbr,
     });
     game.nextObstacleIn =
       tuning.minObstacle +
@@ -558,8 +563,14 @@
     ctx.fill();
 
     const buildingBase = world.groundY - 58;
-    const parallax = -((offset * 0.32) % 520);
+    const baseOffset = offset * 0.32;
+    const parallax = -(baseOffset % 520);
     for (let x = parallax - 120; x < world.width + 160; x += 520) {
+      const indexOffset = Math.round((x - (parallax - 120)) / 520);
+      const absoluteIndex = Math.floor(baseOffset / 520) + indexOffset;
+      const stop = estimateStops[absoluteIndex % estimateStops.length];
+      const displayName = stop.name.length > 16 ? stop.name.substring(0, 14) + ".." : stop.name;
+
       drawBuilding(x + 30, buildingBase, 82, 58, cssVar("--runner-building", "#e8eef9"), "#bad0f8");
       drawBuilding(x + 135, buildingBase, 58, 42, cssVar("--runner-building-2", "#f3eee1"), "#d8caa4");
       ctx.fillStyle = cssVar("--runner-roof", "#d97706");
@@ -572,9 +583,10 @@
       ctx.fillStyle = cssVar("--runner-station", "#25416d");
       roundRect(x + 262, buildingBase - 48, 122, 48, 6);
       ctx.fillStyle = "#f8fafc";
-      ctx.font = "800 13px system-ui";
-      ctx.fillText("KIU", x + 279, buildingBase - 22);
-      ctx.fillText("STN", x + 327, buildingBase - 22);
+      ctx.font = "800 11px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText(displayName, x + 323, buildingBase - 22);
+      ctx.textAlign = "left";
       ctx.fillStyle = "#fbbf24";
       roundRect(x + 274, buildingBase - 40, 28, 9, 2);
       roundRect(x + 318, buildingBase - 40, 48, 9, 2);
@@ -747,7 +759,7 @@
     roundRect(x + 3, y + 4, obstacle.width - 6, 9, 4);
     ctx.fillStyle = "#ffffff";
     ctx.font = "900 12px system-ui";
-    ctx.fillText("KIU", x + 8, y + 29);
+    ctx.fillText(obstacle.stopAbbr || "KIU", x + 8, y + 29);
     ctx.fillStyle = "#fbbf24";
     roundRect(x + 10, y + 34, obstacle.width - 20, 4, 2);
     ctx.restore();
