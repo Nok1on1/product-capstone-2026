@@ -2,11 +2,9 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
-import { useBusState } from "@/context/BusStateContext";
-import { useDictionary } from "@/hooks/useDictionary";
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
+import { readBuses } from "@/lib/offline-bus-data";
+import { reportBusIssue } from "@/lib/bus-reporting";
 
 interface Bus {
   id: string;
@@ -24,19 +22,13 @@ export function ReportButton() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth();
-  const dict = useDictionary();
 
-  // Fetch buses on component mount
   useEffect(() => {
     const fetchBuses = async () => {
       setIsLoading(true);
       try {
-        const busesSnapshot = await getDocs(collection(db, "buses"));
-        const busesData = busesSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Bus[];
-        setBuses(busesData);
+        const { data } = await readBuses();
+        setBuses(data as Bus[]);
       } catch (error) {
         console.error("Error fetching buses:", error);
       } finally {
@@ -56,18 +48,18 @@ export function ReportButton() {
 
     setIsSubmitting(true);
     try {
-      await addDoc(collection(db, "alerts"), {
+      const result = await reportBusIssue({
         busId: selectedBus,
         reason: reason.trim(),
-        timestamp: new Date(),
         userId: user?.uid || "anonymous",
-        status: "open",
       });
 
-      // Reset form
       setSelectedBus("");
       setReason("");
       setIsOpen(false);
+      if (result.status === "queued") {
+        window.dispatchEvent(new CustomEvent("bandersnatch-offline-state-change"));
+      }
     } catch (error) {
       console.error("Error submitting alert:", error);
       alert("Failed to submit report. Please try again.");
@@ -144,7 +136,7 @@ export function ReportButton() {
                     <option key="default" value="">Choose a bus...</option>
                     {buses.map((bus, index) => (
                       <option key={`bus-${bus.id || index}`} value={bus.id}>
-                        {bus.name} {bus.isActive ? "🟢" : "🔴"}
+                        {bus.name || bus.id} {bus.isActive ? "Active" : "Inactive"}
                       </option>
                     ))}
                   </select>

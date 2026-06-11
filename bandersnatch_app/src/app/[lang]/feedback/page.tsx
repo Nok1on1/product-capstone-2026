@@ -2,10 +2,12 @@
 
 import { useState, use } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
+import { putSnapshot } from "@/lib/offline-db";
+import { writeOrQueueReport } from "@/lib/offline-sync";
 
 type CrowdingLevel = "Low" | "Medium" | "High";
 
@@ -19,12 +21,34 @@ export default function FeedbackPage({ params }: { params: Promise<{ lang: strin
 
   const handleFeedback = async (level: CrowdingLevel) => {
     setSubmitting(level);
+    const updatedAt = new Date().toISOString();
     
     try {
-      await setDoc(doc(db, "bus_data", "current_status"), {
+      const result = await writeOrQueueReport(
+        "bus_reports",
+        {
+          type: "crowding_report",
+          level,
+          source: "feedback_page",
+          userId: "anonymous",
+          clientCreatedAt: updatedAt,
+        },
+        () =>
+          setDoc(doc(db, "bus_data", "current_status"), {
         crowding: level,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
+            updatedAt,
+            timestamp: serverTimestamp(),
+          }, { merge: true }),
+        { label: "Crowding status feedback write", userId: "anonymous" }
+      );
+
+      if (result.status === "sent") {
+        await putSnapshot("busStatus", {
+          exists: true,
+          crowding: level,
+          updatedAt,
+        });
+      }
       
       setSuccess(true);
       setTimeout(() => {

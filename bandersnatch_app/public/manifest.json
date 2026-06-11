@@ -1,17 +1,19 @@
 {
   "name": "Bandersnatch",
   "short_name": "Bandersnatch",
-  "description": "Bus #3 Real-Time Tracker",
+  "description": "Offline-ready Bus #3 real-time tracker for Kutaisi students.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "orientation": "portrait",
+  "background_color": "#faf8ff",
+  "theme_color": "#2563eb",
   "icons": [
     {
       "src": "/launcher_icon192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "/launcher_icon512.png",

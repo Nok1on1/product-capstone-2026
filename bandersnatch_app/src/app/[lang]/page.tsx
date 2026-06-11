@@ -6,17 +6,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useBusState } from "@/context/BusStateContext";
 import { StopSelect } from "@/components/StopSelect";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import {
-  doc,
-  getDoc,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  limit as firestoreLimit,
-} from "firebase/firestore";
 import { logEvent } from "firebase/analytics";
-import { db, analytics } from "@/lib/firebase";
+import { analytics } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import { useUserLocation } from "@/hooks/useUserLocation";
@@ -32,6 +23,12 @@ import {
 } from "@/lib/delay-prediction";
 import Skeleton from "@/components/Skeleton";
 import { toStationStops, toCityCentreStops } from "@/data/route3";
+import {
+  readAlerts,
+  readBuses,
+  readBusStatus,
+  readRecentBusReports,
+} from "@/lib/offline-bus-data";
 
 function BackgroundAnimation() {
   const shouldReduceMotion = useReducedMotion();
@@ -220,13 +217,8 @@ export default function Home({
   useEffect(() => {
     const fetchDelayReports = async () => {
       try {
-        const reportsQuery = query(
-          collection(db, "bus_reports"),
-          orderBy("timestamp", "desc"),
-          firestoreLimit(250)
-        );
-        const snapshot = await getDocs(reportsQuery);
-        setDelayReports(snapshot.docs.map((doc) => doc.data() as DelayReportLike));
+        const { data } = await readRecentBusReports();
+        setDelayReports(data as DelayReportLike[]);
       } catch (error) {
         console.error("Error fetching delay reports:", error);
       }
@@ -239,32 +231,27 @@ export default function Home({
   useEffect(() => {
     const fetchBusesAndAlerts = async () => {
       try {
-        // Fetch all buses
-        const busesSnapshot = await getDocs(collection(db, "buses"));
+        const [{ data: buses }, { data: alerts }] = await Promise.all([
+          readBuses(),
+          readAlerts(),
+        ]);
+        const openAlerts = alerts.filter((alert) => alert.status === "open");
 
-        // Fetch all alerts with status open
-        const alertsSnapshot = await getDocs(collection(db, "alerts"));
-        const openAlerts = alertsSnapshot.docs.filter(
-          (doc) => doc.data().status === "open",
-        );
-
-        // Build a set of bus IDs that have alerts
         const busIdsWithAlerts = new Set<string>();
         const busAlerts: { [busId: string]: string[] } = {};
 
-        openAlerts.forEach((doc) => {
-          const data = doc.data();
-          busIdsWithAlerts.add(data.busId);
-          if (!busAlerts[data.busId]) {
-            busAlerts[data.busId] = [];
+        openAlerts.forEach((alert) => {
+          if (!alert.busId) return;
+          busIdsWithAlerts.add(alert.busId);
+          if (!busAlerts[alert.busId]) {
+            busAlerts[alert.busId] = [];
           }
-          busAlerts[data.busId].push(data.reason);
+          if (alert.reason) busAlerts[alert.busId].push(alert.reason);
         });
 
         setAlertedBuses(busAlerts);
 
-        // Count buses: total active buses minus those with alerts
-        const totalBuses = busesSnapshot.docs.length;
+        const totalBuses = buses.length;
         const activeBusesWithoutAlerts = totalBuses - busIdsWithAlerts.size;
 
         setActiveBusCount(activeBusesWithoutAlerts);
@@ -291,12 +278,10 @@ export default function Home({
     setStatus("loading");
 
     try {
-      const docRef = doc(db, "bus_data", "current_status");
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
+      const { data } = await readBusStatus();
+      if (data.exists) {
         if (data.crowding) {
-          setCrowding(data.crowding as "Low" | "Medium" | "High");
+          setCrowding(data.crowding);
           setHasLiveData(true);
         } else {
           setCrowding(null);

@@ -3,15 +3,13 @@
 import { use, useEffect, useState } from "react";
 import { getDictionary, Locale } from "@/i18n/dictionaries";
 import RouteMap from "@/components/RouteMap";
-import { collection, getDocs, limit as firestoreLimit, orderBy, query } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { motion } from "framer-motion";
 import {
   DelayPattern,
-  DelayReportLike,
   formatDelayPattern,
   getDelayPatternForNow,
 } from "@/lib/delay-prediction";
+import { readRecentBusReports } from "@/lib/offline-bus-data";
 
 export default function RoutesPage({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = use(params);
@@ -21,14 +19,8 @@ export default function RoutesPage({ params }: { params: Promise<{ lang: string 
   useEffect(() => {
     const fetchDelayPattern = async () => {
       try {
-        const reportsQuery = query(
-          collection(db, "bus_reports"),
-          orderBy("timestamp", "desc"),
-          firestoreLimit(250)
-        );
-        const snapshot = await getDocs(reportsQuery);
-        const reports = snapshot.docs.map((doc) => doc.data() as DelayReportLike);
-        setDelayPattern(getDelayPatternForNow(reports, "station", 10));
+        const { data } = await readRecentBusReports();
+        setDelayPattern(getDelayPatternForNow(data, "station", 10));
       } catch (error) {
         console.error("Error fetching delay pattern:", error);
       }

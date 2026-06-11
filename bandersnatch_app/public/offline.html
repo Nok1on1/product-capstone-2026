@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2563eb" />
+    <title>Bandersnatch Offline</title>
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/offline-runner.css" />
+  </head>
+  <body>
+    <main class="offline-shell">
+      <section class="status-bar" aria-live="polite">
+        <div>
+          <p class="eyebrow">Offline mode</p>
+          <h1>Bus Runner</h1>
+        </div>
+        <div class="connection-pill">Waiting for signal</div>
+      </section>
+
+      <section class="game-panel">
+        <div class="score-row">
+          <span>Score <strong id="score">0</strong></span>
+          <span>Best <strong id="best">0</strong></span>
+        </div>
+        <canvas id="runner" width="900" height="360" aria-label="Bandersnatch bus runner game"></canvas>
+        <div class="game-message" id="message">
+          <strong>Tap or press Space to start</strong>
+          <span>Jump road cones, duck campus signs, and keep Bus #3 rolling.</span>
+        </div>
+      </section>
+
+      <section class="controls">
+        <button id="jump" type="button">Jump</button>
+        <button id="duck" type="button">Duck</button>
+        <button id="restart" type="button">Restart</button>
+      </section>
+
+      <p class="fine-print">
+        Live tracking will reconnect automatically when your connection returns.
+      </p>
+    </main>
+    <script src="/offline-runner.js" defer></script>
+  </body>
+</html>

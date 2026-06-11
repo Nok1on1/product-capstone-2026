@@ -1,6 +1,6 @@
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
-import { withFirebaseRetry } from "@/lib/firebase-retry";
+import { writeOrQueueReport } from "@/lib/offline-sync";
 
 export type BusDirection = "station" | "city";
 
@@ -53,32 +53,68 @@ function cleanPayload<T>(payload: T): T {
 
 export async function reportBusStatus(report: BusStatusReport) {
   const userId = requireUserId();
+  const payload = cleanPayload({
+    ...report,
+    userId,
+    source: "web_app",
+    clientCreatedAt: new Date().toISOString(),
+  });
 
-  return withFirebaseRetry(
+  return writeOrQueueReport(
+    "bus_reports",
+    payload as Record<string, unknown>,
     () =>
       addDoc(collection(db, "bus_reports"), {
-        ...cleanPayload(report),
-        userId,
-        source: "web_app",
-        clientCreatedAt: new Date().toISOString(),
+        ...payload,
         timestamp: serverTimestamp(),
       }),
-    { label: "Bus status report write" }
+    { label: "Bus status report write", userId }
   );
 }
 
 export async function reportBusTrackingEvent(event: BusTrackingEvent) {
   const userId = requireUserId();
+  const payload = cleanPayload({
+    ...event,
+    userId,
+    source: "web_app",
+    clientCreatedAt: new Date().toISOString(),
+  });
 
-  return withFirebaseRetry(
+  return writeOrQueueReport(
+    "bus_tracking",
+    payload as Record<string, unknown>,
     () =>
       addDoc(collection(db, "bus_tracking"), {
-        ...cleanPayload(event),
-        userId,
-        source: "web_app",
-        clientCreatedAt: new Date().toISOString(),
+        ...payload,
         timestamp: serverTimestamp(),
       }),
-    { label: "Bus tracking event write" }
+    { label: "Bus tracking event write", userId }
+  );
+}
+
+export async function reportBusIssue(issue: {
+  busId: string;
+  reason: string;
+  userId?: string;
+}) {
+  const userId = issue.userId || auth.currentUser?.uid || "anonymous";
+  const payload = {
+    busId: issue.busId,
+    reason: issue.reason,
+    userId,
+    status: "open",
+    clientCreatedAt: new Date().toISOString(),
+  };
+
+  return writeOrQueueReport(
+    "alerts",
+    payload,
+    () =>
+      addDoc(collection(db, "alerts"), {
+        ...payload,
+        timestamp: new Date(),
+      }),
+    { label: "Bus issue report write", userId }
   );
 }

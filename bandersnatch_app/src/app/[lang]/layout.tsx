@@ -41,7 +41,7 @@ export default async function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
           rel="stylesheet"
         />
-        <template
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -51,13 +51,6 @@ export default async function RootLayout({
                   document.documentElement.classList.toggle('dark', isDark);
                 } catch (e) {}
               })();
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                    console.warn('SW registration failed:', err);
-                  });
-                });
-              }
             `,
           }}
         />

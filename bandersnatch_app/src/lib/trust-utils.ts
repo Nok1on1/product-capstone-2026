@@ -4,8 +4,9 @@
  * Used to track user reliability based on accuracy of bus reports
  */
 
-import { doc, updateDoc, increment, FieldValue } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "./firebase";
+import { writeOrQueueReport } from "@/lib/offline-sync";
 
 /**
  * Increment trust score for a user (reward for accurate reports)
@@ -16,15 +17,7 @@ export async function incrementTrustScore(
   userId: string,
   amount: number = 1
 ): Promise<void> {
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      trustScore: increment(amount),
-    });
-  } catch (error) {
-    console.error(`Failed to increment trust score for user ${userId}:`, error);
-    throw error;
-  }
+  await updateTrustMetrics(userId, { trustScoreDelta: amount });
 }
 
 /**
@@ -36,18 +29,7 @@ export async function decrementTrustScore(
   userId: string,
   amount: number = 1
 ): Promise<void> {
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      trustScore: increment(-amount),
-    });
-  } catch (error) {
-    console.error(
-      `Failed to decrement trust score for user ${userId}:`,
-      error
-    );
-    throw error;
-  }
+  await updateTrustMetrics(userId, { trustScoreDelta: -amount });
 }
 
 /**
@@ -56,18 +38,7 @@ export async function decrementTrustScore(
  * @param userId - The user's Firebase UID
  */
 export async function incrementReportCount(userId: string): Promise<void> {
-  try {
-    const userRef = doc(db, "users", userId);
-    await updateDoc(userRef, {
-      totalReportsMade: increment(1),
-    });
-  } catch (error) {
-    console.error(
-      `Failed to increment report count for user ${userId}:`,
-      error
-    );
-    throw error;
-  }
+  await updateTrustMetrics(userId, { reportCountDelta: 1 });
 }
 
 /**
@@ -132,7 +103,12 @@ export async function updateTrustMetrics(
     }
 
     if (Object.keys(updatePayload).length > 0) {
-      await updateDoc(userRef, updatePayload);
+      await writeOrQueueReport(
+        "trust_metric",
+        { userId, ...updates },
+        () => updateDoc(userRef, updatePayload),
+        { label: "Trust metric update", userId }
+      );
     }
   } catch (error) {
     console.error(`Failed to update trust metrics for user ${userId}:`, error);
