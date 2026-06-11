@@ -7,6 +7,14 @@
   const jumpButton = document.getElementById("jump");
   const duckButton = document.getElementById("duck");
   const restartButton = document.getElementById("restart");
+  const showEstimatesButton = document.getElementById("show-estimates");
+  const playRunnerButton = document.getElementById("play-runner");
+  const gameScreen = document.getElementById("game-screen");
+  const gameSuggestion = document.getElementById("game-suggestion");
+  const estimatesScreen = document.getElementById("estimates-screen");
+  const screenTitle = document.getElementById("screen-title");
+  const estimateGrid = document.getElementById("estimate-grid");
+  const estimateUpdated = document.getElementById("estimate-updated");
 
   const storageKey = "bandersnatch_offline_runner_best";
   const jumpSounds = [
@@ -19,6 +27,21 @@
   const base = { width: 900, height: 360, groundY: 285 };
   const mobileQuery = window.matchMedia("(max-width: 520px)");
   let audioReady = false;
+  const schedule = {
+    start: "07:30",
+    end: "22:00",
+    frequencyMin: 30,
+    stopTravelMinutes: 7,
+  };
+  const estimateStops = [
+    { name: "Colchis Fountain", direction: "To Station", stopOffset: 0 },
+    { name: "KIU (K Building)", direction: "To Station", stopOffset: 9 },
+    { name: "KIU Campus", direction: "To Station", stopOffset: 10 },
+    { name: "Rioni Railway Station", direction: "To Station", stopOffset: 13 },
+    { name: "Railway Station", direction: "To City Centre", stopOffset: 0 },
+    { name: "KIU (K Building)", direction: "To City Centre", stopOffset: 2 },
+    { name: "Colchis Fountain", direction: "To City Centre", stopOffset: 11 },
+  ];
 
   drivingSound.loop = true;
   drivingSound.volume = 0.32;
@@ -125,6 +148,7 @@
   }
 
   function resizeCanvas() {
+    if (estimatesScreen && !estimatesScreen.hidden) return;
     const rect = canvas.getBoundingClientRect();
     const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
     world.dpr = dpr;
@@ -167,6 +191,77 @@
     scoreEl.textContent = "0";
     messageEl.classList.remove("hidden");
     messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Hold Duck for signs. Tap the road to jump.</span>";
+  }
+
+  function minutesUntilNextDeparture(now) {
+    const [startH, startM] = schedule.start.split(":").map(Number);
+    const [endH, endM] = schedule.end.split(":").map(Number);
+    const startMin = startH * 60 + startM;
+    const endMin = endH * 60 + endM;
+    const currentMin = now.getHours() * 60 + now.getMinutes();
+
+    if (currentMin >= endMin) {
+      const tomorrowDeparture = new Date(now);
+      tomorrowDeparture.setDate(tomorrowDeparture.getDate() + 1);
+      tomorrowDeparture.setHours(startH, startM, 0, 0);
+      return Math.round((tomorrowDeparture.getTime() - now.getTime()) / 60000);
+    }
+
+    let nextDepartureMin = startMin;
+    while (nextDepartureMin <= currentMin) {
+      nextDepartureMin += schedule.frequencyMin;
+    }
+
+    if (nextDepartureMin > endMin) {
+      const tomorrowDeparture = new Date(now);
+      tomorrowDeparture.setDate(tomorrowDeparture.getDate() + 1);
+      tomorrowDeparture.setHours(startH, startM, 0, 0);
+      return Math.round((tomorrowDeparture.getTime() - now.getTime()) / 60000);
+    }
+
+    return nextDepartureMin - currentMin;
+  }
+
+  function renderEstimates() {
+    const now = new Date();
+    const baseEta = minutesUntilNextDeparture(now);
+    estimateGrid.innerHTML = estimateStops
+      .map((stop) => {
+        const eta = baseEta + stop.stopOffset * schedule.stopTravelMinutes;
+        return `<article class="estimate-card">
+          <div>
+            <strong>${stop.name}</strong>
+            <span>${stop.direction}</span>
+          </div>
+          <div class="estimate-minutes">${eta} min</div>
+        </article>`;
+      })
+      .join("");
+    estimateUpdated.textContent = `Updated ${now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+  }
+
+  function showEstimates(event) {
+    event?.preventDefault?.();
+    game.running = false;
+    player.ducking = false;
+    stopDrivingSound();
+    renderEstimates();
+    gameScreen.hidden = true;
+    estimatesScreen.hidden = false;
+    gameSuggestion.hidden = false;
+    screenTitle.textContent = "Offline Estimates";
+  }
+
+  function showGame(event) {
+    event?.preventDefault?.();
+    gameSuggestion.hidden = true;
+    estimatesScreen.hidden = true;
+    gameScreen.hidden = false;
+    screenTitle.textContent = "Bus Runner";
+    resizeCanvas();
   }
 
   function start() {
@@ -403,6 +498,8 @@
     event.preventDefault();
     reset();
   });
+  showEstimatesButton.addEventListener("pointerdown", showEstimates);
+  playRunnerButton.addEventListener("pointerdown", showGame);
   bindPressHoldDuck(duckButton);
 
   window.addEventListener("resize", () => {
@@ -414,5 +511,6 @@
 
   resizeCanvas();
   reset();
+  renderEstimates();
   update();
 })();

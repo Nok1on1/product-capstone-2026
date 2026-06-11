@@ -158,6 +158,10 @@ canvas {
   gap: 10px;
 }
 
+#game-screen {
+  display: contents;
+}
+
 button {
   min-height: 50px;
   border: 0;
@@ -193,6 +197,113 @@ button:active {
   border: 1px solid var(--border);
 }
 
+.secondary-action {
+  grid-column: 1 / -1;
+  background: var(--surface-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.secondary-action.compact {
+  grid-column: auto;
+  min-height: 42px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.estimates-panel {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
+  padding: 14px;
+}
+
+.game-suggestion {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--primary) 7%, var(--surface));
+  padding: 14px;
+}
+
+.game-suggestion h2 {
+  margin-bottom: 4px;
+}
+
+.game-suggestion p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.estimate-hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(24px, 7vw, 34px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.estimate-note {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.estimate-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.estimate-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface-soft) 62%, var(--surface));
+  padding: 10px 12px;
+}
+
+.estimate-card strong {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.estimate-card span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.estimate-minutes {
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.estimate-updated {
+  margin-top: 10px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 12px;
+}
+
 .fine-print {
   margin: 0;
   color: var(--muted);
@@ -225,10 +336,19 @@ button:active {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .game-suggestion {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
   #jump {
     grid-column: auto;
     min-height: 50px;
     font-size: inherit;
+  }
+
+  .secondary-action {
+    grid-column: auto;
   }
 
   .game-message {
@@ -284,6 +404,14 @@ button:active {
 
   #jump {
     min-height: 56px;
+  }
+
+  .estimate-hero {
+    flex-direction: column;
+  }
+
+  .secondary-action.compact {
+    width: 100%;
   }
 }
 
