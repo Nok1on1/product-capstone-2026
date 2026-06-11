@@ -8,6 +8,7 @@
   const duckButton = document.getElementById("duck");
   const restartButton = document.getElementById("restart");
   const showEstimatesButton = document.getElementById("show-estimates");
+  const returnToAppButton = document.getElementById("return-to-app");
   const playRunnerButton = document.getElementById("play-runner");
   const gameScreen = document.getElementById("game-screen");
   const gameSuggestion = document.getElementById("game-suggestion");
@@ -17,6 +18,9 @@
   const estimateUpdated = document.getElementById("estimate-updated");
 
   const storageKey = "bandersnatch_offline_runner_best";
+  const urlParams = new URLSearchParams(window.location.search);
+  const shouldOpenGame = urlParams.get("play") === "1";
+  const returnTo = urlParams.get("returnTo");
   const jumpSounds = [
     "/sound_effects/jump1.mp3",
     "/sound_effects/jump2.mp3",
@@ -29,6 +33,47 @@
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   let audioReady = false;
   let frame = 0;
+
+  const assetSources = {
+    bagrati: "/game_assets/bagrati.png",
+    bird: "/game_assets/bird.png",
+    building: "/game_assets/building.png",
+    busDuck: "/game_assets/bus-duck.png",
+    busNormal: "/game_assets/bus-normal.png",
+    cone: "/game_assets/cone.png",
+    lamp: "/game_assets/lamp.png",
+    plane: "/game_assets/plane.png",
+    road: "/game_assets/road.png",
+    station: "/game_assets/station.png",
+    sky: "/game_assets/sky.png",
+    cloud: "/game_assets/cloud.png",
+    tree: "/game_assets/tree.png",
+  };
+
+  const spriteCrop = {
+    bagrati: { x: 0.03, y: 0.09, width: 0.94, height: 0.76 },
+    bird: { x: 0.18, y: 0.2, width: 0.64, height: 0.58 },
+    building: { x: 0.2, y: 0.13, width: 0.6, height: 0.74 },
+    busDuck: { x: 0.04, y: 0.43, width: 0.93, height: 0.37 },
+    busNormal: { x: 0.04, y: 0.28, width: 0.93, height: 0.44 },
+    cone: { x: 0.26, y: 0.14, width: 0.48, height: 0.72 },
+    lamp: { x: 0.34, y: 0.08, width: 0.32, height: 0.84 },
+    plane: { x: 0.16, y: 0.35, width: 0.68, height: 0.3 },
+    road: { x: 0.02, y: 0.46, width: 0.96, height: 0.18 },
+    station: { x: 0.15, y: 0.14, width: 0.7, height: 0.74 },
+    sky: { x: 0, y: 0, width: 1, height: 1 },
+    cloud: { x: 0.13, y: 0.26, width: 0.74, height: 0.38 },
+    tree: { x: 0.18, y: 0.08, width: 0.64, height: 0.84 },
+  };
+
+  const sprites = Object.fromEntries(
+    Object.entries(assetSources).map(([name, src]) => {
+      const image = new Image();
+      image.src = src;
+      return [name, image];
+    })
+  );
+
   const schedule = {
     start: "07:30",
     end: "22:00",
@@ -72,6 +117,49 @@
     sound.volume = 0.55;
     sound.preload = "auto";
   });
+
+  const world = {
+    width: base.width,
+    height: base.height,
+    scale: 1,
+    dpr: 1,
+    groundY: base.groundY,
+    mobile: mobileQuery.matches,
+  };
+
+  const player = {
+    x: 96,
+    y: base.groundY - 64,
+    width: 112,
+    height: 64,
+    fullHeight: 64,
+    duckHeight: 48,
+    vy: 0,
+    ducking: false,
+    squash: 0,
+    wasGrounded: true,
+  };
+
+  const game = {
+    running: false,
+    over: false,
+    score: 0,
+    best: Number(localStorage.getItem(storageKey) || 0),
+    speed: 6.3,
+    nextObstacleIn: 80,
+    obstacles: [],
+    roadSegments: [],
+    landmarks: [],
+    clouds: [],
+    nextBagratiScore: 1000,
+    particles: [],
+    scorePulse: 0,
+    lastMilestone: 0,
+    flash: 0,
+    shake: 0,
+  };
+
+  bestEl.textContent = String(game.best);
 
   function unlockAudio() {
     if (audioReady) return;
@@ -125,107 +213,80 @@
     playSound(sound);
   }
 
-  const world = {
-    width: base.width,
-    height: base.height,
-    scale: 1,
-    dpr: 1,
-    groundY: base.groundY,
-    mobile: mobileQuery.matches,
-  };
-
-  const player = {
-    x: 96,
-    y: base.groundY - 58,
-    width: 86,
-    height: 58,
-    fullHeight: 58,
-    duckHeight: 42,
-    vy: 0,
-    ducking: false,
-    duckProgress: 0,
-    wheelSpin: 0,
-    squash: 0,
-    wasGrounded: true,
-  };
-
-  const palettes = {
-    day: { skyTop: "#bfe2ff", skyMid: "#e9f4ff", skyBottom: "#fff4dc", cloud: "#ffffff", hillFar: "#cbdcbd", hillNear: "#98bb86", grass: "#96c476", building: "#e8eef9", building2: "#f5eddd", roof: "#d97706", station: "#1e3a8a", roadTop: "#647181", roadBottom: "#313948" },
-    sunset: { skyTop: "#5c7cb9", skyMid: "#b891ab", skyBottom: "#f2aa85", cloud: "#ffdac7", hillFar: "#8a9a83", hillNear: "#688560", grass: "#658c53", building: "#bac3d4", building2: "#c4beaf", roof: "#a65800", station: "#122863", roadTop: "#4a5462", roadBottom: "#242a35" },
-    night: { skyTop: "#12233d", skyMid: "#1e3a5f", skyBottom: "#263552", cloud: "#dbeafe", hillFar: "#263f36", hillNear: "#31533f", grass: "#42693e", building: "#334155", building2: "#3d4656", roof: "#f59e0b", station: "#1d4ed8", roadTop: "#475569", roadBottom: "#1f2937" },
-    sunrise: { skyTop: "#678bba", skyMid: "#b7a9c7", skyBottom: "#ffd3b5", cloud: "#ffe9dd", hillFar: "#9ba992", hillNear: "#7d9e72", grass: "#7da564", building: "#cdd6e6", building2: "#dbd2be", roof: "#bd6c04", station: "#173278", roadTop: "#535e6e", roadBottom: "#282f3c" }
-  };
-  let currentColors = { ...palettes.day };
-
-  function hexToRgb(hex) {
-    const h = hex.replace('#', '');
-    return {
-      r: parseInt(h.substring(0, 2), 16),
-      g: parseInt(h.substring(2, 4), 16),
-      b: parseInt(h.substring(4, 6), 16)
-    };
-  }
-
-  function interpolateColor(c1, c2, factor) {
-    const rgb1 = hexToRgb(c1);
-    const rgb2 = hexToRgb(c2);
-    const r = Math.round(rgb1.r + factor * (rgb2.r - rgb1.r));
-    const g = Math.round(rgb1.g + factor * (rgb2.g - rgb1.g));
-    const b = Math.round(rgb1.b + factor * (rgb2.b - rgb1.b));
-    return `rgb(${r}, ${g}, ${b})`;
-  }
-
-  const game = {
-    running: false,
-    over: false,
-    score: 0,
-    best: Number(localStorage.getItem(storageKey) || 0),
-    speed: 5.2,
-    nextObstacleIn: 80,
-    obstacles: [],
-    particles: [],
-    scorePulse: 0,
-    lastMilestone: 0,
-    flash: 0,
-    shake: 0,
-    nightStrength: 0,
-    stars: Array.from({ length: 45 }, () => ({
-      x: Math.random() * base.width,
-      y: Math.random() * (base.groundY - 120),
-      size: 0.6 + Math.random() * 1.5,
-      blinkPhase: Math.random() * Math.PI * 2,
-      blinkSpeed: 0.02 + Math.random() * 0.05
-    })),
-    clouds: [
-      { x: 160, y: 68, size: 1, speed: 0.14 },
-      { x: 520, y: 94, size: 0.78, speed: 0.11 },
-      { x: 760, y: 52, size: 0.9, speed: 0.18 },
-      { x: 360, y: 42, size: 0.58, speed: 0.09 },
-    ],
-  };
-
-  bestEl.textContent = String(game.best);
-
   function mobileTuning() {
     return world.mobile
       ? {
-          playerX: 70,
-          speed: 4.35,
-          jumpVelocity: -13.4,
+          playerX: 64,
+          speed: 5.25,
+          jumpVelocity: -12.1,
           gravity: 0.68,
-          minObstacle: 94,
-          obstacleSpread: 108,
+          minObstacle: 96,
+          obstacleSpread: 112,
           spacingSpeedPenalty: 12,
         }
       : {
           playerX: 96,
-          speed: 5.2,
-          jumpVelocity: -14.5,
+          speed: 6.3,
+          jumpVelocity: -13.1,
           gravity: 0.72,
-          minObstacle: 72,
-          obstacleSpread: 92,
+          minObstacle: 76,
+          obstacleSpread: 98,
           spacingSpeedPenalty: 24,
         };
+  }
+
+  function roadTileWidth() {
+    return world.mobile ? 260 : 330;
+  }
+
+  function roadHeight() {
+    return world.mobile ? 118 : 132;
+  }
+
+  function roadY() {
+    return world.groundY - 24;
+  }
+
+  function coneBaseY() {
+    return world.groundY + 20;
+  }
+
+  function createRoadSegment(x, index) {
+    return { x, index, type: "road" };
+  }
+
+  function createInitialRoadSegments() {
+    const width = roadTileWidth();
+    const segments = [];
+    for (let x = -width; x < world.width + width; x += width) {
+      segments.push(createRoadSegment(x, segments.length));
+    }
+    return segments;
+  }
+
+  function extendRoadSegments() {
+    const width = roadTileWidth();
+    game.roadSegments = game.roadSegments.filter((segment) => segment.x > -width * 1.4);
+    let last = game.roadSegments[game.roadSegments.length - 1];
+    if (!last) {
+      game.roadSegments = createInitialRoadSegments();
+      return;
+    }
+    while (last.x < world.width + width) {
+      const next = createRoadSegment(last.x + width, last.index + 1);
+      game.roadSegments.push(next);
+      last = next;
+    }
+  }
+
+  function createClouds() {
+    return Array.from({ length: world.mobile ? 5 : 7 }, (_, index) => ({
+      x: Math.random() * world.width,
+      y: 18 + Math.random() * Math.max(44, world.groundY - 180),
+      width: (world.mobile ? 78 : 96) + Math.random() * (world.mobile ? 48 : 72),
+      speed: 0.08 + Math.random() * 0.1,
+      phase: index * 1.7 + Math.random() * Math.PI,
+    }));
   }
 
   function resizeCanvas() {
@@ -236,7 +297,7 @@
     world.scale = rect.width / base.width;
     world.width = base.width;
     world.height = Math.max(280, Math.round(rect.height / world.scale));
-    world.groundY = Math.min(base.groundY, world.height - 74);
+    world.groundY = Math.min(base.groundY, world.height - 72);
     world.mobile = mobileQuery.matches || rect.width <= 520;
 
     canvas.width = Math.max(1, Math.round(rect.width * dpr));
@@ -251,8 +312,11 @@
     }
 
     game.obstacles.forEach((obstacle) => {
-      obstacle.y = obstacleY(obstacle.type);
+      obstacle.y = obstacleY(obstacle);
     });
+    if (!game.running) {
+      game.roadSegments = createInitialRoadSegments();
+    }
   }
 
   function reset() {
@@ -263,6 +327,10 @@
     game.speed = tuning.speed;
     game.nextObstacleIn = tuning.minObstacle;
     game.obstacles = [];
+    game.roadSegments = createInitialRoadSegments();
+    game.landmarks = [];
+    game.clouds = createClouds();
+    game.nextBagratiScore = 1000;
     game.particles = [];
     game.scorePulse = 0;
     game.lastMilestone = 0;
@@ -273,8 +341,6 @@
     player.y = world.groundY - player.height;
     player.vy = 0;
     player.ducking = false;
-    player.duckProgress = 0;
-    player.wheelSpin = 0;
     player.squash = 0;
     player.wasGrounded = true;
     stopDrivingSound();
@@ -282,7 +348,7 @@
     scoreEl.textContent = "0";
     scoreEl.parentElement?.classList.remove("score-pop");
     messageEl.classList.remove("hidden", "danger");
-    messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Jump cones. Hold Duck for touchdown planes.</span>";
+    messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Jump road hazards. Hold Duck for birds and planes.</span>";
   }
 
   function minutesUntilNextDeparture(now) {
@@ -376,7 +442,7 @@
     if (playerBottom >= world.groundY - 2) {
       player.vy = mobileTuning().jumpVelocity;
       player.squash = 1;
-      addDust(player.x + 18, world.groundY - 3, 6, -1);
+      addDust(player.x + 20, world.groundY - 3, 6, -1);
       playRandomJumpSound();
     }
   }
@@ -394,42 +460,62 @@
     player.ducking = value;
   }
 
-  function obstacleY(type) {
-    if (type === "plane") return world.groundY - 72;
-    if (type === "sign") return world.groundY - 118;
-    return world.groundY - 44;
+  function obstacleY(obstacle) {
+    if (obstacle.kind === "flyer") return obstacle.laneY;
+    return coneBaseY() - obstacle.height;
+  }
+
+  function chooseObstacleType() {
+    const roll = Math.random();
+    if (game.score >= 1000 && roll < 0.28) return "plane";
+    if (roll < 0.42) return "bird";
+    return "cone";
+  }
+
+  function createObstacle(type) {
+    if (type === "plane") {
+      const lanes = [
+        world.groundY - 128,
+        world.groundY - 106,
+        world.groundY - 88,
+      ];
+      return {
+        type,
+        kind: "flyer",
+        width: world.mobile ? 94 : 118,
+        height: world.mobile ? 42 : 52,
+        laneY: lanes[Math.floor(Math.random() * lanes.length)],
+      };
+    }
+
+    if (type === "bird") {
+      const lanes = world.mobile
+        ? [world.groundY - 102, world.groundY - 98]
+        : [world.groundY - 112, world.groundY - 106];
+      return {
+        type,
+        kind: "flyer",
+        width: world.mobile ? 64 : 78,
+        height: world.mobile ? 58 : 71,
+        laneY: lanes[Math.floor(Math.random() * lanes.length)],
+      };
+    }
+
+    return {
+      type,
+      kind: "ground",
+      width: world.mobile ? 38 : 48,
+      height: world.mobile ? 46 : 58,
+    };
   }
 
   function spawnObstacle() {
     const tuning = mobileTuning();
-    const roll = Math.random();
-    const planeChance = world.mobile ? 0.24 : 0.28;
-    const type =
-      game.score > 35 && roll < planeChance
-        ? "plane"
-        : roll > (world.mobile ? 0.68 : 0.62)
-          ? "sign"
-          : "cone";
-    const dimensions =
-      type === "plane"
-        ? { width: 96, height: 38 }
-        : type === "sign"
-          ? { width: 42, height: 54 }
-          : { width: 34, height: 44 };
-
-    const stopAbbr = type === "sign" 
-      ? estimateStops[Math.floor(Math.random() * estimateStops.length)].name.substring(0, 3).toUpperCase()
-      : "";
-
-    game.obstacles.push({
-      x: world.width + 40,
-      y: obstacleY(type),
-      width: dimensions.width,
-      height: dimensions.height,
-      type,
-      phase: Math.random() * Math.PI * 2,
-      stopAbbr,
-    });
+    const obstacle = createObstacle(chooseObstacleType());
+    obstacle.x = world.width + 44;
+    obstacle.y = obstacleY(obstacle);
+    obstacle.phase = Math.random() * Math.PI * 2;
+    game.obstacles.push(obstacle);
     game.nextObstacleIn =
       tuning.minObstacle +
       Math.random() * tuning.obstacleSpread -
@@ -439,26 +525,27 @@
   function playerBounds() {
     if (player.ducking) {
       return {
-        x: player.x + 6,
-        y: player.y + 24,
-        width: player.width - 8,
-        height: player.height - 22,
+        x: player.x + 12,
+        y: player.y + 22,
+        width: player.width - 22,
+        height: player.height - 20,
       };
     }
     return {
-      x: player.x + 8,
-      y: player.y + 6,
-      width: player.width - 16,
-      height: player.height - 8,
+      x: player.x + 12,
+      y: player.y + 8,
+      width: player.width - 22,
+      height: player.height - 10,
     };
   }
 
   function collides(a, b) {
+    const inset = b.kind === "flyer" ? 8 : 6;
     return (
-      a.x < b.x + b.width &&
-      a.x + a.width > b.x &&
-      a.y < b.y + b.height &&
-      a.y + a.height > b.y
+      a.x < b.x + b.width - inset &&
+      a.x + a.width > b.x + inset &&
+      a.y < b.y + b.height - inset &&
+      a.y + a.height > b.y + inset
     );
   }
 
@@ -466,7 +553,7 @@
     game.running = false;
     game.over = true;
     game.flash = reducedMotionQuery.matches ? 0.35 : 0.75;
-    game.shake = reducedMotionQuery.matches ? 0 : 14;
+    game.shake = reducedMotionQuery.matches ? 0 : 10;
     stopDrivingSound();
     stopDuckSound();
     game.best = Math.max(game.best, Math.floor(game.score));
@@ -477,20 +564,8 @@
     messageEl.innerHTML = "<strong>Route blocked</strong><span>Tap Jump or Restart to try again.</span>";
   }
 
-  function cssVar(name, fallback) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
-  }
-
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
-  }
-
-  function drawPath(points) {
-    ctx.beginPath();
-    points.forEach(([x, y], index) => {
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
   }
 
   function circle(x, y, r) {
@@ -499,10 +574,30 @@
     ctx.fill();
   }
 
-  function roundRect(x, y, width, height, radius) {
-    ctx.beginPath();
-    ctx.roundRect(x, y, width, height, radius);
-    ctx.fill();
+  function drawSprite(name, x, y, width, height, options = {}) {
+    const image = sprites[name];
+    if (!image || !image.complete || image.naturalWidth === 0) {
+      ctx.fillStyle = options.fallback || "#2563eb";
+      ctx.fillRect(x, y, width, height);
+      return;
+    }
+
+    const crop = spriteCrop[name] || { x: 0, y: 0, width: 1, height: 1 };
+    const sx = crop.x * image.naturalWidth;
+    const sy = crop.y * image.naturalHeight;
+    const sw = crop.width * image.naturalWidth;
+    const sh = crop.height * image.naturalHeight;
+
+    ctx.save();
+    if (options.alpha !== undefined) ctx.globalAlpha = options.alpha;
+    if (options.flipX) {
+      ctx.translate(x + width, y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(image, sx, sy, sw, sh, 0, 0, width, height);
+    } else {
+      ctx.drawImage(image, sx, sy, sw, sh, x, y, width, height);
+    }
+    ctx.restore();
   }
 
   function addDust(x, y, count, direction = 1) {
@@ -516,7 +611,6 @@
         life: 22 + Math.random() * 10,
         maxLife: 32,
         size: 2 + Math.random() * 3.5,
-        color: i % 3 === 0 ? "#f59e0b" : "#d6b980",
       });
     }
   }
@@ -534,332 +628,117 @@
   function drawParticles() {
     game.particles.forEach((particle) => {
       ctx.save();
-      ctx.globalAlpha = clamp(particle.life / particle.maxLife, 0, 1) * 0.75;
-      ctx.fillStyle = particle.color;
+      ctx.globalAlpha = clamp(particle.life / particle.maxLife, 0, 1) * 0.72;
+      ctx.fillStyle = "#c7a577";
       circle(particle.x, particle.y, particle.size);
       ctx.restore();
     });
   }
 
-  function drawCloud(cloud) {
-    ctx.save();
-    ctx.globalAlpha = 0.76;
-    ctx.fillStyle = currentColors.cloud;
-    circle(cloud.x, cloud.y, 22 * cloud.size);
-    circle(cloud.x + 22 * cloud.size, cloud.y + 4, 16 * cloud.size);
-    circle(cloud.x - 24 * cloud.size, cloud.y + 6, 14 * cloud.size);
-    roundRect(cloud.x - 30 * cloud.size, cloud.y + 7, 62 * cloud.size, 13 * cloud.size, 8);
-    ctx.restore();
-  }
-
-  function drawBuilding(x, baseY, width, height, color, accent) {
-    ctx.fillStyle = color;
-    roundRect(x, baseY - height, width, height, 5);
-    ctx.fillStyle = accent;
-    for (let row = 0; row < Math.floor(height / 24); row += 1) {
-      for (let col = 0; col < Math.floor(width / 24); col += 1) {
-        roundRect(x + 9 + col * 23, baseY - height + 12 + row * 22, 8, 8, 2);
-      }
-    }
-  }
-
-  function drawCampusLayer(offset) {
-    const horizon = world.groundY - 88;
-    ctx.fillStyle = currentColors.hillFar;
-    drawPath([
-      [0, horizon + 34],
-      [90, horizon + 10],
-      [200, horizon + 22],
-      [320, horizon - 2],
-      [455, horizon + 24],
-      [590, horizon + 6],
-      [735, horizon + 28],
-      [900, horizon + 2],
-      [900, world.groundY],
-      [0, world.groundY],
-    ]);
-    ctx.fill();
-
-    ctx.fillStyle = currentColors.hillNear;
-    drawPath([
-      [0, horizon + 54],
-      [120, horizon + 28],
-      [260, horizon + 48],
-      [380, horizon + 20],
-      [520, horizon + 52],
-      [670, horizon + 24],
-      [805, horizon + 48],
-      [900, horizon + 34],
-      [900, world.groundY],
-      [0, world.groundY],
-    ]);
-    ctx.fill();
-
-    const buildingBase = world.groundY - 58;
-    const baseOffset = offset * 0.32;
-    const parallax = -(baseOffset % 520);
-    for (let x = parallax - 120; x < world.width + 160; x += 520) {
-      const indexOffset = Math.round((x - (parallax - 120)) / 520);
-      const absoluteIndex = Math.floor(baseOffset / 520) + indexOffset;
-      const stop = estimateStops[absoluteIndex % estimateStops.length];
-      const displayName = stop.name.length > 16 ? stop.name.substring(0, 14) + ".." : stop.name;
-
-      drawBuilding(x + 30, buildingBase, 82, 58, currentColors.building, "#bad0f8");
-      drawBuilding(x + 135, buildingBase, 58, 42, currentColors.building2, "#d8caa4");
-      ctx.fillStyle = currentColors.roof;
-      drawPath([
-        [x + 20, buildingBase - 58],
-        [x + 72, buildingBase - 86],
-        [x + 124, buildingBase - 58],
-      ]);
-      ctx.fill();
-      ctx.fillStyle = currentColors.station;
-      roundRect(x + 262, buildingBase - 48, 122, 48, 6);
-      ctx.fillStyle = "#f8fafc";
-      ctx.font = "800 11px system-ui";
-      ctx.textAlign = "center";
-      ctx.fillText(displayName, x + 323, buildingBase - 22);
-      ctx.textAlign = "left";
-      ctx.fillStyle = "#fbbf24";
-      roundRect(x + 274, buildingBase - 40, 28, 9, 2);
-      roundRect(x + 318, buildingBase - 40, 48, 9, 2);
-    }
-  }
-
   function drawRoad(offset) {
-    const curbY = world.groundY - 3;
-    const roadTop = world.groundY + 4;
-    const roadGradient = ctx.createLinearGradient(0, roadTop, 0, world.height);
-    roadGradient.addColorStop(0, currentColors.roadTop);
-    roadGradient.addColorStop(1, currentColors.roadBottom);
-    ctx.fillStyle = currentColors.grass;
-    ctx.fillRect(0, world.groundY - 15, world.width, 18);
-    ctx.fillStyle = "#d6b980";
-    ctx.fillRect(0, curbY, world.width, 7);
-    ctx.fillStyle = roadGradient;
-    ctx.fillRect(0, roadTop, world.width, world.height - roadTop);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.72)";
-    for (let x = -((offset * 1.28) % 86); x < world.width; x += 86) {
-      roundRect(x, world.groundY + 33, 46, 5, 3);
-    }
-    ctx.fillStyle = "rgba(15, 23, 42, 0.18)";
-    for (let x = -((offset * 0.78) % 118); x < world.width + 80; x += 118) {
-      roundRect(x + 16, world.groundY + 63, 24, 3, 2);
+    ctx.fillStyle = "#393A42";
+    ctx.fillRect(0, world.groundY - 42, world.width, world.height - world.groundY + 42);
+    extendRoadSegments();
+    for (const segment of game.roadSegments) {
+      drawSprite("road", segment.x, roadY(), roadTileWidth() + 2, roadHeight(), { fallback: "#3f4650" });
     }
   }
 
-  function drawRoadsideMarkers(offset) {
-    for (let x = -((offset * 0.88) % 170); x < world.width + 120; x += 170) {
-      ctx.fillStyle = "#f8fafc";
-      roundRect(x + 4, world.groundY - 32, 9, 31, 3);
-      ctx.fillStyle = "#ef4444";
-      roundRect(x + 5, world.groundY - 23, 7, 7, 2);
+  function drawBackdropSprite(name, x, groundOffset, width, height, speedFactor, offset) {
+    const wrapped = x - ((offset * speedFactor) % (world.width + 260));
+    const drawX = wrapped < -180 ? wrapped + world.width + 260 : wrapped;
+    drawSprite(name, drawX, world.groundY - groundOffset - height, width, height);
+  }
+
+  function drawLandmarks() {
+    for (const landmark of game.landmarks) {
+      const width = world.mobile ? 178 : 230;
+      const height = world.mobile ? 146 : 188;
+      drawSprite("bagrati", landmark.x, world.groundY - 64 - height, width, height, {
+        fallback: "#d7c095",
+      });
     }
   }
 
-  function drawSpeedLines(offset) {
-    if (!game.running || game.speed < 6.2 || reducedMotionQuery.matches) return;
-    ctx.save();
-    ctx.globalAlpha = clamp((game.speed - 6.2) / 6, 0, 0.24);
-    ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = 2;
-    for (let y = world.groundY + 52; y < world.height; y += 34) {
-      for (let x = -((offset * 2.2) % 180); x < world.width; x += 180) {
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x + 54, y);
-        ctx.stroke();
-      }
+  function drawSky() {
+    ctx.fillStyle = "#dff1ff";
+    ctx.fillRect(-28, -28, world.width + 56, world.height + 56);
+    drawSprite("sky", -8, -8, world.width + 16, world.groundY - 72, {
+      fallback: "#dff1ff",
+    });
+  }
+
+  function drawClouds() {
+    for (const cloud of game.clouds) {
+      const cloudHeight = cloud.width * 0.42;
+      const bob = reducedMotionQuery.matches ? 0 : Math.sin(frame * 0.018 + cloud.phase) * 2;
+      drawSprite("cloud", cloud.x, cloud.y + bob, cloud.width, cloudHeight, {
+        fallback: "#ffffff",
+      });
     }
-    ctx.restore();
+  }
+
+  function drawBackground() {
+    const distance = game.score * 7 + (game.running ? frame * game.speed * 0.18 : 0);
+    drawSky();
+    drawClouds();
+    ctx.fillStyle = "#393A42";
+    ctx.fillRect(0, world.groundY - 118, world.width, 86);
+
+    drawLandmarks();
+    drawBackdropSprite("building", 70, 56, 96, 116, 0.18, distance);
+    drawBackdropSprite("building", 820, 56, 106, 126, 0.18, distance);
+    drawBackdropSprite("station", 290, 48, 116, 92, 0.24, distance);
+    drawBackdropSprite("tree", 470, 42, 74, 96, 0.28, distance);
+    drawBackdropSprite("lamp", 660, 38, 46, 104, 0.34, distance);
+
+    drawRoad(distance);
   }
 
   function drawBus(x, y) {
-    const duckEase = player.duckProgress;
-    const visualHeight = player.fullHeight - duckEase * 15;
-    const top = y + (player.fullHeight - visualHeight);
     const grounded = player.y + player.height >= world.groundY - 2;
-    const bob = game.running && grounded && !reducedMotionQuery.matches ? Math.sin(frame * 0.32) * 1.8 : 0;
+    const bob = game.running && grounded && !reducedMotionQuery.matches ? Math.sin(frame * 0.32) * 1.4 : 0;
     const squashY = player.squash * 3;
-    const bodyTop = top + 6 + bob + squashY;
-    const bodyHeight = visualHeight - 12 - squashY * 0.4;
+    const duckVisualOffset = player.ducking ? 16 : 0;
 
     ctx.save();
-    ctx.shadowColor = "rgba(15, 23, 42, 0.24)";
-    ctx.shadowBlur = 12;
-    ctx.shadowOffsetY = 8;
-    ctx.fillStyle = "rgba(15, 23, 42, 0.22)";
+    ctx.fillStyle = "rgba(19, 27, 46, 0.18)";
     ctx.beginPath();
-    ctx.ellipse(x + 43, world.groundY + 6, 46, 8, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + player.width * 0.5, world.groundY + 5, player.width * 0.45, 7, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.shadowColor = "transparent";
-
-    const bodyGradient = ctx.createLinearGradient(x, bodyTop, x, bodyTop + bodyHeight);
-    bodyGradient.addColorStop(0, "#3b82f6");
-    bodyGradient.addColorStop(0.58, "#2563eb");
-    bodyGradient.addColorStop(1, "#1d4ed8");
-    ctx.fillStyle = bodyGradient;
-    roundRect(x, bodyTop, 86, bodyHeight, 10);
-    ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
-    roundRect(x + 5, bodyTop + 5, 76, 6, 5);
-
-    ctx.fillStyle = "#dbeafe";
-    roundRect(x + 9, bodyTop + 12, 14, 13, 4);
-    roundRect(x + 28, bodyTop + 12, 14, 13, 4);
-    roundRect(x + 47, bodyTop + 12, 14, 13, 4);
-    ctx.fillStyle = "#bfdbfe";
-    drawPath([
-      [x + 65, bodyTop + 12],
-      [x + 79, bodyTop + 16],
-      [x + 79, bodyTop + 26],
-      [x + 65, bodyTop + 26],
-    ]);
-    ctx.fill();
-
-    ctx.fillStyle = "#eff6ff";
-    roundRect(x + 9, bodyTop + 31, 50, 8, 3);
-    ctx.fillStyle = "#facc15";
-    roundRect(x + 74, bodyTop + bodyHeight - 18, 8, 6, 3);
-    ctx.fillStyle = "#0f172a";
-    roundRect(x + 64, bodyTop + 29, 16, 16, 5);
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "900 13px system-ui";
-    ctx.fillText("3", x + 69, bodyTop + 42);
-
-    drawWheel(x + 18, bodyTop + bodyHeight - 2, 9, player.wheelSpin);
-    drawWheel(x + 68, bodyTop + bodyHeight - 2, 9, player.wheelSpin + 0.8);
+    drawSprite(
+      player.ducking ? "busDuck" : "busNormal",
+      x,
+      y + bob + squashY + duckVisualOffset,
+      player.width,
+      player.fullHeight,
+      { fallback: "#2563eb" }
+    );
     ctx.restore();
   }
 
-  function drawWheel(x, y, radius, spin) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(spin);
-    ctx.fillStyle = "#0f172a";
-    circle(0, 0, radius);
-    ctx.strokeStyle = "#cbd5e1";
-    ctx.lineWidth = 2;
-    for (let i = 0; i < 4; i += 1) {
-      ctx.rotate(Math.PI / 2);
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(radius - 2, 0);
-      ctx.stroke();
-    }
-    ctx.fillStyle = "#ffffff";
-    circle(0, 0, 3);
-    ctx.restore();
-  }
+  function drawObstacle(obstacle) {
+    const float = obstacle.kind === "flyer" && !reducedMotionQuery.matches
+      ? Math.sin(frame * 0.16 + obstacle.phase) * 2
+      : 0;
 
-  function drawCone(obstacle) {
-    const x = obstacle.x;
-    const y = obstacle.y;
     ctx.save();
-    ctx.fillStyle = "rgba(15, 23, 42, 0.22)";
+    ctx.fillStyle = "rgba(19, 27, 46, 0.15)";
     ctx.beginPath();
-    ctx.ellipse(x + obstacle.width / 2, y + obstacle.height + 4, 25, 5, 0, 0, Math.PI * 2);
+    const shadowY = obstacle.kind === "flyer" ? world.groundY + 2 : obstacle.y + obstacle.height + 4;
+    ctx.ellipse(obstacle.x + obstacle.width / 2, shadowY, obstacle.width * 0.36, 5, 0, 0, Math.PI * 2);
     ctx.fill();
-    const coneGradient = ctx.createLinearGradient(x, y, x, y + obstacle.height);
-    coneGradient.addColorStop(0, "#f59e0b");
-    coneGradient.addColorStop(1, "#c2410c");
-    ctx.fillStyle = coneGradient;
-    ctx.beginPath();
-    ctx.moveTo(x + obstacle.width / 2, y);
-    ctx.lineTo(x + obstacle.width, y + obstacle.height);
-    ctx.lineTo(x, y + obstacle.height);
-    ctx.closePath();
-    ctx.fill();
-    ctx.fillStyle = "#fff7ed";
-    roundRect(x + 8, y + 23, obstacle.width - 16, 6, 3);
-    ctx.fillStyle = "#7c2d12";
-    roundRect(x - 4, y + obstacle.height - 3, obstacle.width + 8, 7, 3);
-    ctx.restore();
-  }
-
-  function drawSign(obstacle) {
-    const x = obstacle.x;
-    const y = obstacle.y;
-    ctx.save();
-    ctx.fillStyle = "rgba(15, 23, 42, 0.18)";
-    ctx.beginPath();
-    ctx.ellipse(x + 22, world.groundY + 4, 26, 5, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "#475569";
-    roundRect(x + 18, y + 41, 6, 80, 3);
-    ctx.fillStyle = "#1e3a8a";
-    roundRect(x - 3, y - 2, obstacle.width + 6, 46, 7);
-    ctx.fillStyle = "#60a5fa";
-    roundRect(x + 3, y + 4, obstacle.width - 6, 9, 4);
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "900 12px system-ui";
-    ctx.fillText(obstacle.stopAbbr || "KIU", x + 8, y + 29);
-    ctx.fillStyle = "#fbbf24";
-    roundRect(x + 10, y + 34, obstacle.width - 20, 4, 2);
-    ctx.restore();
-  }
-
-  function drawPlane(obstacle) {
-    const x = obstacle.x;
-    const y = obstacle.y + (reducedMotionQuery.matches ? 0 : Math.sin(frame * 0.16 + obstacle.phase) * 2);
-    const prop = frame * 0.45 + obstacle.phase;
-    ctx.save();
-    ctx.fillStyle = "rgba(15, 23, 42, 0.18)";
-    ctx.beginPath();
-    ctx.ellipse(x + 54, y + 46, 44, 5, 0, 0, Math.PI * 2);
-    ctx.fill();
-    const bodyGradient = ctx.createLinearGradient(x, y, x + obstacle.width, y + obstacle.height);
-    bodyGradient.addColorStop(0, "#e2e8f0");
-    bodyGradient.addColorStop(0.48, "#64748b");
-    bodyGradient.addColorStop(1, "#1f2937");
-    ctx.fillStyle = bodyGradient;
-    roundRect(x + 16, y + 12, 66, 17, 9);
-    drawPath([
-      [x + 80, y + 12],
-      [x + 96, y + 20],
-      [x + 80, y + 28],
-    ]);
-    ctx.fill();
-    ctx.fillStyle = "#475569";
-    drawPath([
-      [x + 34, y + 16],
-      [x + 58, y],
-      [x + 72, y + 16],
-    ]);
-    ctx.fill();
-    drawPath([
-      [x + 38, y + 24],
-      [x + 66, y + 38],
-      [x + 73, y + 24],
-    ]);
-    ctx.fill();
-    ctx.fillStyle = "#bfdbfe";
-    roundRect(x + 24, y + 15, 12, 6, 3);
-    roundRect(x + 40, y + 15, 12, 6, 3);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.ellipse(x + 13, y + 20, 4, 13, prop, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.ellipse(x + 13, y + 20, 13, 4, prop, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.fillStyle = "#111827";
-    circle(x + 30, y + 32, 3);
-    circle(x + 76, y + 32, 3);
+    drawSprite(obstacle.type, obstacle.x, obstacle.y + float, obstacle.width, obstacle.height, {
+      fallback: obstacle.kind === "flyer" ? "#475569" : "#d97706",
+    });
     ctx.restore();
   }
 
   function drawScorePulse() {
     if (game.scorePulse <= 0) return;
     ctx.save();
-    ctx.globalAlpha = game.scorePulse * 0.2;
-    ctx.strokeStyle = "#f59e0b";
-    ctx.lineWidth = 5;
-    ctx.beginPath();
-    ctx.roundRect(14, 14, world.width - 28, world.height - 28, 12);
-    ctx.stroke();
     ctx.globalAlpha = game.scorePulse;
-    ctx.fillStyle = "#1e3a8a";
+    ctx.fillStyle = "#1d4ed8";
     ctx.font = "900 18px system-ui";
     ctx.fillText(`+${game.lastMilestone}`, world.width - 84, 34);
     ctx.restore();
@@ -868,49 +747,10 @@
   function drawFlash() {
     if (game.flash <= 0) return;
     ctx.save();
-    ctx.globalAlpha = game.flash * 0.28;
+    ctx.globalAlpha = game.flash * 0.18;
     ctx.fillStyle = "#f97316";
     ctx.fillRect(0, 0, world.width, world.height);
     ctx.restore();
-  }
-
-  function drawStars(offset) {
-    if (game.nightStrength <= 0) return;
-    ctx.save();
-    ctx.fillStyle = "#ffffff";
-    game.stars.forEach((star) => {
-      const starX = (star.x - offset * 0.05) % world.width;
-      const x = starX < 0 ? starX + world.width : starX;
-      const opacity = (Math.sin(frame * star.blinkSpeed + star.blinkPhase) * 0.5 + 0.5) * game.nightStrength;
-      ctx.globalAlpha = opacity * 0.8;
-      circle(x, star.y, star.size);
-    });
-    ctx.restore();
-  }
-
-  function drawBackground() {
-    const distance = game.score * 7 + (game.running ? frame * game.speed * 0.18 : 0);
-    const sky = ctx.createLinearGradient(0, 0, 0, world.groundY);
-    sky.addColorStop(0, currentColors.skyTop);
-    sky.addColorStop(0.58, currentColors.skyMid);
-    sky.addColorStop(1, currentColors.skyBottom);
-    ctx.fillStyle = sky;
-    ctx.fillRect(-28, -28, world.width + 56, world.height + 56);
-
-    drawStars(distance);
-
-    game.clouds.forEach((cloud) => {
-      if (game.running && !reducedMotionQuery.matches) {
-        cloud.x -= game.speed * cloud.speed;
-        if (cloud.x < -90) cloud.x = world.width + 90;
-      }
-      drawCloud(cloud);
-    });
-
-    drawCampusLayer(distance);
-    drawRoad(distance);
-    drawRoadsideMarkers(distance);
-    drawSpeedLines(distance);
   }
 
   function pulseScoreDisplay(milestone) {
@@ -923,41 +763,12 @@
     game.scorePulse = reducedMotionQuery.matches ? 0 : 1;
   }
 
-  function updateColors() {
-    const cycleLength = 2000;
-    const progress = (game.score % cycleLength) / cycleLength; // 0.0 to 1.0
-
-    let p1, p2, factor;
-    if (progress < 0.25) {
-      p1 = palettes.day; p2 = palettes.day; factor = 0;
-    } else if (progress < 0.35) {
-      p1 = palettes.day; p2 = palettes.sunset; factor = (progress - 0.25) / 0.10;
-    } else if (progress < 0.50) {
-      p1 = palettes.sunset; p2 = palettes.night; factor = (progress - 0.35) / 0.15;
-    } else if (progress < 0.75) {
-      p1 = palettes.night; p2 = palettes.night; factor = 0;
-    } else if (progress < 0.85) {
-      p1 = palettes.night; p2 = palettes.sunrise; factor = (progress - 0.75) / 0.10;
-    } else {
-      p1 = palettes.sunrise; p2 = palettes.day; factor = (progress - 0.85) / 0.15;
-    }
-
-    game.nightStrength = progress >= 0.35 && progress <= 0.85 
-      ? (progress < 0.50 ? (progress - 0.35) / 0.15 : (progress > 0.75 ? 1.0 - (progress - 0.75) / 0.10 : 1.0))
-      : 0;
-
-    for (const key in palettes.day) {
-      currentColors[key] = interpolateColor(p1[key], p2[key], factor);
-    }
-  }
-
   function update() {
     frame += 1;
-    updateColors();
     ctx.save();
     if (game.shake > 0) {
       const shake = reducedMotionQuery.matches ? 0 : game.shake;
-      ctx.translate(Math.sin(frame * 1.9) * shake * 0.55, Math.cos(frame * 1.3) * shake * 0.25);
+      ctx.translate(Math.sin(frame * 1.9) * shake * 0.45, Math.cos(frame * 1.3) * shake * 0.2);
       game.shake *= 0.84;
       if (game.shake < 0.2) game.shake = 0;
     }
@@ -965,8 +776,7 @@
     if (game.running && !game.over) {
       const tuning = mobileTuning();
       const wasGrounded = player.y + player.height >= world.groundY - 2;
-      player.height = player.ducking ? player.duckHeight : player.fullHeight;
-      player.duckProgress += ((player.ducking ? 1 : 0) - player.duckProgress) * 0.18;
+      player.height = player.fullHeight;
       player.vy += tuning.gravity;
       player.y += player.vy;
       if (player.y + player.height > world.groundY) {
@@ -977,13 +787,12 @@
       const isGrounded = player.y + player.height >= world.groundY - 2;
       if (!wasGrounded && isGrounded) {
         player.squash = 1;
-        addDust(player.x + 72, world.groundY - 3, 8, 1);
+        addDust(player.x + player.width - 10, world.groundY - 3, 8, 1);
       }
       player.wasGrounded = isGrounded;
       player.squash *= 0.74;
-      player.wheelSpin += isGrounded && !reducedMotionQuery.matches ? game.speed * 0.08 : 0.04;
 
-      game.speed += world.mobile ? 0.0022 : 0.0028;
+      game.speed += world.mobile ? 0.0034 : 0.0042;
       game.score += world.mobile ? 0.16 : 0.18;
       game.nextObstacleIn -= 1;
       if (game.nextObstacleIn <= 0) spawnObstacle();
@@ -991,7 +800,26 @@
       game.obstacles.forEach((obstacle) => {
         obstacle.x -= game.speed;
       });
-      game.obstacles = game.obstacles.filter((obstacle) => obstacle.x > -80);
+      game.obstacles = game.obstacles.filter((obstacle) => obstacle.x > -140);
+      game.roadSegments.forEach((segment) => {
+        segment.x -= game.speed;
+      });
+      extendRoadSegments();
+      if (game.score >= game.nextBagratiScore) {
+        game.landmarks.push({ x: world.width + 70 });
+        game.nextBagratiScore += 1000;
+      }
+      game.landmarks.forEach((landmark) => {
+        landmark.x -= game.speed * 0.34;
+      });
+      game.landmarks = game.landmarks.filter((landmark) => landmark.x > -220);
+      game.clouds.forEach((cloud) => {
+        cloud.x -= game.speed * cloud.speed;
+        if (cloud.x + cloud.width < -30) {
+          cloud.x = world.width + 30 + Math.random() * 140;
+          cloud.y = 18 + Math.random() * Math.max(44, world.groundY - 180);
+        }
+      });
 
       const bounds = playerBounds();
       for (const obstacle of game.obstacles) {
@@ -1000,7 +828,6 @@
           break;
         }
       }
-
       const visibleScore = Math.floor(game.score);
       const milestone = Math.floor(visibleScore / 50) * 50;
       if (milestone > 0 && milestone > game.lastMilestone) {
@@ -1008,7 +835,6 @@
       }
       scoreEl.textContent = String(visibleScore);
     } else {
-      player.duckProgress += (0 - player.duckProgress) * 0.18;
       player.squash *= 0.74;
     }
 
@@ -1017,11 +843,7 @@
     game.flash *= 0.86;
 
     drawBackground();
-    game.obstacles.forEach((obstacle) => {
-      if (obstacle.type === "plane") drawPlane(obstacle);
-      else if (obstacle.type === "sign") drawSign(obstacle);
-      else drawCone(obstacle);
-    });
+    game.obstacles.forEach(drawObstacle);
     drawParticles();
     drawBus(player.x, player.y);
     drawScorePulse();
@@ -1064,6 +886,10 @@
   });
   showEstimatesButton.addEventListener("pointerdown", showEstimates);
   playRunnerButton.addEventListener("pointerdown", showGame);
+  returnToAppButton.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    window.location.href = returnTo?.startsWith("/") ? returnTo : "/";
+  });
   bindPressHoldDuck(duckButton);
 
   window.addEventListener("resize", () => {
@@ -1074,9 +900,14 @@
   });
 
   resizeCanvas();
-  gameSuggestion.hidden = false;
-  estimatesScreen.hidden = false;
-  gameScreen.hidden = true;
+  returnToAppButton.hidden = !returnTo;
+  gameSuggestion.hidden = shouldOpenGame;
+  estimatesScreen.hidden = shouldOpenGame;
+  gameScreen.hidden = !shouldOpenGame;
+  screenTitle.textContent = shouldOpenGame ? "Bus Runner" : "Offline Estimates";
+  if (shouldOpenGame) {
+    resizeCanvas();
+  }
   reset();
   renderEstimates();
   update();

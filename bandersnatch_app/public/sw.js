@@ -1,4 +1,4 @@
-const APP_CACHE = "bandersnatch-app-v2";
+const APP_CACHE = "bandersnatch-app-v12";
 const TILE_CACHE = "bandersnatch-tiles-v2";
 const MAX_TILES = 500;
 
@@ -11,6 +11,19 @@ const APP_SHELL = [
   "/offline.html",
   "/offline-runner.css",
   "/offline-runner.js",
+  "/game_assets/bagrati.png",
+  "/game_assets/bird.png",
+  "/game_assets/building.png",
+  "/game_assets/bus-duck.png",
+  "/game_assets/bus-normal.png",
+  "/game_assets/cone.png",
+  "/game_assets/lamp.png",
+  "/game_assets/plane.png",
+  "/game_assets/road.png",
+  "/game_assets/station.png",
+  "/game_assets/sky.png",
+  "/game_assets/cloud.png",
+  "/game_assets/tree.png",
   "/sound_effects/driving.mp3",
   "/sound_effects/ducking.mp3",
   "/sound_effects/jump1.mp3",

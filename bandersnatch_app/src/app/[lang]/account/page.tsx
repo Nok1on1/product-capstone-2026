@@ -142,6 +142,7 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
   const currentUserInTop100 = !!leaderboard?.top.some(
     (entry) => entry.userId === user?.uid
   );
+  const runnerGameHref = `/offline.html?play=1&returnTo=${encodeURIComponent(`/${lang}/account`)}`;
 
   const loadLeaderboard = async () => {
     if (!user) return;
@@ -184,9 +185,13 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
     };
 
     void syncScore();
+    window.addEventListener("pageshow", syncScore);
+    window.addEventListener("focus", syncScore);
 
     return () => {
       cancelled = true;
+      window.removeEventListener("pageshow", syncScore);
+      window.removeEventListener("focus", syncScore);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, profile?.offlineRunnerHighScore, profile?.displayName, profile?.email]);
@@ -310,44 +315,56 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
             </div>
           )}
 
-          <motion.button
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => {
-              setLeaderboardOpen(true);
-              void loadLeaderboard();
-            }}
-            className="mt-4 w-full bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/30 rounded-lg p-4 text-left flex items-center gap-4 hover:bg-amber-100/70 dark:hover:bg-amber-900/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40"
-          >
-            <div className="h-12 w-12 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                emoji_events
-              </span>
+          <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-900/30 dark:bg-amber-950/20">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-full bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  emoji_events
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
+                  Bus Runner Ranking
+                </p>
+                <p className="text-2xl font-black text-amber-900 dark:text-amber-100 tracking-tight">
+                  {formatRank(runnerRank)}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold">
+                  Best
+                </p>
+                <p className="text-xl font-black text-amber-900 dark:text-amber-100">
+                  {runnerScore}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300">
-                Bus Runner Ranking
-              </p>
-              <p className="text-2xl font-black text-amber-900 dark:text-amber-100 tracking-tight">
-                {formatRank(runnerRank)}
-              </p>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <Link
+                href={runnerGameHref}
+                className="flex items-center justify-center gap-2 rounded-lg bg-amber-600 px-3 py-2.5 text-sm font-bold text-white shadow-sm transition-colors hover:bg-amber-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40"
+              >
+                <span className="material-symbols-outlined text-[18px]">sports_esports</span>
+                Play
+              </Link>
+              <motion.button
+                whileHover={{ y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setLeaderboardOpen(true);
+                  void loadLeaderboard();
+                }}
+                className="flex items-center justify-center gap-2 rounded-lg border border-amber-300 bg-white px-3 py-2.5 text-sm font-bold text-amber-800 transition-colors hover:bg-amber-100/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40 dark:border-amber-800 dark:bg-slate-900 dark:text-amber-200 dark:hover:bg-amber-900/20"
+              >
+                Rankings
+                <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+              </motion.button>
             </div>
-            <div className="text-right">
-              <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold">
-                Best
-              </p>
-              <p className="text-xl font-black text-amber-900 dark:text-amber-100">
-                {runnerScore}
-              </p>
-            </div>
-            <span className="material-symbols-outlined text-amber-700 dark:text-amber-300">
-              chevron_right
-            </span>
-          </motion.button>
+          </div>
         </div>
 
         <div className="mb-8 space-y-4">
-          <div className="relative z-20">
+          <div className="relative z-10">
             <label className="block font-bold text-on-surface dark:text-slate-200 mb-1 text-sm tracking-wide">Saved Primary Stop</label>
             <StopSelect 
               value={profile?.defaultStop || "10"} 
@@ -384,14 +401,14 @@ export default function Account({ params }: { params: Promise<{ lang: string }> 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setLeaderboardOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/50"
+              className="fixed inset-0 z-[120] bg-black/50"
             />
             <motion.section
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.98 }}
               transition={{ type: "spring", bounce: 0.12, duration: 0.35 }}
-              className="fixed inset-x-3 bottom-3 z-[70] mx-auto max-h-[82vh] max-w-md overflow-hidden rounded-xl border border-outline-variant bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+              className="fixed inset-x-3 bottom-3 z-[130] mx-auto max-h-[82vh] max-w-md overflow-hidden rounded-xl border border-outline-variant bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
               role="dialog"
               aria-modal="true"
               aria-labelledby="runner-leaderboard-title"
