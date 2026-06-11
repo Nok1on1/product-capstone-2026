@@ -11,6 +11,11 @@ const APP_SHELL = [
   "/offline.html",
   "/offline-runner.css",
   "/offline-runner.js",
+  "/sound_effects/driving.mp3",
+  "/sound_effects/ducking.mp3",
+  "/sound_effects/jump1.mp3",
+  "/sound_effects/jump2.mp3",
+  "/sound_effects/jump3.mp3",
 ];
 
 const TILE_SERVERS = [
@@ -41,6 +46,7 @@ function isAppAsset(request) {
       url.pathname.endsWith(".js") ||
       url.pathname.endsWith(".css") ||
       url.pathname.endsWith(".png") ||
+      url.pathname.endsWith(".mp3") ||
       url.pathname.endsWith(".ico") ||
       url.pathname.endsWith(".webmanifest"))
   );

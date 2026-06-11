@@ -9,8 +9,61 @@
   const restartButton = document.getElementById("restart");
 
   const storageKey = "bandersnatch_offline_runner_best";
+  const jumpSounds = [
+    "/sound_effects/jump1.mp3",
+    "/sound_effects/jump2.mp3",
+    "/sound_effects/jump3.mp3",
+  ].map((src) => new Audio(src));
+  const duckSound = new Audio("/sound_effects/ducking.mp3");
+  const drivingSound = new Audio("/sound_effects/driving.mp3");
   const base = { width: 900, height: 360, groundY: 285 };
   const mobileQuery = window.matchMedia("(max-width: 520px)");
+  let audioReady = false;
+
+  drivingSound.loop = true;
+  drivingSound.volume = 0.32;
+  duckSound.volume = 0.5;
+  jumpSounds.forEach((sound) => {
+    sound.volume = 0.55;
+    sound.preload = "auto";
+  });
+
+  function unlockAudio() {
+    if (audioReady) return;
+    audioReady = true;
+    [...jumpSounds, duckSound, drivingSound].forEach((sound) => {
+      sound.load();
+    });
+  }
+
+  function playSound(sound) {
+    if (!audioReady) return;
+    try {
+      sound.currentTime = 0;
+      void sound.play();
+    } catch {
+      // Audio is best-effort because browsers may still block playback.
+    }
+  }
+
+  function startDrivingSound() {
+    if (!audioReady || game.over) return;
+    try {
+      void drivingSound.play();
+    } catch {
+      // Audio is best-effort because browsers may still block playback.
+    }
+  }
+
+  function stopDrivingSound() {
+    drivingSound.pause();
+    drivingSound.currentTime = 0;
+  }
+
+  function playRandomJumpSound() {
+    const sound = jumpSounds[Math.floor(Math.random() * jumpSounds.length)];
+    playSound(sound);
+  }
 
   const world = {
     width: base.width,
@@ -110,6 +163,7 @@
     player.y = world.groundY - player.height;
     player.vy = 0;
     player.ducking = false;
+    stopDrivingSound();
     scoreEl.textContent = "0";
     messageEl.classList.remove("hidden");
     messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Hold Duck for signs. Tap the road to jump.</span>";
@@ -121,21 +175,28 @@
     }
     game.running = true;
     messageEl.classList.add("hidden");
+    startDrivingSound();
   }
 
   function jump(event) {
+    unlockAudio();
     event?.preventDefault?.();
     if (!game.running) start();
     if (game.over) return;
     const playerBottom = player.y + player.height;
     if (playerBottom >= world.groundY - 2) {
       player.vy = mobileTuning().jumpVelocity;
+      playRandomJumpSound();
     }
   }
 
   function setDuck(value, event) {
+    unlockAudio();
     event?.preventDefault?.();
     if (!game.running || game.over) return;
+    if (value && !player.ducking) {
+      playSound(duckSound);
+    }
     player.ducking = value;
   }
 
@@ -184,6 +245,7 @@
   function endGame() {
     game.running = false;
     game.over = true;
+    stopDrivingSound();
     game.best = Math.max(game.best, Math.floor(game.score));
     localStorage.setItem(storageKey, String(game.best));
     bestEl.textContent = String(game.best);
@@ -337,6 +399,7 @@
   canvas.addEventListener("pointerdown", jump);
   jumpButton.addEventListener("pointerdown", jump);
   restartButton.addEventListener("pointerdown", (event) => {
+    unlockAudio();
     event.preventDefault();
     reset();
   });
