@@ -230,25 +230,6 @@ button:active {
   box-shadow: 0 3px 8px rgba(15, 23, 42, 0.12);
 }
 
-#jump {
-  grid-column: 1 / -1;
-  min-height: 60px;
-  font-size: 18px;
-  background: var(--primary);
-}
-
-#duck {
-  border-color: color-mix(in srgb, var(--warning) 76%, var(--border));
-  background: var(--warning);
-  box-shadow: 0 6px 12px rgba(15, 23, 42, 0.12);
-}
-
-#restart {
-  background: var(--surface-soft);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-
 .secondary-action {
   grid-column: 1 / -1;
   background: var(--surface-soft);
@@ -413,12 +394,6 @@ h2 {
     align-items: center;
   }
 
-  #jump {
-    grid-column: auto;
-    min-height: 50px;
-    font-size: inherit;
-  }
-
   .secondary-action {
     grid-column: auto;
   }
@@ -477,10 +452,6 @@ h2 {
 
   button {
     min-height: 48px;
-  }
-
-  #jump {
-    min-height: 56px;
   }
 
   .estimate-hero {

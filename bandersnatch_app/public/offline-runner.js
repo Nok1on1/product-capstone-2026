@@ -4,9 +4,6 @@
   const scoreEl = document.getElementById("score");
   const bestEl = document.getElementById("best");
   const messageEl = document.getElementById("message");
-  const jumpButton = document.getElementById("jump");
-  const duckButton = document.getElementById("duck");
-  const restartButton = document.getElementById("restart");
   const showEstimatesButton = document.getElementById("show-estimates");
   const returnToAppButton = document.getElementById("return-to-app");
   const playRunnerButton = document.getElementById("play-runner");
@@ -348,7 +345,7 @@
     scoreEl.textContent = "0";
     scoreEl.parentElement?.classList.remove("score-pop");
     messageEl.classList.remove("hidden", "danger");
-    messageEl.innerHTML = "<strong>Tap Jump to start</strong><span>Jump road hazards. Hold Duck for birds and planes.</span>";
+    messageEl.innerHTML = "<strong>Press Space to start</strong><span>On mobile, tap the top half to jump and hold the bottom half to duck.</span>";
   }
 
   function minutesUntilNextDeparture(now) {
@@ -561,7 +558,7 @@
     bestEl.textContent = String(game.best);
     messageEl.classList.remove("hidden");
     messageEl.classList.add("danger");
-    messageEl.innerHTML = "<strong>Route blocked</strong><span>Tap Jump or Restart to try again.</span>";
+    messageEl.innerHTML = "<strong>Route blocked</strong><span>Press Space, or tap the top half on mobile, to try again.</span>";
   }
 
   function clamp(value, min, max) {
@@ -867,30 +864,42 @@
     if (event.code === "ArrowDown") setDuck(false, event);
   });
 
-  function bindPressHoldDuck(element) {
-    element.addEventListener("pointerdown", (event) => {
-      element.setPointerCapture?.(event.pointerId);
-      setDuck(true, event);
-    });
-    element.addEventListener("pointerup", (event) => setDuck(false, event));
-    element.addEventListener("pointercancel", (event) => setDuck(false, event));
-    element.addEventListener("pointerleave", (event) => setDuck(false, event));
+  function isMobilePointer(event) {
+    return world.mobile || event.pointerType === "touch";
   }
 
-  canvas.addEventListener("pointerdown", jump);
-  jumpButton.addEventListener("pointerdown", jump);
-  restartButton.addEventListener("pointerdown", (event) => {
-    unlockAudio();
-    event.preventDefault();
-    reset();
-  });
+  function isBottomHalfPointer(event) {
+    const rect = canvas.getBoundingClientRect();
+    return event.clientY - rect.top >= rect.height / 2;
+  }
+
+  function handleCanvasPointerDown(event) {
+    if (!isMobilePointer(event)) return;
+    canvas.setPointerCapture?.(event.pointerId);
+    if (isBottomHalfPointer(event)) {
+      setDuck(true, event);
+      return;
+    }
+    jump(event);
+  }
+
+  function handleCanvasPointerEnd(event) {
+    if (!isMobilePointer(event)) return;
+    if (player.ducking) {
+      setDuck(false, event);
+    }
+  }
+
+  canvas.addEventListener("pointerdown", handleCanvasPointerDown);
+  canvas.addEventListener("pointerup", handleCanvasPointerEnd);
+  canvas.addEventListener("pointercancel", handleCanvasPointerEnd);
+  canvas.addEventListener("pointerleave", handleCanvasPointerEnd);
   showEstimatesButton.addEventListener("pointerdown", showEstimates);
   playRunnerButton.addEventListener("pointerdown", showGame);
   returnToAppButton.addEventListener("pointerdown", (event) => {
     event.preventDefault();
     window.location.href = returnTo?.startsWith("/") ? returnTo : "/";
   });
-  bindPressHoldDuck(duckButton);
 
   window.addEventListener("resize", () => {
     resizeCanvas();
