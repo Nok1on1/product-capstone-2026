@@ -1,6 +1,6 @@
 # Checkpoint 4 Rubric Audit
 
-**Audit date:** June 10, 2026  
+**Audit date:** June 13, 2026
 **Rubric source:** `Lab-12/GRADING-RUBRIC.md`  
 **Product:** Bandersnatch, Bus #3 Real-Time Tracker
 
@@ -21,7 +21,7 @@
 | Criterion | Target | Current readiness | Risk |
 |-----------|--------|-------------------|------|
 | B1 Folder completeness | `00-foundation` through `09-final` present and non-empty | Ready after adding rubric-required `07-team` contribution logs plus supplemental `07-operations` prep. | Low |
-| B2 README/documentation quality | Product name, tagline, problem, live URL, demo video link, team, stack, setup, license | Mostly ready after README update. Demo video link remains pending final upload. | Medium |
+| B2 README/documentation quality | Product name, tagline, problem, live URL, demo video link, team, stack, setup, license | Ready. README includes final demo video link, live product URL, setup, architecture links, team, stack, and MIT license declaration. | Low |
 | B3 Investor materials | `05-fundraising/pitch-deck.pdf` and `05-fundraising/one-pager.pdf` valid PDFs | Ready after PDF generation. | Low |
 
 ## Automatic Deduction Watchlist
@@ -29,15 +29,13 @@
 | Issue | Current status | Action |
 |-------|----------------|--------|
 | Repository private | Unknown from local checkout | Confirm public visibility on GitHub before Demo Day |
-| Live URL returns 404/error | Not browser-tested per repo instruction | Verify by production build locally and day-of manual team check |
-| `pitch-deck.pdf` missing | Will be resolved by generated PDF | Confirm file exists |
+| Live URL returns 404/error | Not browser-tested per repo instruction; production build passes locally | Day-of manual team check only |
+| `pitch-deck.pdf` missing | Resolved | Confirm file exists |
 | No open-source license | Resolved by root `LICENSE` | Confirm file exists |
 | README has no live product URL | Resolved by README update | Confirm link present |
 
 ## Remaining Human-Owned Items
 
-1. Record and upload the 60-second launch video.
-2. Replace the pending video line in `09-final/demo-video.md`.
-3. Replace the pending video line in `README.md`.
-4. Confirm repository is public from GitHub web UI.
-5. Rehearse the analytics caveat so it sounds honest and controlled.
+1. Confirm repository is public from GitHub web UI.
+2. Create and push the `cp4-submission` tag before Sunday June 14, 2026 at 23:59.
+3. Rehearse the analytics caveat so it sounds honest and controlled.

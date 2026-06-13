@@ -117,8 +117,8 @@ Blended CAC = Total spend across all channels / Total new users
 | ARPU (current) | $0/month | MVP — no paid tier |
 | ARPU (projected, post-MVP) | $1/month | P03: "I would pay good money for a bus app that just told the truth" (unprompted). P11: "If it saved me one taxi fare, it would pay for itself." Benchmark: comparable transit apps charge $1–3/month. |
 | Gross margin | 100% | Digital product. Firebase Spark plan is free. Vercel free tier covers MVP. No COGS per user. |
-| Monthly retention (conservative) | 50% | We use 50% as a placeholder until we have 4+ weeks of post-launch cohort data. |
-| Monthly retention (optimistic) | 70% | We use 70% as a placeholder assuming the app becomes part of the daily morning routine. |
+| Monthly retention (conservative) | 50% | We use 50% as a working estimate until we have 4+ weeks of post-launch cohort data. |
+| Monthly retention (optimistic) | 70% | We use 70% as a working estimate assuming the app becomes part of the daily morning routine. |
 | Customer lifespan (conservative) | 2 months | `1 / (1 - 0.50) = 2` |
 | Customer lifespan (optimistic) | 3.3 months | `1 / (1 - 0.70) = 3.3` |
 
@@ -263,7 +263,7 @@ This is why the roadmap prioritizes a bus operator data conversation. A deal wit
 
 These numbers are estimates based on a small sample (12 interviews + team observation). The actual CAC, retention, and willingness to pay will be measured in Experiment 1 and the first 4 weeks of live operation.
 
-| Unknown | Current placeholder | When we will have real data |
+| Unknown | Current estimate | When we will have real data |
 |---|---|---|
 | Actual QR scan-to-signup rate | 1–3% (industry benchmark) | After 2 weeks of flyers (by Jun 2) |
 | Actual group post conversion | 5% | After first group post (within 1 week) |

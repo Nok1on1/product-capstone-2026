@@ -2,7 +2,7 @@
 
 **Team:** Bandersnatch
 **Product:** Bus #3 Real-Time Tracker
-**Last updated:** May 21, 2026
+**Last updated:** June 13, 2026
 
 ---
 
@@ -13,10 +13,14 @@ This directory contains traction evidence demonstrating real user engagement wit
 | File | Type | Description |
 |------|------|-------------|
 | `waitlist-signups.md` | Waitlist | User signups with acquisition source and date |
+| `Firebase_overview.csv` | Analytics export | Firebase/GA4 export used for current traction metrics |
 
 ## Evidence Summary
 
-_To be updated once real signup/usage data is collected from the deployed application._
+- 28 Firestore user profile documents are listed in `waitlist-signups.md`.
+- GA4 recorded 5 `user_signup_completed` events after the Firebase logging fix.
+- The discrepancy is documented in `waitlist-signups.md` and `03-build/experiments/experiment-results.md`.
+- Firebase analytics show 44 first visits, 122 page views, 25 bus status checks, and 23 departure decisions for the Apr 5-Jun 13 evidence window.
 
 ---
 

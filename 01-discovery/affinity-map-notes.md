@@ -1,7 +1,7 @@
 # Affinity Map Notes
 
 **Project:** Bus #3 Commute Research | **Team:** Bandersnatch
-**Simulates file:** `01-discovery/synthesis/affinity-map-notes.md`
+**Related synthesis artifact:** `01-discovery/synthesis/affinity-map.md`
 
 ---
 
@@ -14,7 +14,7 @@
 | Total stickies | 61 |
 | Tool | Miro |
 | Board link | <https://miro.com/app/board/uXjVGmcZpw8=/?share_link_id=197920000861> |
-| Image file | ![Affinity Map](Affinity%20Map.jpg) |
+| Image file | ![Affinity Map](synthesis/Affinity%20Map.jpg) |
 | Team members present | Nikoloz Modebadze, Giorgi Mikaberidze, Nikoloz Kvirikashvili, Besik Meskhia |
 ---
 

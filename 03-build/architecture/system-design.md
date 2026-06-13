@@ -32,7 +32,7 @@ A mobile-first web application that provides KIU students with reliable, honest 
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| Frontend Framework | Next.js 16.2.4 (App Router) | Server components, file-based routing, middleware |
+| Frontend Framework | Next.js 16.2.9 (App Router) | Server components, file-based routing, middleware |
 | UI Language | TypeScript 5 | Type safety across the codebase |
 | Styling | Tailwind CSS v4 | Utility-first responsive design |
 | UI Components | Headless UI 2 | Accessible listbox (StopSelect) |
@@ -83,7 +83,7 @@ A mobile-first web application that provides KIU students with reliable, honest 
 | **OnBusBanner** | Green sticky banner when user is on bus | Yes | `BusStateContext` |
 | **OnBusButton** | Floating FAB for board/disembark | Yes | `BusStateContext` |
 | **ReportButton** | Floating FAB + modal for issue reporting | Yes | Firestore `alerts` collection |
-| **Skeleton** | Loading placeholders (Box, Circle, Text, Card, Map, etc.) | No | — |
+| **Skeleton** | Loading skeleton UI (Box, Circle, Text, Card, Map, etc.) | No | — |
 
 ### 2.3 State Management
 
@@ -113,7 +113,7 @@ A mobile-first web application that provides KIU students with reliable, honest 
 | `/[lang]/ride-history` | Ride History | Required | `bus_reports` (query by userId) | — |
 | `/[lang]/onboarding` | Onboarding | Optional | — | `users/{uid}` or `localStorage` |
 | `/[lang]/feedback` | Feedback | None | — | `bus_data/current_status` |
-| `/[lang]/find-ride` | Find Ride | None | — | — (placeholder) |
+| `/[lang]/find-ride` | Find Ride | None | — | — (MVP static/promo surface) |
 
 ---
 

@@ -374,7 +374,7 @@ Task: Implement notification hook with FCM token management
 Prompt summary: "Create a useNotifications hook that: (1) requests notification permission, (2) gets FCM token via getToken(), (3) persists token to users/{uid}/fcmTokens/{tokenId}, (4) handles foreground messages via onMessage, (5) provides unsubscribe function that deletes token and Firestore doc."
 Files changed: src/hooks/useNotifications.ts
 Result: Modified
-Review notes: FCM integration was correct. Added browser support detection (isSupported() check) to prevent errors on desktop Chrome. Added preference update function. Note: VAPID key in .env.local is currently a placeholder — must be set before FCM works in production.
+Review notes: FCM integration was correct. Added browser support detection (isSupported() check) to prevent errors on desktop Chrome. Added preference update function. Note: VAPID key in `.env.local` must be set before FCM works in production.
 Reviewer: Nikoloz Kvirikashvili
 
 ---

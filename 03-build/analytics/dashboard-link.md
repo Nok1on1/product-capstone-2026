@@ -2,7 +2,7 @@
 
 **Team:** Bandersnatch
 **Product:** Bus #3 Real-Time Tracker
-**Last updated:** May 21, 2026
+**Last updated:** June 13, 2026
 
 ---
 
@@ -47,8 +47,15 @@ The core user flow fires these events in order:
 
 | Metric | Value | Date Range |
 |---|---|---|
-| Total unique users | 15 | May 21, 2026 |
-| `user_signup_completed` events | 2 | May 21, 2026 |
+| First visits | 44 | Apr 5-Jun 13, 2026 |
+| Total page views | 122 | Apr 5-Jun 13, 2026 |
+| Peak active users, 30d | 42 | Firebase overview export |
+| Peak active users, 7d | 28 | Firebase overview export |
+| Peak active users, 1d | 25 | Firebase overview export |
+| `user_signup_completed` events | 5 | Post-logging-fix GA4 count |
+| Firestore user profiles | 28 | `04-gtm/traction/waitlist-signups.md` |
+| `bus_status_confirmed` events | 25 | Firebase overview export |
+| `departure_decision_made` events | 23 | Firebase overview export |
 
 ---
 

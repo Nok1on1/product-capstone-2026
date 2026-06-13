@@ -3,7 +3,7 @@
 **Product:** Bus #3 Real-Time Tracker
 **Team:** Bandersnatch
 **Date:** 22 May 2026
-**Audit run date:** 22 May 2026
+**Audit run date:** 13 June 2026
 
 ---
 
@@ -115,43 +115,29 @@ This document applies the STRIDE threat model to our five highest-traffic user f
 
 ### Audit run
 
-**Command used:** `npm audit`
-**Date run:** 22 May 2026
+**Command used:** `npm audit --audit-level=high`
+**Date run:** 13 June 2026
 **Working directory:** `bandersnatch_app/`
 
 **Summary:**
 ```
-found 4 vulnerabilities (3 moderate, 1 high)
+0 high or critical vulnerabilities
+2 moderate vulnerabilities
 ```
 
-### Three highest-priority findings
+### Current findings
 
-**Finding 1 (High):**
-- Package: next 16.2.4
-- CVE: Multiple — GHSA-8h8q-6873-q5fj (DoS via Server Components), GHSA-26hh-7cqf-hhc6 (middleware bypass), GHSA-3g8h-86w9-wvmq (cache-poisoned redirects)
-- Vulnerability: Multiple high-severity vulnerabilities in Next.js including Denial of Service, middleware bypass, and cache poisoning
-- Remediation: Update next to version 16.2.6. Command: `npm install next@16.2.6`
+**Finding 1 (Moderate):**
+- Package: `postcss <8.5.10`, via `next`
+- CVE/GHSA: GHSA-qx2v-qp2m-jg93
+- Vulnerability: PostCSS can emit unescaped `</style>` in CSS stringify output.
+- Remediation status: Accepted with rationale for Demo Day. The app does not expose user-authored CSS or a feature that stringifies attacker-controlled CSS into page output. `npm audit fix --force` proposes downgrading to `next@9.3.3`, which is a breaking and higher-risk remediation path than accepting this moderate advisory until the framework publishes a compatible patched dependency chain.
 - Owner: Giorgi Mikaberidze
-- Target date: 26 May 2026
-- Status: In progress — 16.2.6 is outside the stated dependency range, needs testing
+- Follow-up: Re-run `npm audit` weekly and upgrade Next/PostCSS once a compatible non-breaking patch is available.
 
-**Finding 2 (Moderate):**
-- Package: brace-expansion (via @typescript-eslint/typescript-estree)
-- CVE: GHSA-jxxr-4gwj-5jf2
-- Vulnerability: Large numeric range defeats documented max DoS protection
-- Remediation: `npm audit fix` — dev dependency, no production impact
-- Owner: Nikoloz Kvirikashvili
-- Target date: 26 May 2026
-- Status: Accepted — dev-only dependency, no production exposure
-
-**Finding 3 (Moderate):**
-- Package: protobufjs 7.5.0
-- CVE: GHSA-jggg-4jg4-v7c6
-- Vulnerability: Denial of Service via unbounded recursive JSON descriptor expansion
-- Remediation: Update protobufjs via `npm audit fix` (transitive dependency of firebase)
-- Owner: Nikoloz Kvirikashvili
-- Target date: 30 May 2026
-- Status: Pending — requires Firebase SDK update or override
+**Previously high Next.js finding:**
+- Status: Addressed. `next` has been upgraded from `16.2.4` to `16.2.9` in `bandersnatch_app/package.json` and `package-lock.json`.
+- Verification: `npm audit --audit-level=high` passes with no high or critical findings, and `npm run build` completes successfully on Next.js `16.2.9`.
 
 ---
 
@@ -178,7 +164,7 @@ git log -p | grep -i "api_key\|secret\|password\|token" | head -40
 **Current .env status:**
 - [x] `.env` file exists locally
 - [x] `.env` is listed in `.gitignore`
-- [ ] `.env.example` exists in the repo with placeholder values only — not yet created, gap acknowledged
+- [x] `.env.example` exists in the repo with empty public Firebase variable names only
 - [x] No `.env` file has ever been committed (verified by secrets check above)
 
 ---
@@ -187,6 +173,6 @@ git log -p | grep -i "api_key\|secret\|password\|token" | head -40
 
 | Priority | Vulnerability | Flow or component | Mitigation or action | Owner | Date |
 |----------|--------------|------------------|---------------------|-------|------|
-| 1 | Next.js 16.2.4 — multiple high-severity vulnerabilities (DoS, middleware bypass, cache poisoning) | All flows (via Next.js framework) | Update to 16.2.6 | Giorgi Mikaberidze | 26 May 2026 |
+| 1 | Moderate PostCSS advisory via Next.js dependency chain | App build framework | Accepted for Demo Day with rationale above; upgrade when compatible patch is available | Giorgi Mikaberidze | Weekly audit cadence |
 | 2 | No rate limiting on bus reports, peer locations, or status queries | Flows 3, 4, 5 | Add rate limiting middleware for Firestore writes | Nikoloz Kvirikashvili | Sprint 2 |
-| 3 | No admin action audit log for trust score/role changes | Flow 5 | Implement `admin_actions/{autoId}` collection with write rules | Giorgi Mikaberidze | 5 June 2026 |
+| 3 | No admin action audit log for trust score/role changes | Flow 5 | Implement `admin_actions/{autoId}` collection with write rules | Giorgi Mikaberidze | Sprint 2 |

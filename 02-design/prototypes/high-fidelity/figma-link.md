@@ -64,8 +64,8 @@ Visual style: Clean, minimal, blue and white colour scheme. Clear typography. Hi
 **Initial prompt:**
 "Build a mobile-first web app called Bandersnatch. The primary user is a KIU university student who needs to find reliable bus arrival information for Bus #3. Screen 1: a home screen with a bus stop selector dropdown (options: KIU Main Gate, Kutaisi Central, Terjola, Samtredia, Khoni) and a 'Check Status' button. Screen 2: a loading state showing 'Querying bus status...' with a spinner. Screen 3: a status display showing the bus line, estimated arrival time in minutes, a 'CONFIRMED' badge (green) or 'ESTIMATED' badge (yellow), and crowding level indicator. Screen 4: a departure confirmation showing 'Leave in X minutes?' with a 'Yes, I'm leaving now' button. Use a clean, minimal design with a blue (#2563EB) and white colour scheme. High contrast for outdoor readability."
 
-**Iteration prompts (if any):**
-[To be added after Lab 5 iteration]
+**Iteration prompts:**
+No extra Stitch prompts were needed before the first usability test. Post-test changes are documented in `02-design/user-testing/usability-findings.md` and implemented in the deployed app.
 
 ---
 
@@ -82,14 +82,14 @@ Kept the departure decision minimal — just "Leave in X minutes?" — because t
 
 ---
 
-## What Lab 6 Will Add
+## What Production Added After Prototype
 
-This prototype is the design blueprint. Lab 6 adds:
+The Stitch prototype was the design blueprint. The deployed production app now adds:
 
-- Backend logic (user authentication, data storage)
-- Event schema instrumentation (actual tracking code)
-- Real data persistence (bus status queries, user sessions actually save)
-- Vercel deployment (public URL for real user testing)
+- Backend logic for user authentication and data storage
+- Event schema instrumentation in production code
+- Real data persistence for bus status queries and user sessions
+- Vercel deployment at the public live URL
 
 
 

@@ -94,7 +94,7 @@ For Sprint 1, the team is optimising for speed of delivery and demo reliability 
 - **Analytics:** Google Analytics 4 — choice locked, implementation deferred to post-Sprint 1
 - **Hosting:** Vercel for the Next.js app; Firebase project for auth, Firestore, FCM, and the service worker tile cache
 
-No TBD entries remain.
+All stack entries are resolved.
 
 ---
 
