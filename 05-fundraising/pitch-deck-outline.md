@@ -62,19 +62,22 @@ This source outline adapts the Lab 12 pitch deck template to the Bandersnatch pr
 
 ## Slide 6: Traction
 
-**Primary metric:** 20 seven-day active users as of May 21, 2026.  
+**Primary metric:** 28 seven-day active users (peak), 42 thirty-day active users (peak) as of Jun 13, 2026.  
 **Source:** `04-gtm/traction/waitlist-signups.md` and Firebase Analytics export.
 
 **Supporting metrics:**
 
 | Metric | Value | Source | Date |
 |--------|-------|--------|------|
-| 30-day active users | 21 | Firebase overview export | May 21, 2026 |
-| Core status checks | 15 of 20 observed users, 75% | Manual rapid-test tracking | May 19-21, 2026 |
-| Boarding completed | 12 of 15 status checkers, 80% | Manual rapid-test tracking | May 19-21, 2026 |
-| Signup events recorded | 2 | Firebase Analytics | May 21, 2026 |
+| 30-day active users | 42 | Firebase overview export | Jun 13, 2026 |
+| 7-day active users | 28 | Firebase overview export | Jun 13, 2026 |
+| 1-day active users | 25 | Firebase overview export | Jun 13, 2026 |
+| Core status checks | 25 bus_status_confirmed | Firebase Analytics | Jun 13, 2026 |
+| Departure decisions | 23 departure_decision_made | Firebase Analytics | Jun 13, 2026 |
+| Signup events recorded | 5 | Firebase Analytics | Jun 13, 2026 |
+| Firestore user documents | 28 | Firestore users/ collection | Jun 13, 2026 |
 
-**Honest caveat:** Signup analytics undercounted activity before a Firebase SDK initialization fix on May 20. The deck uses the observed session data and discloses the instrumentation caveat.
+**Honest caveat:** Signup analytics undercounted activity before a Firebase SDK initialization fix on May 20. The deck uses the observed session data and discloses the instrumentation caveat. The Firestore user collection (28 documents) confirms actual signups exceed the GA4 event count (5).
 
 ---
 

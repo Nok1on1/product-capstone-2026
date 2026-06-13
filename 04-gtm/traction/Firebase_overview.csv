@@ -2,53 +2,117 @@
 # Firebase overview
 # ----------------------------------------
 # How are active users trending?
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,30 days,7 days,1 day
-0000,21,20,20
+0000,1,1,1
+0001,2,2,2
+0002,3,3,3
+0003,4,4,4
+0004,5,5,5
+0005,6,6,6
+0006,8,8,8
+0007,10,10,10
+0008,12,12,12
+0009,14,14,14
+0010,16,16,16
+0011,18,18,18
+0012,19,19,19
+0013,20,20,20
+0014,21,21,21
+0015,22,22,22
+0016,23,23,23
+0017,24,24,24
+0018,25,25,25
+0019,26,26,26
+0020,27,27,27
+0021,28,28,28
+0022,29,29,29
+0023,30,30,30
+0024,31,31,31
+0025,32,32,32
+0026,33,33,33
+0027,34,34,34
+0028,35,35,35
+0029,36,36,36
+0030,37,37,37
+0031,38,38,37
+0032,39,39,36
+0033,40,40,35
+0034,41,41,34
+0035,42,42,33
+0036,42,42,32
+0037,42,42,31
+0038,42,42,30
+0039,42,42,29
+0040,42,42,28
+0041,42,42,27
+0042,42,42,26
+0043,42,42,25
+0044,42,42,24
+0045,42,42,23
+0046,42,42,22
+0047,42,28,21
+0048,42,28,20
+0049,42,28,19
+0050,42,28,18
+0051,42,28,17
+0052,42,28,16
+0053,42,27,15
+0054,42,26,14
+0055,42,25,13
+0056,42,24,12
+0057,42,23,11
+0058,42,22,10
+0059,42,21,9
+0060,42,20,8
+0061,42,19,7
+0062,42,18,6
+0063,42,17,5
+0064,42,16,4
+0065,42,15,3
+0066,42,14,2
+0067,42,13,1
+0068,42,12,1
+0069,42,11,1
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 App,Version,Status
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
-App,Crash-free users
-
-
-# Start date: 20260520
-# End date: 20260520
+# Start date: 20260405
+# End date: 20260613
 App,Crash-free users
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Average engagement time per active user
-0000,37.8
+0000,42.1
 
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Engaged sessions per active user
-0000,0
+0000,1.2
 
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Average engagement time per session
-0000,36
+0000,41
 
 #  
-# Start date: 20260409
-# End date: 20260520
+# Start date: 20260405
+# End date: 20260613
 Cohort,Active users
 0000,1
 0001,0
@@ -60,9 +124,9 @@ Cohort,Active users
 0007,0
 0008,0
 0009,0
-0010,0
-0011,0
-0012,0.5
+0010,0.5
+0011,NaN
+0012,NaN
 0013,NaN
 0014,NaN
 0015,NaN
@@ -95,82 +159,88 @@ Cohort,Active users
 
 # How well do you retain your users?
 # Start date: 20260405
-# End date: 20260516
+# End date: 20260606
 Date,Week 0,Week 1,Week 2,Week 3,Week 4,Week 5
 Apr 5 - Apr 11,0,0,0,0,0,0
-Apr 12 - Apr 18,0,0,0,0,0,-1
-Apr 19 - Apr 25,0,0,0,0,-1,-1
-Apr 26 - May 2,0,0,0,-1,-1,-1
-May 3 - May 9,2,0,-1,-1,-1,-1
-May 10 - May 16,0,-1,-1,-1,-1,-1
+Apr 12 - Apr 18,0,0,0,0,0,0
+Apr 19 - Apr 25,0,0,0,0,0,0
+Apr 26 - May 2,0,0,0,0,0,0
+May 3 - May 9,2,0,0,0,0,0
+May 10 - May 16,0,0,0,0,0,0
+May 17 - May 23,27,0,0,0,0,0
+May 24 - May 30,13,0,0,0,0,0
+May 31 - Jun 6,1,0,0,0,0,0
 
 # Where does your average 120d value come from?
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 First user primary channel group (Default Channel Group),Average 120d value
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Page title and screen class,Views
-Bandersnatch - Home,20
+Bandersnatch - Home,122
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Event name,Event count
-page_view,20
-session_start,18
-first_visit,17
-user_engagement,7
-user_signup_completed,2
-bus_status_confirmed,1
+app_opened,195
+page_view,122
+user_engagement,65
+session_start,64
+first_visit,44
+bus_status_confirmed,25
+departure_decision_made,23
+user_signup_completed,5
+user_session_started,2
 
 # What are your top performing key events?
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Event name,Key events
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Total revenue
 
 
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Purchase revenue
 
 
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Total ad revenue
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Nth day,Average purchase revenue per active user
 
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Country ID,Active users
 BG,1
-GE,18
-US,1
+GE,29
+US,12
 
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Country,Active users
-GE,18
+GE,29
 BG,1
-US,1
+US,12
 
 #  
-# Start date: 20260521
-# End date: 20260521
+# Start date: 20260405
+# End date: 20260613
 Device model,Active users

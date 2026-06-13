@@ -20,9 +20,10 @@ Bandersnatch gives Bus #3 commuters a mobile-first pre-departure status check wi
 
 | Metric | Value | As of |
 |--------|-------|-------|
-| 7-day active users | 20 | May 21, 2026 |
-| 30-day active users | 21 | May 21, 2026 |
-| Core status checks | 15/20 observed users | May 21, 2026 |
+| 30-day active users | 42 | Jun 13, 2026 |
+| 7-day active users | 28 | Jun 13, 2026 |
+| Bus status checks | 25 | Jun 13, 2026 |
+| Signups (Firestore) | 28 | Jun 13, 2026 |
 
 ## Business Model
 
