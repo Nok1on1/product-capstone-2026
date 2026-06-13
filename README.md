@@ -50,8 +50,9 @@ See [03-build/architecture/tech-stack.md](03-build/architecture/tech-stack.md) f
 | `03-build/` | Architecture, analytics, experiments, reliability, roadmap |
 | `04-gtm/` | Growth strategy, traction, unit economics, financial model |
 | `05-fundraising/` | Lab 12 pitch deck, one-pager, feedback form |
-| `06-strategy/` | Competitive analysis, ecosystem map, moat statement |
-| `07-operations/` | Demo Day operating checklist and Q&A prep |
+| `06-strategy/` | Competitive analysis, ecosystem map, roadmap, prioritization, moat statement |
+| `07-team/` | Weekly contribution logs for all team members |
+| `07-operations/` | Supplemental Demo Day operating checklist and Q&A prep |
 | `08-legal/` | Privacy notice and legal/privacy artifacts |
 | `09-final/` | Demo video plan, case study, rubric audit |
 | `bandersnatch_app/` | Deployed Next.js application source |
@@ -116,7 +117,9 @@ Read more:
 | Pitch deck | [05-fundraising/pitch-deck.pdf](05-fundraising/pitch-deck.pdf) |
 | One-pager | [05-fundraising/one-pager.pdf](05-fundraising/one-pager.pdf) |
 | Financial model | [04-gtm/financials/12-month-model.xlsx](04-gtm/financials/12-month-model.xlsx) |
+| Growth projection | [04-gtm/growth-projection.xlsx](04-gtm/growth-projection.xlsx) |
 | Traction evidence | [04-gtm/traction/](04-gtm/traction/) |
+| Team contribution logs | [07-team/contribution-logs/](07-team/contribution-logs/) |
 | Rubric audit | [09-final/checkpoint-4-rubric-audit.md](09-final/checkpoint-4-rubric-audit.md) |
 
 ## Troubleshooting

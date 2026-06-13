@@ -14,13 +14,13 @@
 | A2 Product demonstrated live | Live product on real device, core flow end-to-end, URL stated | Ready for rehearsal. Live URL is documented. Day-of app check still required. | Medium |
 | A3 Traction and business model | Real usage numbers, engagement/retention, CAC and LTV | Mostly ready. Uses Firebase active users plus observed rapid-test engagement; CAC/LTV sourced from unit economics. | Medium because signup analytics undercount needs clear explanation |
 | A4 Competitive moat | 5+ competitors, 7+ dimensions, Helmer power, 2 repo evidence points | Ready. Deck includes 6 competitors, 7 dimensions, Switching Costs, and repository evidence. | Low |
-| A5 Q&A fluency | Direct answers, numbers owned, honest caveats | Prep material added in `07-operations/README.md`. | Medium until rehearsed |
+| A5 Q&A fluency | Direct answers, numbers owned, honest caveats | Prep material added in `07-operations/demo-day-checklist.md`. | Medium until rehearsed |
 
 ## Part B: Repository Review
 
 | Criterion | Target | Current readiness | Risk |
 |-----------|--------|-------------------|------|
-| B1 Folder completeness | `00-foundation` through `09-final` present and non-empty | Ready after adding `05-fundraising`, `07-operations`, and `09-final`. | Low |
+| B1 Folder completeness | `00-foundation` through `09-final` present and non-empty | Ready after adding rubric-required `07-team` contribution logs plus supplemental `07-operations` prep. | Low |
 | B2 README/documentation quality | Product name, tagline, problem, live URL, demo video link, team, stack, setup, license | Mostly ready after README update. Demo video link remains pending final upload. | Medium |
 | B3 Investor materials | `05-fundraising/pitch-deck.pdf` and `05-fundraising/one-pager.pdf` valid PDFs | Ready after PDF generation. | Low |
 
