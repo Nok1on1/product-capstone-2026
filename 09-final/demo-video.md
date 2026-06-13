@@ -4,7 +4,7 @@
 **Product:** Bus #3 Real-Time Tracker  
 **Target length:** 60 seconds maximum  
 **Live URL:** https://product-capstone-2026.vercel.app/en  
-**Final video link:** https://drive.google.com/file/d/1XcHa8vzhEsan1ueGC3cJol9Y9KlVvTei/view?usp=sharing
+**Final video link:** https://drive.google.com/file/d/1PK4HSCrKtRbGGV_idOX94wdWUsIUahBo/view?usp=sharing
 
 ---
 

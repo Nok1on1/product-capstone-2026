@@ -5,7 +5,7 @@
 Bandersnatch is a mobile-first web app for KIU students who rely on municipal Bus #3. It helps commuters make a pre-departure decision using clearer status, route context, crowding signals, and peer-powered reports.
 
 **Live demo:** https://product-capstone-2026.vercel.app/en  
-**Demo video:** [Watch on Google Drive](https://drive.google.com/file/d/1XcHa8vzhEsan1ueGC3cJol9Y9KlVvTei/view?usp=sharing) · [Production plan](09-final/demo-video.md)  
+**Demo video:** [Watch on Google Drive](https://drive.google.com/file/d/1PK4HSCrKtRbGGV_idOX94wdWUsIUahBo/view?usp=sharing) · [Production plan](09-final/demo-video.md)  
 **License:** MIT, see [LICENSE](LICENSE)
 
 ---
